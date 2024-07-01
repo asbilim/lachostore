@@ -51,8 +51,8 @@ export default function Header() {
   const pathName = usePathname();
 
   return (
-    <div className="flex bg-secondary px-4 md:px-12 md:pb-6 flex-col gap-6 items-center justify-center">
-      <div className="layer_one flex w-full gap-3 justify-between items-center">
+    <div className="flex bg-secondary px-4 md:px-12 md:pb-6 flex-col items-center justify-center">
+      <div className="flex w-full  justify-between items-center">
         {/* logo */}
         <Link href="/">
           <Image
