@@ -31,7 +31,7 @@ const pathNames = [
   },
   {
     name: "Shop",
-    path: "/shop",
+    path: "/products",
   },
   {
     name: "Cart",
