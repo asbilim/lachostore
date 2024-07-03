@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ProductList } from "../datas/products";
 import { Button } from "@/components/ui/button";
 import slugify from "react-slugify";
+import { Input } from "../ui/input";
 export default function ShopMain() {
   return (
     <div className="flex w-full h-full my-12  flex-col gap-8 items-center ">
@@ -122,6 +123,29 @@ export default function ShopMain() {
           />
         </div>
       </section>
+      <div className="flex my-12 w-full max-w-6xl items-center">
+        <div className="flex w-full maw-w-5xl border-y py-6 justify-between items-center">
+          <div className="flex flex-col gap-3">
+            <h2 className="font-bold">Subscribe to our newsletter</h2>
+            <p className="text-sm">
+              The latest news , articles , and resources , sent to your inbox
+              weekly
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <Input placeholder="youremail@gmail.com" />
+            <Button>Subscribe</Button>
+          </div>
+        </div>
+      </div>
+      <div className="flex max-w-6xl w-full items-center">
+        <div className="flex w-full justify-around">
+          <p>partner1</p>
+          <p>partner 2</p>
+          <p>partner 2</p>
+          <p>partner 2</p>
+        </div>
+      </div>
     </div>
   );
 }

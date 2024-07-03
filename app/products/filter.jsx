@@ -51,7 +51,7 @@ export default function Filter({
   clearAllFilters,
 }) {
   return (
-    <div className="bg-background rounded-lg z-20  p-3 sm:p-4 sticky top-4 w-full max-w-xs sm:max-w-sm md:max-w-md">
+    <div className="bg-background md:bg-transparent  rounded-lg z-20  p-3 sm:p-4 sticky top-4 w-full max-w-xs sm:max-w-sm md:max-w-md">
       <h2 className="text-xl font-bold mb-3">Filters</h2>
       <Accordion type="single" collapsible className="space-y-2">
         <AccordionItem value="category">

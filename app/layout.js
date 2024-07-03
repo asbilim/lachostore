@@ -1,13 +1,14 @@
-import { Montserrat as Inter } from "next/font/google";
+import { Manrope as Inte, Playfair_Display as Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import PreHeader from "@/components/layout/preheader";
 
-const inter = Inter({
+const inter = Inte({
   subsets: ["latin"],
   preload: true,
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  weight: ["200", "300", "400", "500", "600", "700", "800"],
+  display: "swap",
 });
 
 export const metadata = {
