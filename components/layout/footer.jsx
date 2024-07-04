@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
-import Link from "next/link";
+import { Link } from "../navigation";
 import { ChevronDown, Globe, ArrowRight } from "lucide-react";
+import { usePathname } from "../navigation";
 import {
   Accordion,
   AccordionContent,
@@ -37,18 +38,23 @@ const footerSections = [
 const languages = [
   { code: "en", name: "English" },
   { code: "fr", name: "Français" },
-  { code: "es", name: "Español" },
+  { code: "de", name: "Deutsche" },
 ];
 
-export default function Footer() {
+export default function Footer({ params, locale }) {
   const [language, setLanguage] = useState(languages[0]);
+  const pathname = usePathname();
 
   return (
     <footer className="bg-background">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="space-y-6">
-            <Link href="#" className="inline-block" prefetch={false}>
+            <Link
+              href="/"
+              className="inline-block"
+              prefetch={false}
+              locale={locale}>
               <span className="sr-only">Lachoshop</span>
               <div className="h-8 w-auto">{/* Add your logo SVG here */}</div>
             </Link>
@@ -114,7 +120,9 @@ export default function Footer() {
                 <DropdownMenuItem
                   key={lang.code}
                   onSelect={() => setLanguage(lang)}>
-                  {lang.name}
+                  <Link href={pathname} locale={lang.code} prefetch={false}>
+                    {lang.name}
+                  </Link>
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>

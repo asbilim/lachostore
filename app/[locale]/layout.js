@@ -4,7 +4,7 @@ import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import PreHeader from "@/components/layout/preheader";
 import { CartProvider } from "@/providers/cart";
-import { ThemeProvider } from "@/providers/theme";
+import { getTranslations } from "next-intl/server";
 
 const inter = Inte({
   subsets: ["latin"],
@@ -18,15 +18,25 @@ export const metadata = {
   description: "The official web store of Lachofit",
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children, params }) {
+  const { locale } = params;
+  const t = await getTranslations("Header");
+
   return (
-    <html lang="en" dangerouslyAllowSVG={true}>
+    <html lang={locale} dangerouslyAllowSVG={true}>
       <CartProvider>
         <body className={inter.className}>
           <PreHeader />
-          <Header />
+          <Header
+            locale={locale}
+            home={t("home")}
+            contact={t("contact")}
+            apply={t("apply")}
+            shop={t("shop")}
+            header_cart={t("cart")}
+          />
           {children}
-          <Footer />
+          <Footer locale={locale} />
         </body>
       </CartProvider>
     </html>

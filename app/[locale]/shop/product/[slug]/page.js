@@ -5,18 +5,25 @@ import NoFound from "@/components/reusables/no-found";
 import ProductDescription from "@/components/layout/product/description";
 import ProductRecommendation from "@/components/reusables/recommandations";
 export default function Shop({ params }) {
-  const { slug } = params;
+  const { slug, locale } = params;
+
   const product = findProductByName(ProductList, slug);
 
   return (
-    <div>{product.found ? <Content product={product} /> : <NoFound />}</div>
+    <div>
+      {product.found ? (
+        <Content product={product} locale={locale} />
+      ) : (
+        <NoFound />
+      )}
+    </div>
   );
 }
 
-export function Content({ product }) {
+export function Content({ product, locale }) {
   return (
     <>
-      <Main product={product.product} />
+      <Main product={product.product} locale={locale} />
       <ProductRecommendation />
     </>
   );

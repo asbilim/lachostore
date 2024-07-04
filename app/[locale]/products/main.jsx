@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { BreadcrumbComponent as Breadcrumb } from "@/components/reusables/breadcrumbs";
-import Link from "next/link";
+import { Link } from "@/components/navigation";
 import slugify from "react-slugify";
 import { useCart } from "@/hooks/use-cart";
 import { FilterIcon, X } from "lucide-react";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, locale }) => {
   const [isAdding, setIsAdding] = useState(false);
   const { cart, addToCart, removeFromCart } = useCart();
   const isInCart = cart.some((item) => item.id === product.id);
@@ -28,7 +28,7 @@ const ProductCard = ({ product }) => {
   return (
     <div className="w-full max-w-xs mx-auto mb-8">
       <div className="bg-green-100 border border-green-300 p-4 transition-all duration-300 hover:shadow-md">
-        <Link href={`/shop/product/${slugify(product.name)}`}>
+        <Link href={`/shop/product/${slugify(product.name)}`} locale={locale}>
           <div className="relative aspect-square w-full mb-4 overflow-hidden">
             <Image
               src={product.image_url || "https://placehold.co/400x400.png"}
@@ -146,10 +146,10 @@ const CartActions = ({ isInCart, isAdding, onAdd, onRemove }) => (
   </>
 );
 
-export default function MainShop({ products }) {
+export default function MainShop({ products, locale }) {
   const breadcrumbItems = [
-    { type: "link", label: "Home", href: "/" },
-    { type: "link", label: "Products", href: "/products/" },
+    { type: "link", label: "Home", href: "/" + locale },
+    { type: "link", label: "Products", href: locale + "/products/" },
   ];
   const [selectedFilters, setSelectedFilters] = useState({
     category: [],
@@ -285,7 +285,7 @@ export default function MainShop({ products }) {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {productsToShow.map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCard key={product.id} product={product} locale={locale} />
         ))}
       </div>
 

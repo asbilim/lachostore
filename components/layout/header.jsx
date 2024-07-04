@@ -4,7 +4,7 @@ import Image from "next/image";
 import logo from "@/public/lachostore.png";
 import { Input } from "../ui/input";
 import { Menu, Search, ShoppingBag, UserRound } from "lucide-react";
-import Link from "next/link";
+import { Link } from "../navigation";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/providers/cart";
 import { motion, AnimatePresence } from "framer-motion";
@@ -38,15 +38,22 @@ import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Command, CommandInput } from "@/components/ui/command";
 
-const pathNames = [
-  { name: "Home", path: "/" },
-  { name: "Shop", path: "/products" },
-  { name: "Cart", path: "/cart" },
-  { name: "Application", path: "/application" },
-  { name: "Contact", path: "/contact" },
-];
+export default function Header({
+  locale,
+  home,
+  shop,
+  header_cart,
+  apply,
+  contact,
+}) {
+  const pathNames = [
+    { name: home, path: "/" },
+    { name: shop, path: locale + "/products" },
+    { name: header_cart, path: locale + "/cart" },
+    { name: apply, path: locale + "/application" },
+    { name: contact, path: locale + "/contact" },
+  ];
 
-export default function Header() {
   const pathName = usePathname();
   const { cart } = useCart();
   const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -54,13 +61,12 @@ export default function Header() {
   const { setTheme, theme } = useTheme();
 
   const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
-  const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark");
 
   return (
     <header className="bg-background px-4 md:px-8 lg:px-12 py-4 shadow-md">
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex-shrink-0">
+          <Link locale={locale} href="/" className="flex-shrink-0">
             <Image
               src={logo}
               width={200}
@@ -118,7 +124,7 @@ export default function Header() {
               <Search className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all" />
             </Button>
 
-            <Link href="/cart" className="relative">
+            <Link locale={locale} href="/cart" className="relative">
               <ShoppingBag className="w-6 h-6 text-muted-foreground" />
               {itemCount > 0 && (
                 <Badge
@@ -158,6 +164,7 @@ export default function Header() {
                     <nav className="flex flex-col space-y-4 mt-8">
                       {pathNames.map((path) => (
                         <Link
+                          locale={locale}
                           key={path.name}
                           href={path.path}
                           className={`text-sm font-medium transition-colors hover:text-primary

@@ -1,23 +1,24 @@
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "../navigation";
 import { ProductList } from "../datas/products";
 import { Button } from "@/components/ui/button";
 import slugify from "react-slugify";
 import { Input } from "../ui/input";
+import { useTranslations } from "next-intl";
 export default function ShopMain() {
+  const t = useTranslations("Index");
+
   return (
     <div className="flex w-full h-full my-12  flex-col gap-8 items-center ">
       <div className="w-full flex flex-col max-w-6xl gap-4">
-        <CustomLink text="Become a seller today" href="" />
+        <CustomLink text={t("section_one.title")} href="" />
         <p className="text-sm leading-relaxed">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime velit
-          esse, ratione dolorum quia nam obcaecati ut vitae. Dolor et ad enim
-          tempore necessitatibus. Possimus ducimus quasi similique nulla enim.
+          {t("section_one.description")}
         </p>
       </div>
       <div className="w-full flex flex-col max-w-6xl  gap-4">
-        <h2 className="text-primary mb-12">Featured products</h2>
+        <h2 className="text-primary mb-12">{t("section_two.subtitle")}</h2>
         <div className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {ProductList.slice(0, 10).map((item) => {
             return (
@@ -50,15 +51,13 @@ export default function ShopMain() {
         </div>
       </div>
       <div className="w-full flex flex-col max-w-6xl gap-4">
-        <CustomLink text="Achieve your goals: talk to a professional" href="" />
+        <CustomLink text={t("section_two.title")} href="" />
         <p className="text-sm leading-relaxed">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime velit
-          esse, ratione dolorum quia nam obcaecati ut vitae. Dolor et ad enim
-          tempore necessitatibus. Possimus ducimus quasi similique nulla enim.
+          {t("section_two.description")}
         </p>
       </div>
       <div className="w-full flex flex-col max-w-6xl  gap-4">
-        <h2 className="text-primary mb-12">Featured products</h2>
+        <h2 className="text-primary mb-12">{t("section_two.subtitle")}</h2>
         <div className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {ProductList.slice(0, 8).map((item) => {
             return (
@@ -92,26 +91,21 @@ export default function ShopMain() {
       </div>
       <div className="w-full flex flex-col max-w-6xl gap-4 my-16">
         <div className="flex">
-          <Button className="flex ">View All the products</Button>
+          <Button className="flex ">{t("button")}</Button>
         </div>
       </div>
       <section className="w-full flex flex-col max-w-6xl  gap-4">
         <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2">
           <div className="space-y-4">
             <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
-              Become a Partner Today
+              {t("section_three.title")}
             </h1>
             <p className="text-muted-foreground md:text-xl">
-              Create your account now and start earning! As a partner,{" "}
-              {"you'll"}
-              have access to unique affiliate links for all our products.
+              {t("section_three.description")}
             </p>
-            <p className="mt-2 text-muted-foreground md:text-xl">
-              Earn a commission on every sale made through your links. Join our
-              community and start growing your revenue today!
-            </p>
+
             <Button>
-              <Link href="/">Sign Up and Earn</Link>
+              <Link href="/">{t("section_three.button")}</Link>
             </Button>
           </div>
           <Image
@@ -126,15 +120,12 @@ export default function ShopMain() {
       <div className="flex my-12 w-full max-w-6xl items-center">
         <div className="flex flex-col gap-2 md:flex-row w-full maw-w-5xl border-y py-6 justify-between items-start md:items-center">
           <div className="flex flex-col gap-3">
-            <h2 className="font-bold">Subscribe to our newsletter</h2>
-            <p className="text-sm">
-              The latest news , articles , and resources , sent to your inbox
-              weekly
-            </p>
+            <h2 className="font-bold">{t("newsletter.title")}</h2>
+            <p className="text-sm">{t("newsletter.message")}</p>
           </div>
           <div className="flex gap-2">
-            <Input placeholder="youremail@gmail.com" />
-            <Button>Subscribe</Button>
+            <Input placeholder={t("newsletter.placeholder")} />
+            <Button>{t("newsletter.button")}</Button>
           </div>
         </div>
       </div>

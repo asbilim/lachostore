@@ -1,0 +1,38 @@
+{
+  "Index": {
+    "section_one": {
+      "title": "Start Selling with Us Today",
+      "description": "Join our vibrant community of sellers and expand your market reach. Start your journey with us and experience seamless selling with comprehensive support at every step.",
+      "subtitle": "Featured Products"
+    },
+    "section_two": {
+      "title": "Achieve Your Goals: Talk to a Professional",
+      "description": "Connect with our experts and get personalized advice to help you reach your business objectives. Benefit from tailored strategies and insights to maximize your potential.",
+      "subtitle": "Customer Choices"
+    },
+    "button": "View All Products",
+    "section_three": {
+      "title": "Become a Partner Today",
+      "description": "Collaborate with us and take advantage of our extensive network and resources. Enjoy the benefits of partnership and grow your business with our support.",
+      "button": "Sign Up and Earn"
+    },
+    "newsletter": {
+      "title": "Subscribe to Our Newsletter",
+      "message": "Get the latest news, articles, and resources delivered to your inbox weekly.",
+      "button": "Subscribe",
+      "placeholder": "Enter Your Email"
+    }
+  },
+  "Header": {
+    "home": "Home",
+    "apply": "Apply",
+    "shop": "Shop",
+    "cart": "Cart",
+    "contact": "Contact"
+  },
+  "Footer": {
+    "text": "Redefining the shopping paradigm through avant-garde technology and unparalleled customer-centric experiences.",
+    "placeholder": "Enter your email",
+    "subscribe": "Subscribe"
+  }
+}

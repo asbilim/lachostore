@@ -1,0 +1,38 @@
+{
+  "Index": {
+    "section_one": {
+      "title": "Starten Sie noch heute mit dem Verkauf bei uns",
+      "description": "Treten Sie unserer lebendigen Gemeinschaft von Verkäufern bei und erweitern Sie Ihre Marktreichweite. Beginnen Sie Ihre Reise mit uns und erleben Sie nahtloses Verkaufen mit umfassender Unterstützung bei jedem Schritt.",
+      "subtitle": "Empfohlene Produkte"
+    },
+    "section_two": {
+      "title": "Erreichen Sie Ihre Ziele: Sprechen Sie mit einem Profi",
+      "description": "Verbinden Sie sich mit unseren Experten und erhalten Sie personalisierte Ratschläge, um Ihre Geschäftsziele zu erreichen. Profitieren Sie von maßgeschneiderten Strategien und Einblicken, um Ihr Potenzial zu maximieren.",
+      "subtitle": "Kundenwahl"
+    },
+    "button": "Alle Produkte anzeigen",
+    "section_three": {
+      "title": "Werden Sie noch heute Partner",
+      "description": "Arbeiten Sie mit uns zusammen und nutzen Sie unser umfangreiches Netzwerk und unsere Ressourcen. Genießen Sie die Vorteile einer Partnerschaft und wachsen Sie mit unserer Unterstützung.",
+      "button": "Anmelden und verdienen"
+    },
+    "newsletter": {
+      "title": "Abonnieren Sie unseren Newsletter",
+      "message": "Erhalten Sie die neuesten Nachrichten, Artikel und Ressourcen wöchentlich in Ihren Posteingang.",
+      "button": "Abonnieren",
+      "placeholder": "Geben Sie Ihre E-Mail ein"
+    }
+  },
+  "Header": {
+    "home": "Startseite",
+    "apply": "Bewerben",
+    "shop": "Shop",
+    "cart": "Warenkorb",
+    "contact": "Kontakt"
+  },
+  "Footer": {
+    "text": "Neudefinition des Einkaufsparadigmas durch avantgardistische Technologie und unvergleichliche kundenorientierte Erlebnisse.",
+    "placeholder": "Geben Sie Ihre E-Mail ein",
+    "subscribe": "Abonnieren"
+  }
+}

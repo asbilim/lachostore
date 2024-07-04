@@ -1,0 +1,38 @@
+{
+  "Index": {
+    "section_one": {
+      "title": "Commencez à vendre avec nous dès aujourd'hui",
+      "description": "Rejoignez notre communauté dynamique de vendeurs et élargissez votre portée sur le marché. Commencez votre aventure avec nous et profitez d'une expérience de vente fluide avec un soutien complet à chaque étape.",
+      "subtitle": "Produits phares"
+    },
+    "section_two": {
+      "title": "Atteignez vos objectifs : parlez à un professionnel",
+      "description": "Connectez-vous avec nos experts et obtenez des conseils personnalisés pour vous aider à atteindre vos objectifs commerciaux. Bénéficiez de stratégies et d'analyses sur mesure pour maximiser votre potentiel.",
+      "subtitle": "Choix des clients"
+    },
+    "button": "Voir tous les produits",
+    "section_three": {
+      "title": "Devenez partenaire dès aujourd'hui",
+      "description": "Collaborez avec nous et profitez de notre vaste réseau et de nos ressources. Profitez des avantages du partenariat et développez votre entreprise avec notre soutien.",
+      "button": "Inscrivez-vous et gagnez"
+    },
+    "newsletter": {
+      "title": "Abonnez-vous à notre newsletter",
+      "message": "Recevez les dernières nouvelles, articles et ressources directement dans votre boîte de réception chaque semaine.",
+      "button": "S'abonner",
+      "placeholder": "Entrez votre email"
+    }
+  },
+  "Header": {
+    "home": "Accueil",
+    "apply": "Postuler",
+    "shop": "Boutique",
+    "cart": "Panier",
+    "contact": "Contact"
+  },
+  "Footer": {
+    "text": "Redéfinir le paradigme du shopping grâce à une technologie avant-gardiste et des expériences centrées sur le client inégalées.",
+    "placeholder": "Entrez votre email",
+    "subscribe": "S'abonner"
+  }
+}

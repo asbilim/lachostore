@@ -24,8 +24,12 @@ export default function Main(props) {
   const [selectedImage, setSelectedImage] = useState(0);
   const breadcrumbItems = [
     { type: "link", label: "Home", href: "/" },
-    { type: "link", label: "Shop", href: "/products/" },
-    { type: "link", label: "Products", href: "/products/" },
+    { type: "link", label: "Shop", href: "/" + props.locale + "/products/" },
+    {
+      type: "link",
+      label: "Products",
+      href: "/" + props.locale + "/products/",
+    },
     { type: "text", label: props.product.name },
   ];
 
