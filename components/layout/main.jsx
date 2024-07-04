@@ -124,7 +124,7 @@ export default function ShopMain() {
         </div>
       </section>
       <div className="flex my-12 w-full max-w-6xl items-center">
-        <div className="flex w-full maw-w-5xl border-y py-6 justify-between items-center">
+        <div className="flex flex-col gap-2 md:flex-row w-full maw-w-5xl border-y py-6 justify-between items-start md:items-center">
           <div className="flex flex-col gap-3">
             <h2 className="font-bold">Subscribe to our newsletter</h2>
             <p className="text-sm">

@@ -3,6 +3,8 @@ import "./globals.css";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import PreHeader from "@/components/layout/preheader";
+import { CartProvider } from "@/providers/cart";
+import { ThemeProvider } from "@/providers/theme";
 
 const inter = Inte({
   subsets: ["latin"],
@@ -19,12 +21,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" dangerouslyAllowSVG={true}>
-      <body className={inter.className}>
-        <PreHeader />
-        <Header />
-        {children}
-        <Footer />
-      </body>
+      <CartProvider>
+        <body className={inter.className}>
+          <PreHeader />
+          <Header />
+          {children}
+          <Footer />
+        </body>
+      </CartProvider>
     </html>
   );
 }

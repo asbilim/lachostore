@@ -7,35 +7,23 @@ import { Badge } from "@/components/ui/badge";
 import { BreadcrumbComponent as Breadcrumb } from "@/components/reusables/breadcrumbs";
 import Link from "next/link";
 import slugify from "react-slugify";
+import { useCart } from "@/hooks/use-cart";
+import { FilterIcon, X } from "lucide-react";
 
 const ProductCard = ({ product }) => {
   const [isAdding, setIsAdding] = useState(false);
-  const [isInCart, setIsInCart] = useState(false);
+  const { cart, addToCart, removeFromCart } = useCart();
+  const isInCart = cart.some((item) => item.id === product.id);
 
   const handleAddToCart = async (e) => {
-    e.preventDefault(); // Prevent link navigation
-    setIsAdding(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Added to cart:", product);
-      setIsInCart(true);
-    } finally {
-      setIsAdding(false);
-    }
+    e.preventDefault();
+    const c = await addToCart(product);
   };
 
   const handleRemoveFromCart = async (e) => {
-    e.preventDefault(); // Prevent link navigation
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Removed from cart:", product);
-      setIsInCart(false);
-    } catch (error) {
-      console.error("Error removing from cart:", error);
-    }
+    e.preventDefault();
+    await removeFromCart(product.id);
   };
-
-  const slugify = (text) => text.toLowerCase().replace(/\s+/g, "-");
 
   return (
     <div className="w-full max-w-xs mx-auto mb-8">
@@ -90,14 +78,16 @@ const PriceDisplay = ({ price, salePrice }) => (
     {salePrice ? (
       <>
         <span className="text-green-900 font-bold">
-          ${salePrice.toFixed(2)}
+          {salePrice.toLocaleString()} FCFA
         </span>
         <span className="text-green-600 line-through ml-2">
-          ${price.toFixed(2)}
+          {price.toLocaleString()} FCFA
         </span>
       </>
     ) : (
-      <span className="text-green-900 font-bold">${price.toFixed(2)}</span>
+      <span className="text-green-900 font-bold">
+        {price.toLocaleString()} FCFA
+      </span>
     )}
   </div>
 );
@@ -163,7 +153,7 @@ export default function MainShop({ products }) {
   ];
   const [selectedFilters, setSelectedFilters] = useState({
     category: [],
-    price: { min: 0, max: 500 },
+    price: { min: 0, max: 100000 },
     color: [],
     size: [],
   });
@@ -214,8 +204,8 @@ export default function MainShop({ products }) {
         return false;
       }
       if (
-        product.price < selectedFilters.price.min * 100 ||
-        product.price > selectedFilters.price.max * 100
+        product.price < selectedFilters.price.min ||
+        product.price > selectedFilters.price.max
       ) {
         return false;
       }
@@ -238,27 +228,74 @@ export default function MainShop({ products }) {
   const productsToShow = filteredProducts.slice(0, displayCount);
 
   return (
-    <section className="grid md:grid-cols-[20rem_1fr] gap-8 p-4 md:p-8 sm:p-6">
-      <Filter
-        selectedFilters={selectedFilters}
-        handleFilterChange={handleFilterChange}
-        clearAllFilters={clearAllFilters}
-      />
-      <div className="flex flex-col gap-4">
-        <Breadcrumb items={breadcrumbItems} />
+    <section className="container mx-auto px-4 py-8">
+      {/* Hero Section */}
+      <div className="bg-green-100 rounded-lg p-8 mb-8 text-center">
+        <h1 className="text-4xl font-bold mb-4">
+          Bienvenue dans notre boutique
+        </h1>
+        <p className="text-xl mb-4">Découvrez notre dernière collection !</p>
+        <Button>Achetez maintenant</Button>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 gap-y-12">
-          {productsToShow.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+      {/* Filter and Product Grid */}
+      <div className="mb-6 flex justify-between items-center">
+        <Filter
+          selectedFilters={selectedFilters}
+          handleFilterChange={handleFilterChange}
+          clearAllFilters={clearAllFilters}
+        />
+        <span className="text-sm text-gray-500">
+          {filteredProducts.length} produits
+        </span>
+      </div>
 
-        {displayCount < filteredProducts.length && (
-          <div className="flex justify-center mt-6">
-            <Button onClick={loadMore}>Load More</Button>
-          </div>
+      {/* Selected Filters Display */}
+      <div className="flex flex-wrap gap-2 mb-4">
+        {Object.entries(selectedFilters).map(([key, value]) =>
+          Array.isArray(value)
+            ? value.map((item) => (
+                <Badge
+                  key={`${key}-${item}`}
+                  variant="secondary"
+                  className="px-2 py-1">
+                  {item}{" "}
+                  <X
+                    className="ml-1 h-3 w-3 cursor-pointer"
+                    onClick={() => handleFilterChange(key, item)}
+                  />
+                </Badge>
+              ))
+            : null
+        )}
+        {(selectedFilters.price.min > 0 ||
+          selectedFilters.price.max < 100000) && (
+          <Badge variant="secondary" className="px-2 py-1">
+            {selectedFilters.price.min.toLocaleString()} -{" "}
+            {selectedFilters.price.max.toLocaleString()} FCFA
+            <X
+              className="ml-1 h-3 w-3 cursor-pointer"
+              onClick={() =>
+                handleFilterChange("price", { min: 0, max: 100000 })
+              }
+            />
+          </Badge>
         )}
       </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {productsToShow.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
+
+      {displayCount < filteredProducts.length && (
+        <div className="flex justify-center mt-8">
+          <Button onClick={loadMore} variant="outline">
+            Charger plus
+          </Button>
+        </div>
+      )}
     </section>
   );
 }

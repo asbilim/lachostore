@@ -17,7 +17,6 @@ export function Content({ product }) {
   return (
     <>
       <Main product={product.product} />
-      <ProductDescription product={product.product} />
       <ProductRecommendation />
     </>
   );

@@ -1,189 +1,109 @@
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState } from "react";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Slider } from "@/components/ui/slider";
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
+import { Checkbox } from "@/components/ui/checkbox";
+import { FilterIcon, X } from "lucide-react";
 
-const ColorSwatch = ({ color, selected, onClick }) => (
-  <motion.div
-    whileHover={{ scale: 1.1 }}
-    whileTap={{ scale: 0.9 }}
-    onClick={onClick}
-    style={{
-      width: 20,
-      height: 20,
-      borderRadius: "50%",
-      backgroundColor: color,
-      border: selected ? "2px solid black" : "1px solid #ccc",
-      cursor: "pointer",
-    }}
-  />
-);
+const Filter = ({ selectedFilters, handleFilterChange, clearAllFilters }) => {
+  const [isOpen, setIsOpen] = useState(false);
 
-const SizeButton = ({ size, selected, onClick }) => (
-  <motion.button
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-    onClick={onClick}
-    style={{
-      padding: "4px 8px",
-      border: selected ? "2px solid black" : "1px solid #ccc",
-      borderRadius: 4,
-      backgroundColor: selected ? "black" : "white",
-      color: selected ? "white" : "black",
-      cursor: "pointer",
-      fontSize: "0.75rem",
-    }}>
-    {size}
-  </motion.button>
-);
+  const categories = ["Dresses", "Tops", "Bottoms", "Shoes", "Accessories"];
+  const colors = ["white", "black", "blue", "pink", "olive", "brown"];
+  const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
 
-export default function Filter({
-  selectedFilters,
-  handleFilterChange,
-  clearAllFilters,
-}) {
+  // Adjust price range for FCFA
+  const minPrice = 0;
+  const maxPrice = 100000; // Adjust based on your product range
+
   return (
-    <div className="bg-background md:bg-transparent  rounded-lg z-20  p-3 sm:p-4 sticky top-4 w-full max-w-xs sm:max-w-sm md:max-w-md">
-      <h2 className="text-xl font-bold mb-3">Filters</h2>
-      <Accordion type="single" collapsible className="space-y-2">
-        <AccordionItem value="category">
-          <AccordionTrigger className="text-base font-semibold">
-            Category
-          </AccordionTrigger>
-          <AccordionContent>
-            <div className="grid gap-2">
-              {["Dresses", "Tops", "Bottoms", "Shoes", "Accessories"].map(
-                (category) => (
-                  <Label
-                    key={category}
-                    className="flex items-center gap-2 font-normal text-sm">
-                    <Checkbox
-                      checked={selectedFilters.category.includes(category)}
-                      onCheckedChange={() =>
-                        handleFilterChange("category", category)
-                      }
-                    />
-                    {category}
-                  </Label>
-                )
-              )}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <PopoverTrigger asChild>
+        <Button variant="outline" className="w-full md:w-auto">
+          <FilterIcon className="mr-2 h-4 w-4" /> Filtres
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80">
+        <div className="space-y-4">
+          <div>
+            <h3 className="font-semibold mb-2">Catégorie</h3>
+            <select
+              className="w-full p-2 border rounded"
+              onChange={(e) => handleFilterChange("category", e.target.value)}
+              value={selectedFilters.category}>
+              <option value="">Toutes les catégories</option>
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        <AccordionItem value="price">
-          <AccordionTrigger className="text-base font-semibold">
-            Price
-          </AccordionTrigger>
-          <AccordionContent>
+          <div>
+            <h3 className="font-semibold mb-2">Couleur</h3>
+            <div className="flex flex-wrap gap-2">
+              {colors.map((color) => (
+                <button
+                  key={color}
+                  className={`w-6 h-6 rounded-full ${
+                    selectedFilters.color.includes(color)
+                      ? "ring-2 ring-offset-2 ring-black"
+                      : ""
+                  }`}
+                  style={{ backgroundColor: color }}
+                  onClick={() => handleFilterChange("color", color)}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h3 className="font-semibold mb-2">Fourchette de prix (FCFA)</h3>
             <Slider
-              min={0}
-              max={500}
-              step={10}
+              min={minPrice}
+              max={maxPrice}
+              step={500}
               value={[selectedFilters.price.min, selectedFilters.price.max]}
               onValueChange={(value) =>
                 handleFilterChange("price", { min: value[0], max: value[1] })
               }
             />
-            <div className="flex justify-between mt-2 text-xs text-muted-foreground">
-              <span>${selectedFilters.price.min}</span>
-              <span>${selectedFilters.price.max}</span>
+            <div className="flex justify-between mt-2 text-sm">
+              <span>{selectedFilters.price.min.toLocaleString()} FCFA</span>
+              <span>{selectedFilters.price.max.toLocaleString()} FCFA</span>
             </div>
-          </AccordionContent>
-        </AccordionItem>
+          </div>
 
-        <AccordionItem value="color">
-          <AccordionTrigger className="text-base font-semibold">
-            Color
-          </AccordionTrigger>
-          <AccordionContent>
-            <div className="grid grid-cols-6 gap-2">
-              {["white", "black", "blue", "pink", "olive", "brown"].map(
-                (color) => (
-                  <ColorSwatch
-                    key={color}
-                    color={color}
-                    selected={selectedFilters.color.includes(color)}
-                    onClick={() => handleFilterChange("color", color)}
-                  />
-                )
-              )}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem value="size">
-          <AccordionTrigger className="text-base font-semibold">
-            Size
-          </AccordionTrigger>
-          <AccordionContent>
+          <div>
+            <h3 className="font-semibold mb-2">Taille</h3>
             <div className="grid grid-cols-3 gap-2">
-              {["XS", "S", "M", "L", "XL", "XXL"].map((size) => (
-                <SizeButton
-                  key={size}
-                  size={size}
-                  selected={selectedFilters.size.includes(size)}
-                  onClick={() => handleFilterChange("size", size)}
-                />
+              {sizes.map((size) => (
+                <label key={size} className="flex items-center space-x-2">
+                  <Checkbox
+                    checked={selectedFilters.size.includes(size)}
+                    onCheckedChange={() => handleFilterChange("size", size)}
+                  />
+                  <span>{size}</span>
+                </label>
               ))}
             </div>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+          </div>
 
-      <div className="bg-muted rounded-lg p-3 mt-4">
-        <div className="flex justify-between items-center mb-2">
-          <h3 className="text-base font-semibold">Selected Filters</h3>
-          <Button variant="outline" size="sm" onClick={clearAllFilters}>
-            Clear All
+          <Button
+            onClick={clearAllFilters}
+            variant="outline"
+            className="w-full">
+            Effacer tous les filtres
           </Button>
         </div>
-        <AnimatePresence>
-          <motion.div className="flex flex-wrap gap-1">
-            {[
-              ...selectedFilters.category,
-              ...selectedFilters.color,
-              ...selectedFilters.size,
-            ].map((filter) => (
-              <Badge
-                key={filter}
-                variant="outline"
-                className="cursor-pointer text-xs"
-                onClick={() =>
-                  handleFilterChange(
-                    selectedFilters.category.includes(filter)
-                      ? "category"
-                      : selectedFilters.color.includes(filter)
-                      ? "color"
-                      : "size",
-                    filter
-                  )
-                }>
-                {filter}
-              </Badge>
-            ))}
-            {(selectedFilters.price.min > 0 ||
-              selectedFilters.price.max < 500) && (
-              <Badge
-                variant="outline"
-                className="cursor-pointer text-xs"
-                onClick={() =>
-                  handleFilterChange("price", { min: 0, max: 500 })
-                }>
-                ${selectedFilters.price.min} - ${selectedFilters.price.max}
-              </Badge>
-            )}
-          </motion.div>
-        </AnimatePresence>
-      </div>
-    </div>
+      </PopoverContent>
+    </Popover>
   );
-}
+};
+
+export default Filter;
