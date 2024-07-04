@@ -48,10 +48,10 @@ export default function Header({
 }) {
   const pathNames = [
     { name: home, path: "/" },
-    { name: shop, path: locale + "/products" },
-    { name: header_cart, path: locale + "/cart" },
-    { name: apply, path: locale + "/application" },
-    { name: contact, path: locale + "/contact" },
+    { name: shop, path: "/products" },
+    { name: header_cart, path: "/cart" },
+    { name: apply, path: "/application" },
+    { name: contact, path: "/contact" },
   ];
 
   const pathName = usePathname();
@@ -85,8 +85,9 @@ export default function Header({
             <NavigationMenuList>
               {pathNames.map((path) => (
                 <NavigationMenuItem key={path.name}>
-                  <NavigationMenuLink
+                  <Link
                     href={path.path}
+                    locale={locale}
                     className={`px-3 py-2 text-sm font-medium transition-colors hover:text-primary
                       ${
                         path.path === pathName
@@ -94,7 +95,7 @@ export default function Header({
                           : "text-muted-foreground"
                       }`}>
                     {path.name}
-                  </NavigationMenuLink>
+                  </Link>
                 </NavigationMenuItem>
               ))}
             </NavigationMenuList>
