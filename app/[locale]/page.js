@@ -1,10 +1,14 @@
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import ShopMain from "@/components/layout/main";
-export default function Home() {
+import { revalidateTag } from "next/cache";
+import { getProducts } from "@/server/get-products";
+
+export default async function Home() {
+  revalidateTag("products");
+  const products = await getProducts();
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center py-24 px-4 md:px-8 lg:px-12">
-      <ShopMain />
+      <ShopMain products={products} />
     </main>
   );
 }

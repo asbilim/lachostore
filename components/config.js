@@ -1,5 +1,5 @@
 export const defaultLocale = "en";
-export const locales = ["en", "de", "fr"];
+export const locales = ["en", "de", "fr", "tr"];
 
 export const pathnames = {
   "/": "/",
@@ -7,6 +7,7 @@ export const pathnames = {
     en: "/en/",
     de: "/de/",
     fr: "/fr/",
+    tr: "/tr/",
   },
 };
 

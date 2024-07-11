@@ -1,18 +1,21 @@
 import Main from "@/components/layout/product/main";
-import { ProductList } from "@/components/datas/products";
 import slugify from "react-slugify";
 import NoFound from "@/components/reusables/no-found";
-import ProductDescription from "@/components/layout/product/description";
 import ProductRecommendation from "@/components/reusables/recommandations";
-export default function Shop({ params }) {
+import { getProducts } from "@/server/get-products";
+import { revalidateTag } from "next/cache";
+
+export default async function Shop({ params }) {
+  revalidateTag("products");
+  const products = await getProducts();
   const { slug, locale } = params;
 
-  const product = findProductByName(ProductList, slug);
+  const product = findProductByName(products, slug);
 
   return (
     <div>
       {product.found ? (
-        <Content product={product} locale={locale} />
+        <Content products={products} product={product} locale={locale} />
       ) : (
         <NoFound />
       )}
@@ -20,11 +23,11 @@ export default function Shop({ params }) {
   );
 }
 
-export function Content({ product, locale }) {
+export function Content({ product, locale, products }) {
   return (
     <>
       <Main product={product.product} locale={locale} />
-      <ProductRecommendation />
+      <ProductRecommendation products={products} />
     </>
   );
 }

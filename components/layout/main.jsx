@@ -1,12 +1,13 @@
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { Link } from "../navigation";
-import { ProductList } from "../datas/products";
 import { Button } from "@/components/ui/button";
 import slugify from "react-slugify";
 import { Input } from "../ui/input";
 import { useTranslations } from "next-intl";
-export default function ShopMain() {
+import { revalidateTag } from "next/cache";
+export default function ShopMain({ products }) {
+  revalidateTag("products");
   const t = useTranslations("Index");
 
   return (
@@ -20,7 +21,7 @@ export default function ShopMain() {
       <div className="w-full flex flex-col max-w-6xl  gap-4">
         <h2 className="text-primary mb-12">{t("section_two.subtitle")}</h2>
         <div className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {ProductList.slice(0, 10).map((item) => {
+          {products.map((item) => {
             return (
               <Link
                 href={"/shop/product/" + slugify(item.name)}
@@ -28,11 +29,11 @@ export default function ShopMain() {
                 prefetch={true}>
                 <div className="flex flex-col gap-2 w-[150px] md:w-[250px]">
                   <Image
-                    src="https://placehold.co/600x400.png"
+                    src={item.image}
                     alt="banana"
                     width="600"
                     height={400}
-                    className="w-full"
+                    className="w-full h-48 object-contain"
                     dangerouslyAllowSVG={true}
                   />
                   <h3 className="text-sm truncate">{item.name}</h3>
@@ -59,7 +60,7 @@ export default function ShopMain() {
       <div className="w-full flex flex-col max-w-6xl  gap-4">
         <h2 className="text-primary mb-12">{t("section_two.subtitle")}</h2>
         <div className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {ProductList.slice(0, 8).map((item) => {
+          {products.map((item) => {
             return (
               <Link
                 href={"/shop/product/" + slugify(item.name)}
@@ -67,11 +68,11 @@ export default function ShopMain() {
                 prefetch={true}>
                 <div className="flex flex-col gap-2 w-[150px] md:w-[250px]">
                   <Image
-                    src="https://placehold.co/600x400.png"
+                    src={item.image}
                     alt="banana"
                     width="600"
                     height={400}
-                    className="w-full"
+                    className="w-full h-48 object-contain"
                     dangerouslyAllowSVG={true}
                   />
                   <h3 className="text-sm truncate">{item.name}</h3>
@@ -109,7 +110,7 @@ export default function ShopMain() {
             </Button>
           </div>
           <Image
-            src="https://placehold.co/400x600.png"
+            src="https://images.pexels.com/photos/3184294/pexels-photo-3184294.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
             width={400}
             height={400}
             alt="Hero Image"

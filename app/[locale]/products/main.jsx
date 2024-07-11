@@ -1,23 +1,36 @@
 "use client";
-import { useState, useMemo, useCallback } from "react";
-import Filter from "./filter";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
+import Filter from "./Filter";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { BreadcrumbComponent as Breadcrumb } from "@/components/reusables/breadcrumbs";
 import { Link } from "@/components/navigation";
 import slugify from "react-slugify";
 import { useCart } from "@/hooks/use-cart";
-import { FilterIcon, X } from "lucide-react";
-
+import HeroShop from "./hero";
 const ProductCard = ({ product, locale }) => {
   const [isAdding, setIsAdding] = useState(false);
-  const { cart, addToCart, removeFromCart } = useCart();
+  const { cart, addToCart, removeFromCart, error } = useCart();
   const isInCart = cart.some((item) => item.id === product.id);
+
+  if (error) {
+    alert(error);
+  }
 
   const handleAddToCart = async (e) => {
     e.preventDefault();
-    const c = await addToCart(product);
+    setIsAdding(true);
+    await addToCart({
+      id: product.id,
+      name: product.name,
+      image: product.image,
+      price: product.price,
+      sale_price: product.sale_price,
+      color: product.colors[0],
+      sizes: product?.sizes[0],
+      quantity: 1,
+    });
+    setIsAdding(false);
   };
 
   const handleRemoveFromCart = async (e) => {
@@ -31,10 +44,10 @@ const ProductCard = ({ product, locale }) => {
         <Link href={`/shop/product/${slugify(product.name)}`} locale={locale}>
           <div className="relative aspect-square w-full mb-4 overflow-hidden">
             <Image
-              src={product.image_url || "https://placehold.co/400x400.png"}
+              src={product.image || "https://placehold.co/400x400.png"}
               alt={product.name}
               layout="fill"
-              objectFit={product.is_transparent ? "contain" : "cover"}
+              objectFit={product.transparent_image ? "contain" : "cover"}
               className="grayscale hover:grayscale-0 transition-all duration-500"
             />
             {(product.is_new || product.is_sale || product.discount > 0) && (
@@ -43,7 +56,7 @@ const ProductCard = ({ product, locale }) => {
                   ? "New"
                   : product.is_sale
                   ? "Sale"
-                  : `${product.discount}% OFF`}
+                  : `${product.discount} FCFA OFF`}
               </div>
             )}
           </div>
@@ -52,160 +65,135 @@ const ProductCard = ({ product, locale }) => {
           {product.name}
         </h3>
         <div className="flex justify-between items-center mb-3">
-          <PriceDisplay price={product.price} salePrice={product.sale_price} />
+          <div className="font-mono">
+            {product.sale_price ? (
+              <>
+                <span className="text-green-900 font-bold">
+                  {parseFloat(product.sale_price).toLocaleString()} FCFA
+                </span>
+                <span className="text-green-600 line-through ml-2">
+                  {parseFloat(product.price).toLocaleString()} FCFA
+                </span>
+              </>
+            ) : (
+              <span className="text-green-900 font-bold">
+                {parseFloat(product.price).toLocaleString()} FCFA
+              </span>
+            )}
+          </div>
         </div>
         <p className="text-sm text-green-700 mb-4 line-clamp-2">
           {product.description}
         </p>
-        <ProductVariants
-          colors={product.colors}
-          sizes={product.sizes}
-          sizable={product.sizable}
-        />
-        <CartActions
-          isInCart={isInCart}
-          isAdding={isAdding}
-          onAdd={handleAddToCart}
-          onRemove={handleRemoveFromCart}
-        />
+        <div className="mb-4">
+          {product.colors && product.colors.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-2">
+              {product.colors.map((color) => (
+                <div
+                  key={color}
+                  className="w-4 h-4 rounded-full border border-green-300 cursor-pointer"
+                  style={{ backgroundColor: color.toLowerCase() }}
+                  title={color}
+                />
+              ))}
+            </div>
+          )}
+          {product.sizable && product.sizes && product.sizes.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {product.sizes.map((size) => (
+                <span
+                  key={size}
+                  className="text-xs border border-green-300 px-2 py-1">
+                  {size}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+        {!isInCart ? (
+          <Button
+            className="w-full bg-green-800 text-green-100 py-2 transition-colors duration-300 hover:bg-green-900 disabled:bg-green-400"
+            onClick={handleAddToCart}
+            disabled={isAdding}>
+            {isAdding ? "Adding..." : "Add to Cart"}
+          </Button>
+        ) : (
+          <div className="flex gap-2">
+            <button
+              className="flex-1 bg-green-400 text-green-100 py-2 transition-colors duration-300 hover:bg-green-800"
+              onClick={handleRemoveFromCart}>
+              Remove
+            </button>
+            <Link
+              href="/cart"
+              className="flex-1 bg-green-800 text-green-100 py-2 text-center transition-colors duration-300 hover:bg-green-900">
+              View Cart
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-const PriceDisplay = ({ price, salePrice }) => (
-  <div className="font-mono">
-    {salePrice ? (
-      <>
-        <span className="text-green-900 font-bold">
-          {salePrice.toLocaleString()} FCFA
-        </span>
-        <span className="text-green-600 line-through ml-2">
-          {price.toLocaleString()} FCFA
-        </span>
-      </>
-    ) : (
-      <span className="text-green-900 font-bold">
-        {price.toLocaleString()} FCFA
-      </span>
-    )}
-  </div>
-);
-
-const ProductVariants = ({ colors, sizes, sizable }) => (
-  <div className="mb-4">
-    {colors && colors.length > 0 && (
-      <div className="flex flex-wrap gap-2 mb-2">
-        {colors.map((color) => (
-          <div
-            key={color}
-            className="w-4 h-4 rounded-full border border-green-300 cursor-pointer"
-            style={{ backgroundColor: color }}
-            title={color}
-          />
-        ))}
-      </div>
-    )}
-    {sizable && sizes && sizes.length > 0 && (
-      <div className="flex flex-wrap gap-2">
-        {sizes.map((size) => (
-          <span
-            key={size}
-            className="text-xs border border-green-300 px-2 py-1">
-            {size}
-          </span>
-        ))}
-      </div>
-    )}
-  </div>
-);
-
-const CartActions = ({ isInCart, isAdding, onAdd, onRemove }) => (
-  <>
-    {!isInCart ? (
-      <Button
-        className="w-full bg-green-800 text-green-100 py-2 transition-colors duration-300 hover:bg-green-900 disabled:bg-green-400"
-        onClick={onAdd}
-        disabled={isAdding}>
-        {isAdding ? "Adding..." : "Add to Cart"}
-      </Button>
-    ) : (
-      <div className="flex gap-2">
-        <button
-          className="flex-1 bg-green-400 text-green-100 py-2 transition-colors duration-300 hover:bg-green-800"
-          onClick={onRemove}>
-          Remove
-        </button>
-        <Link
-          href="/cart"
-          className="flex-1 bg-green-800 text-green-100 py-2 text-center transition-colors duration-300 hover:bg-green-900">
-          View Cart
-        </Link>
-      </div>
-    )}
-  </>
-);
-
-export default function MainShop({ products, locale }) {
-  const breadcrumbItems = [
-    { type: "link", label: "Home", href: "/" + locale },
-    { type: "link", label: "Products", href: locale + "/products/" },
-  ];
+export default function MainShop({
+  products,
+  locale,
+  title,
+  description,
+  link_1,
+  link_2,
+  prod,
+  filters,
+}) {
   const [selectedFilters, setSelectedFilters] = useState({
     category: [],
-    price: { min: 0, max: 100000 },
+    price: { min: 0, max: 1000000 },
     color: [],
     size: [],
   });
   const [displayCount, setDisplayCount] = useState(10);
 
-  const handleFilterChange = useCallback((type, value) => {
+  const handleFilterChange = useCallback((type, value, checked = null) => {
     setSelectedFilters((prev) => {
-      switch (type) {
-        case "category":
-        case "color":
-        case "size":
-          return {
-            ...prev,
-            [type]: prev[type].includes(value)
-              ? prev[type].filter((item) => item !== value)
-              : [...prev[type], value],
-          };
-        case "price":
-          return {
-            ...prev,
-            price: value,
-          };
-        default:
-          return prev;
-      }
+      const newFilters = {
+        ...prev,
+        [type]:
+          checked !== null
+            ? checked
+              ? [...prev[type], value]
+              : prev[type].filter((item) => item !== value)
+            : prev[type].includes(value)
+            ? prev[type].filter((item) => item !== value)
+            : [...prev[type], value],
+      };
+      console.log("Updated filters:", newFilters);
+      return newFilters;
     });
   }, []);
 
   const clearAllFilters = useCallback(() => {
     setSelectedFilters({
       category: [],
-      price: { min: 0, max: 500 },
+      price: { min: 0, max: 1000000 },
       color: [],
       size: [],
     });
-  }, []);
-
-  const loadMore = useCallback(() => {
-    setDisplayCount((prevCount) => prevCount + 10);
+    console.log("Filters cleared");
   }, []);
 
   const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
+    const filtered = products.filter((product) => {
+      const category = product.name.split(" ")[0]; // Assuming first word is category
       if (
         selectedFilters.category.length > 0 &&
-        !selectedFilters.category.includes(product.category)
+        !selectedFilters.category.includes(category)
       ) {
         return false;
       }
       if (
-        product.price < selectedFilters.price.min ||
-        product.price > selectedFilters.price.max
+        parseFloat(product.price) < selectedFilters.price.min ||
+        parseFloat(product.price) > selectedFilters.price.max
       ) {
         return false;
       }
@@ -223,64 +211,42 @@ export default function MainShop({ products, locale }) {
       }
       return true;
     });
+    return filtered;
   }, [selectedFilters, products]);
 
-  const productsToShow = filteredProducts.slice(0, displayCount);
+  const productsToShow = useMemo(() => {
+    const slicedProducts = filteredProducts.slice(0, displayCount);
+    console.log("Products to show:", slicedProducts);
+    return slicedProducts;
+  }, [filteredProducts, displayCount]);
+
+  const loadMore = useCallback(() => {
+    setDisplayCount((prevCount) => {
+      const newCount = prevCount + 10;
+      console.log("New display count:", newCount);
+      return newCount;
+    });
+  }, []);
 
   return (
     <section className="container mx-auto px-4 py-8">
-      {/* Hero Section */}
-      <div className="bg-green-100 rounded-lg p-8 mb-8 text-center">
-        <h1 className="text-4xl font-bold mb-4">
-          Bienvenue dans notre boutique
-        </h1>
-        <p className="text-xl mb-4">Découvrez notre dernière collection !</p>
-        <Button>Achetez maintenant</Button>
-      </div>
-
-      {/* Filter and Product Grid */}
-      <div className="mb-6 flex justify-between items-center">
+      <HeroShop
+        title={title}
+        description={description}
+        link_1={link_1}
+        link_2={link_2}
+      />
+      <div className="mb-6 flex gap-3 justify-between items-center">
         <Filter
+          products={products}
           selectedFilters={selectedFilters}
           handleFilterChange={handleFilterChange}
           clearAllFilters={clearAllFilters}
+          filters={filters}
         />
-        <span className="text-sm text-gray-500">
-          {filteredProducts.length} produits
+        <span className="text-sm text-gray-500 text-center">
+          {filteredProducts.length} {prod}
         </span>
-      </div>
-
-      {/* Selected Filters Display */}
-      <div className="flex flex-wrap gap-2 mb-4">
-        {Object.entries(selectedFilters).map(([key, value]) =>
-          Array.isArray(value)
-            ? value.map((item) => (
-                <Badge
-                  key={`${key}-${item}`}
-                  variant="secondary"
-                  className="px-2 py-1">
-                  {item}{" "}
-                  <X
-                    className="ml-1 h-3 w-3 cursor-pointer"
-                    onClick={() => handleFilterChange(key, item)}
-                  />
-                </Badge>
-              ))
-            : null
-        )}
-        {(selectedFilters.price.min > 0 ||
-          selectedFilters.price.max < 100000) && (
-          <Badge variant="secondary" className="px-2 py-1">
-            {selectedFilters.price.min.toLocaleString()} -{" "}
-            {selectedFilters.price.max.toLocaleString()} FCFA
-            <X
-              className="ml-1 h-3 w-3 cursor-pointer"
-              onClick={() =>
-                handleFilterChange("price", { min: 0, max: 100000 })
-              }
-            />
-          </Badge>
-        )}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

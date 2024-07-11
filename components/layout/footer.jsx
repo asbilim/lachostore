@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import { Link } from "../navigation";
 import { ChevronDown, Globe, ArrowRight } from "lucide-react";
 import { usePathname } from "../navigation";
@@ -20,30 +19,26 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-const footerSections = [
-  {
-    title: "Company",
-    links: ["About", "Careers", "Brand Center", "Blog"],
-  },
-  {
-    title: "Help Center",
-    links: ["Discord Server", "Twitter", "Facebook", "Contact Us"],
-  },
-  {
-    title: "Legal",
-    links: ["Privacy Policy", "Licensing", "Terms"],
-  },
-];
-
 const languages = [
   { code: "en", name: "English" },
   { code: "fr", name: "Français" },
   { code: "de", name: "Deutsche" },
+  { code: "tr", name: "Turkish" },
 ];
 
-export default function Footer({ params, locale }) {
-  const [language, setLanguage] = useState(languages[0]);
+export default function Footer({
+  locale,
+  text,
+  placeholder,
+  subscribe,
+  link_1,
+  link_2,
+  link_3,
+  rights,
+}) {
   const pathname = usePathname();
+  const currentLanguage =
+    languages.find((lang) => lang.code === locale) || languages[0];
 
   return (
     <footer className="bg-background">
@@ -58,18 +53,15 @@ export default function Footer({ params, locale }) {
               <span className="sr-only">Lachoshop</span>
               <div className="h-8 w-auto">{/* Add your logo SVG here */}</div>
             </Link>
-            <p className="text-sm font-light max-w-md">
-              Redefining the shopping paradigm through avant-garde technology
-              and unparalleled customer-centric experiences.
-            </p>
+            <p className="text-sm font-light max-w-md">{text}</p>
             <div className="flex items-center space-x-4">
               <Input
                 type="email"
-                placeholder="Enter your email"
+                placeholder={placeholder}
                 className="max-w-xs"
               />
               <Button>
-                Subscribe
+                {subscribe}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
@@ -77,23 +69,25 @@ export default function Footer({ params, locale }) {
           <div className="md:pl-8">
             <ScrollArea className="h-[300px] md:h-auto">
               <Accordion type="multiple" className="w-full">
-                {footerSections.map((section, index) => (
+                {[link_1, link_2, link_3].map((section, index) => (
                   <AccordionItem value={`item-${index}`} key={index}>
                     <AccordionTrigger className="text-lg font-semibold">
                       {section.title}
                     </AccordionTrigger>
                     <AccordionContent>
                       <ul className="space-y-2">
-                        {section.links.map((link, linkIndex) => (
-                          <li key={linkIndex}>
-                            <Link
-                              href="#"
-                              className="text-sm hover:underline"
-                              prefetch={false}>
-                              {link}
-                            </Link>
-                          </li>
-                        ))}
+                        {Object.values(section)
+                          .slice(1)
+                          .map((link, linkIndex) => (
+                            <li key={linkIndex}>
+                              <Link
+                                href="#"
+                                className="text-sm hover:underline"
+                                prefetch={false}>
+                                {link}
+                              </Link>
+                            </li>
+                          ))}
                       </ul>
                     </AccordionContent>
                   </AccordionItem>
@@ -104,25 +98,26 @@ export default function Footer({ params, locale }) {
         </div>
         <Separator className="my-8" />
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <p className="text-sm font-light">
-            &copy; 2024 Lachoshop. All rights reserved.
-          </p>
+          <p className="text-sm font-light">{rights}</p>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm">
                 <Globe className="mr-2 h-4 w-4" />
-                {language.name}
+                {currentLanguage.name}
                 <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               {languages.map((lang) => (
-                <DropdownMenuItem
-                  key={lang.code}
-                  onSelect={() => setLanguage(lang)}>
-                  <Link href={pathname} locale={lang.code} prefetch={false}>
+                <DropdownMenuItem key={lang.code}>
+                  <a
+                    href={`/${lang.code}${pathname}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.location.href = `/${lang.code}${pathname}`;
+                    }}>
                     {lang.name}
-                  </Link>
+                  </a>
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>

@@ -1,10 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/providers/cart";
 import {
   Card,
@@ -19,7 +17,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -33,73 +30,61 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Image from "next/image";
+import { Separator } from "@/components/ui/separator";
 
-const formSchema = z.object({
-  fullName: z
-    .string()
-    .min(2, { message: "Name must be at least 2 characters." }),
-  email: z.string().email({ message: "Invalid email address." }),
-  address: z
-    .string()
-    .min(5, { message: "Address must be at least 5 characters." }),
-  city: z.string().min(2, { message: "City must be at least 2 characters." }),
-  postalCode: z
-    .string()
-    .min(3, { message: "Postal code must be at least 3 characters." }),
-  paymentMethod: z.enum(["card", "orange", "mtn"]),
-  phoneNumber: z
-    .string()
-    .optional()
-    .refine((val) => !val || /^\d{9,}$/.test(val), {
-      message: "Phone number must be at least 9 digits.",
-    }),
-  cardNumber: z
-    .string()
-    .optional()
-    .refine((val) => !val || /^\d{16}$/.test(val), {
-      message: "Card number must be 16 digits.",
-    }),
-  cardExpiry: z
-    .string()
-    .optional()
-    .refine((val) => !val || /^(0[1-9]|1[0-2])\/\d{2}$/.test(val), {
-      message: "Expiry date must be in MM/YY format.",
-    }),
-  cardCVC: z
-    .string()
-    .optional()
-    .refine((val) => !val || /^\d{3,4}$/.test(val), {
-      message: "CVC must be 3 or 4 digits.",
-    }),
-});
+export const CheckoutPage = ({
+  checkout,
+  cart_text,
+  description,
+  empty,
+  empty_description,
+  subtotal_text,
+  shipping_text,
+  total_text,
+  button,
+  shipping_payment,
+  shipping_description,
+  last_button,
+  validationMessages,
+  labels,
+}) => {
+  const { cart, updateQuantity, removeFromCart, totalItems, totalPrice } =
+    useCart();
 
-export default function CheckoutPage() {
-  const [cart, setCart] = useState([
-    {
-      id: 1,
-      name: "Cozy Blanket",
-      price: 29.99,
-      quantity: 2,
-      image: "/placeholder.svg",
-    },
-    {
-      id: 2,
-      name: "Autumn Mug",
-      price: 12.99,
-      quantity: 1,
-      image: "/placeholder.svg",
-    },
-    {
-      id: 3,
-      name: "Fall Fragrance Candle",
-      price: 16.99,
-      quantity: 1,
-      image: "/placeholder.svg",
-    },
-  ]);
+  const formSchema = z.object({
+    fullName: z.string().min(2, { message: validationMessages.fullName }),
+    email: z.string().email({ message: validationMessages.email }),
+    address: z.string().min(5, { message: validationMessages.address }),
+    city: z.string().min(2, { message: validationMessages.city }),
+    postalCode: z.string().min(3, { message: validationMessages.postalCode }),
+    paymentMethod: z.enum(["card", "orange", "mtn"]),
+    phoneNumber: z
+      .string()
+      .optional()
+      .refine((val) => !val || /^\d{9,}$/.test(val), {
+        message: validationMessages.phoneNumber,
+      }),
+    cardNumber: z
+      .string()
+      .optional()
+      .refine((val) => !val || /^\d{16}$/.test(val), {
+        message: validationMessages.cardNumber,
+      }),
+    cardExpiry: z
+      .string()
+      .optional()
+      .refine((val) => !val || /^(0[1-9]|1[0-2])\/\d{2}$/.test(val), {
+        message: validationMessages.cardExpiry,
+      }),
+    cardCVC: z
+      .string()
+      .optional()
+      .refine((val) => !val || /^\d{3,4}$/.test(val), {
+        message: validationMessages.cardCVC,
+      }),
+  });
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -125,104 +110,106 @@ export default function CheckoutPage() {
   };
 
   const handleQuantityChange = (id, newQuantity) => {
-    setCart(
-      cart.map((item) =>
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
+    updateQuantity(id, newQuantity);
   };
 
   const handleRemoveItem = (id) => {
-    setCart(cart.filter((item) => item.id !== id));
+    removeFromCart(id);
   };
 
-  const subtotal = cart.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
+  const subtotal = totalPrice;
   const shipping = 5.99;
   const total = subtotal + shipping;
 
   return (
-    <div className="mx-auto overflow-x-hidden flex items-center w-full justify-center flex-col  py-8">
-      <h1 className="text-3xl font-bold mb-8">Checkout</h1>
+    <div className="mx-auto overflow-x-hidden flex items-center w-full justify-center flex-col py-8">
+      <h1 className="text-3xl font-bold mb-8">{checkout}</h1>
       <div className="grid lg:grid-cols-2 gap-8 px-4 w-full max-w-7xl">
         <Card>
           <CardHeader>
-            <CardTitle>Your Cart</CardTitle>
-            <CardDescription>Review and modify your items</CardDescription>
+            <CardTitle>{cart_text}</CardTitle>
+            <CardDescription>{description}</CardDescription>
           </CardHeader>
           <CardContent>
-            <ScrollArea className="h-[300px] rounded-md border p-4">
-              {cart.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex items-center justify-between py-4">
-                  <div className="flex items-center space-x-4">
-                    <Image
-                      src={"https://placehold.co/400x600.png"}
-                      alt={item.name}
-                      className="w-16 h-16 rounded-md object-cover"
-                      width={500}
-                      height={500}
-                    />
-                    <div>
-                      <h3 className="font-semibold">{item.name}</h3>
-                      <p className="text-sm text-gray-500">
-                        ${item.price.toFixed(2)}
-                      </p>
+            {cart.length === 0 ? (
+              <div className="text-center py-8">
+                <h3 className="text-xl font-semibold mb-2">{empty}</h3>
+                <p className="text-gray-500">{empty_description}</p>
+              </div>
+            ) : (
+              <ScrollArea className="h-[300px] rounded-md border p-4">
+                {cart.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between py-4">
+                    <div className="flex items-center space-x-4">
+                      <Image
+                        src={item.image || "https://placehold.co/400x600.png"}
+                        alt={item.name}
+                        className="w-16 h-16 rounded-md object-cover"
+                        width={500}
+                        height={500}
+                      />
+                      <div>
+                        <h3 className="font-semibold">{item.name}</h3>
+                        <p className="text-sm text-gray-500">
+                          FCFA {parseFloat(item.price).toFixed(2)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Select
+                        value={item.quantity.toString()}
+                        onValueChange={(value) =>
+                          handleQuantityChange(item.id, parseInt(value, 10))
+                        }>
+                        <SelectTrigger className="w-16">
+                          <SelectValue>{item.quantity}</SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          {[1, 2, 3, 4, 5].map((num) => (
+                            <SelectItem key={num} value={num.toString()}>
+                              {num}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handleRemoveItem(item.id)}>
+                        <TrashIcon className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Select
-                      value={item.quantity.toString()}
-                      onValueChange={(value) =>
-                        handleQuantityChange(item.id, parseInt(value, 10))
-                      }>
-                      <SelectTrigger className="w-16">
-                        <SelectValue>{item.quantity}</SelectValue>
-                      </SelectTrigger>
-                      <SelectContent>
-                        {[1, 2, 3, 4, 5].map((num) => (
-                          <SelectItem key={num} value={num.toString()}>
-                            {num}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => handleRemoveItem(item.id)}>
-                      <TrashIcon className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </ScrollArea>
+                ))}
+              </ScrollArea>
+            )}
           </CardContent>
           <CardFooter className="flex justify-between">
             <div>
               <p className="text-sm text-gray-500">
-                Subtotal: ${subtotal.toFixed(2)}
+                {subtotal_text}: XAF {parseFloat(subtotal).toFixed(2)}
               </p>
               <p className="text-sm text-gray-500">
-                Shipping: ${shipping.toFixed(2)}
+                {shipping_text}: XAF {parseFloat(shipping).toFixed(2)}
               </p>
-              <p className="font-semibold">Total: ${total.toFixed(2)}</p>
+              <p className="font-semibold">
+                {total_text}: XAF {parseFloat(total).toFixed(2)}
+              </p>
             </div>
-            <Button onClick={() => form.handleSubmit(onSubmit)()}>
-              Place Order
+            <Button
+              onClick={() => form.handleSubmit(onSubmit)()}
+              disabled={cart.length === 0}>
+              {button}
             </Button>
           </CardFooter>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Shipping & Payment</CardTitle>
-            <CardDescription>
-              Enter your details to complete the order
-            </CardDescription>
+            <CardTitle>{shipping_payment}</CardTitle>
+            <CardDescription>{shipping_description}</CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
@@ -234,7 +221,7 @@ export default function CheckoutPage() {
                   name="fullName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Full Name</FormLabel>
+                      <FormLabel>{labels.fullName}</FormLabel>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
@@ -247,7 +234,7 @@ export default function CheckoutPage() {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>{labels.email}</FormLabel>
                       <FormControl>
                         <Input {...field} type="email" />
                       </FormControl>
@@ -260,7 +247,7 @@ export default function CheckoutPage() {
                   name="address"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Address</FormLabel>
+                      <FormLabel>{labels.address}</FormLabel>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
@@ -274,7 +261,7 @@ export default function CheckoutPage() {
                     name="city"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>City</FormLabel>
+                        <FormLabel>{labels.city}</FormLabel>
                         <FormControl>
                           <Input {...field} />
                         </FormControl>
@@ -287,7 +274,7 @@ export default function CheckoutPage() {
                     name="postalCode"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Postal Code</FormLabel>
+                        <FormLabel>{labels.postalCode}</FormLabel>
                         <FormControl>
                           <Input {...field} />
                         </FormControl>
@@ -302,7 +289,7 @@ export default function CheckoutPage() {
                   name="paymentMethod"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Payment Method</FormLabel>
+                      <FormLabel>{labels.paymentMethod}</FormLabel>
                       <FormControl>
                         <RadioGroup
                           onValueChange={field.onChange}
@@ -313,7 +300,7 @@ export default function CheckoutPage() {
                               <RadioGroupItem value="card" />
                             </FormControl>
                             <FormLabel className="font-normal">
-                              Credit Card
+                              {labels.creditCard}
                             </FormLabel>
                           </FormItem>
                           <FormItem className="flex items-center space-x-3 space-y-0">
@@ -321,7 +308,7 @@ export default function CheckoutPage() {
                               <RadioGroupItem value="orange" />
                             </FormControl>
                             <FormLabel className="font-normal">
-                              Orange Money
+                              {labels.orangeMoney}
                             </FormLabel>
                           </FormItem>
                           <FormItem className="flex items-center space-x-3 space-y-0">
@@ -329,7 +316,7 @@ export default function CheckoutPage() {
                               <RadioGroupItem value="mtn" />
                             </FormControl>
                             <FormLabel className="font-normal">
-                              MTN Mobile Money
+                              {labels.mtnMobileMoney}
                             </FormLabel>
                           </FormItem>
                         </RadioGroup>
@@ -345,7 +332,7 @@ export default function CheckoutPage() {
                       name="cardNumber"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Card Number</FormLabel>
+                          <FormLabel>{labels.cardNumber}</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -362,7 +349,7 @@ export default function CheckoutPage() {
                         name="cardExpiry"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Expiry Date</FormLabel>
+                            <FormLabel>{labels.cardExpiry}</FormLabel>
                             <FormControl>
                               <Input {...field} placeholder="MM/YY" />
                             </FormControl>
@@ -375,7 +362,7 @@ export default function CheckoutPage() {
                         name="cardCVC"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>CVC</FormLabel>
+                            <FormLabel>{labels.cardCVC}</FormLabel>
                             <FormControl>
                               <Input {...field} placeholder="123" />
                             </FormControl>
@@ -393,11 +380,11 @@ export default function CheckoutPage() {
                     name="phoneNumber"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Phone Number</FormLabel>
+                        <FormLabel>{labels.phoneNumber}</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="Enter your phone number"
+                            placeholder={labels.phoneNumberPlaceholder}
                           />
                         </FormControl>
                         <FormMessage />
@@ -406,7 +393,7 @@ export default function CheckoutPage() {
                   />
                 )}
                 <Button type="submit" className="w-full">
-                  Complete Order
+                  {last_button}
                 </Button>
               </form>
             </Form>
@@ -415,7 +402,7 @@ export default function CheckoutPage() {
       </div>
     </div>
   );
-}
+};
 
 function TrashIcon(props) {
   return (
@@ -436,3 +423,5 @@ function TrashIcon(props) {
     </svg>
   );
 }
+
+export default CheckoutPage;
