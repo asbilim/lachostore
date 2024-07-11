@@ -99,5 +99,31 @@
     "labels_cardCVC": "CVC",
     "labels_phoneNumber": "Telefonnummer",
     "labels_phoneNumberPlaceholder": "Geben Sie Ihre Telefonnummer ein"
+  },
+  "Product": {
+    "description": "Beschreibung",
+    "specifications": "Spezifikationen",
+    "reviews": "Bewertungen",
+    "write_review": "Eine Bewertung schreiben",
+    "name": "Name",
+    "email": "E-Mail",
+    "rating": "Bewertung",
+    "review": "Bewertung",
+    "submit_review": "Bewertung absenden",
+    "product_added": "Produkt zum Warenkorb hinzugefügt",
+    "product_added_message": "wurde Ihrem Warenkorb hinzugefügt.",
+    "free_shipping": "Kostenloser Versand ab 50.000 FCFA",
+    "return_policy": "30-tägige Rückgaberecht",
+    "see_all_reviews": "Alle Bewertungen ansehen",
+    "price": "Preis",
+    "color": "Farbe",
+    "size": "Größe",
+    "quantity": "Menge",
+    "available": "verfügbar",
+    "stock": "Lagerbestand",
+    "low": "Niedrig",
+    "medium": "Mittel",
+    "high": "Hoch",
+    "add_to_cart": ""
   }
 }

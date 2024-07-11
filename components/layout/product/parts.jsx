@@ -19,7 +19,7 @@ import { Progress } from "@/components/ui/progress";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-const ProductDetails = ({ product }) => {
+const ProductDetails = ({ product, translations }) => {
   const [activeTab, setActiveTab] = useState("description");
   const {
     register,
@@ -40,22 +40,22 @@ const ProductDetails = ({ product }) => {
         <TabsList className="grid w-full grid-cols-3 mb-8">
           <TabsTrigger value="description" className="flex items-center gap-2">
             <Package className="w-4 h-4" />
-            Description
+            {translations.description}
           </TabsTrigger>
           <TabsTrigger
             value="specifications"
             className="flex items-center gap-2">
             <Clipboard className="w-4 h-4" />
-            Specifications
+            {translations.specifications}
           </TabsTrigger>
           <TabsTrigger value="reviews" className="flex items-center gap-2">
             <MessageSquare className="w-4 h-4" />
-            Reviews
+            {translations.reviews}
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="description" className="mt-6">
-          <Description product={product} />
+          <Description product={product} translations={translations} />
         </TabsContent>
 
         <TabsContent value="specifications" className="mt-6">
@@ -76,12 +76,14 @@ const ProductDetails = ({ product }) => {
   );
 };
 
-const Description = ({ product }) => {
+const Description = ({ product, translations }) => {
   const features = product?.features || ["new", "rare", "styled", "unnique"];
   return (
     <Card>
       <CardContent className="p-6">
-        <h3 className="text-2xl font-semibold mb-4">Product Description</h3>
+        <h3 className="text-2xl font-semibold mb-4">
+          {translations.description}
+        </h3>
         <p className="text-gray-700 leading-relaxed">
           {product.longDescription}
         </p>

@@ -28,6 +28,8 @@ export default function Main(props) {
   const { cart, addToCart, removeFromCart } = useCart();
   const { toast } = useToast();
 
+  const translations = props.translations;
+
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedColor, setSelectedColor] = useState(props.product.colors[0]);
   const [selectedSize, setSelectedSize] = useState(props.product.sizes[0]);
@@ -241,7 +243,7 @@ export default function Main(props) {
             {props.product.colors && props.product.colors.length > 0 && (
               <div className="grid gap-2">
                 <Label htmlFor="color" className="text-base">
-                  Color
+                  {translations.color}
                 </Label>
                 <RadioGroup
                   id="color"
@@ -263,7 +265,7 @@ export default function Main(props) {
             {props.product.sizes && props.product.sizes.length > 0 && (
               <div className="grid gap-2">
                 <Label htmlFor="size" className="text-base">
-                  Size
+                  {translations.size}
                 </Label>
                 <RadioGroup
                   id="size"
@@ -284,7 +286,7 @@ export default function Main(props) {
             )}
             <div className="grid gap-2">
               <Label htmlFor="quantity" className="text-base">
-                Quantity
+                {translations.quantity}
               </Label>
               <div className="flex items-center gap-4">
                 <Select
@@ -307,11 +309,11 @@ export default function Main(props) {
                   </SelectContent>
                 </Select>
                 <span className="text-sm text-gray-600">
-                  {props.product.stock} items available
+                  {props.product.stock} {translations.available}
                 </span>
                 <div className={`w-4 h-4 rounded-full ${stockColor()}`}></div>
                 <span className="text-sm text-gray-600">
-                  Stock: {stockLevel()}
+                  {translations.stock}: {stockLevel()}
                 </span>
               </div>
             </div>
@@ -344,16 +346,16 @@ export default function Main(props) {
             className="flex flex-col sm:flex-row justify-between items-center text-sm text-gray-600">
             <div className="flex items-center gap-2 mb-2 sm:mb-0">
               <TruckIcon className="w-5 h-5" />
-              Free shipping over FCFA 50,000
+              {translations.free_shipping}
             </div>
             <div className="flex items-center gap-2">
               <ShieldCheck className="w-5 h-5" />
-              30-day return policy
+              {translations.return_policy}
             </div>
           </motion.div>
         </motion.div>
       </div>
-      <ProductDetails product={props.product} />
+      <ProductDetails product={props.product} translations={translations} />
     </motion.div>
   );
 }
