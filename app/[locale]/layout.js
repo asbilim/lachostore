@@ -6,6 +6,7 @@ import PreHeader from "@/components/layout/preheader";
 import { CartProvider } from "@/providers/cart";
 import { getTranslations } from "next-intl/server";
 import FloatingChat from "@/components/chats/floating";
+import { keepServerAwake } from "@/components/reusables/ping";
 
 const inter = Inte({
   subsets: ["latin"],
@@ -23,6 +24,7 @@ export default async function RootLayout({ children, params }) {
   const { locale } = params;
   const tHeader = await getTranslations("Header");
   const tFooter = await getTranslations("Footer");
+  keepServerAwake(process.env.BACKEND_URL);
 
   return (
     <html lang={locale} dangerouslyAllowSVG={true}>

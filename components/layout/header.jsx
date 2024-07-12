@@ -51,7 +51,7 @@ export default function Header({
     { name: shop, path: "/products" },
     { name: header_cart, path: "/cart" },
     { name: apply, path: "/application" },
-    { name: contact, path: "/contact" },
+    { name: contact, path: "https://lachofit.com/contact" },
   ];
 
   const pathName = usePathname();

@@ -100,6 +100,7 @@ export const CheckoutPage = ({
       cardExpiry: "",
       cardCVC: "",
     },
+    mode: "onChange",
   });
 
   const watchPaymentMethod = form.watch("paymentMethod");

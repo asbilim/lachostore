@@ -25,6 +25,11 @@ const nextConfig = {
         hostname: "images.pexels.com",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "27ac4fdf78a8fc9b858b479e7a3d46d4.r2.cloudflarestorage.com",
+        port: "",
+      },
     ],
   },
 };
