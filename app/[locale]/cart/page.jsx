@@ -1,4 +1,4 @@
-import CheckoutPage from "./forms";
+import CheckoutPage from "../../../components/forms";
 import { getTranslations } from "next-intl/server";
 
 export default async function Cart() {

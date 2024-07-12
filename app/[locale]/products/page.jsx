@@ -1,5 +1,5 @@
 import { revalidateTag } from "next/cache";
-import MainShop from "./main";
+import MainShop from "../../../components/main";
 import { getProducts } from "@/server/get-products";
 import { getTranslations } from "next-intl/server";
 export default async function Shop({ params }) {

@@ -1,9 +1,8 @@
 "use client";
-import React, { useState, useMemo, useCallback, useEffect } from "react";
-import Filter from "./Filter";
+import React, { useState, useMemo, useCallback } from "react";
+import Filter from "./layout/product/filter";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
 import { Link } from "@/components/navigation";
 import slugify from "react-slugify";
 import { useCart } from "@/hooks/use-cart";
