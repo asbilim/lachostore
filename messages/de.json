@@ -1,0 +1,129 @@
+{
+  "Index": {
+    "section_one": {
+      "title": "Starten Sie noch heute den Verkauf mit uns",
+      "description": "Treten Sie unserer dynamischen Verkäufer-Community bei und erweitern Sie Ihre Reichweite auf dem Markt. Beginnen Sie Ihre Reise mit uns und erleben Sie reibungslosen Verkauf mit umfassender Unterstützung bei jedem Schritt.",
+      "subtitle": "Vorgestellte Produkte"
+    },
+    "section_two": {
+      "title": "Erreichen Sie Ihre Ziele: Sprechen Sie mit einem Profi",
+      "description": "Verbinden Sie sich mit unseren Experten für maßgeschneiderte Beratung, um Ihre Geschäftsziele zu erreichen. Profitieren Sie von maßgeschneiderten Strategien und Erkenntnissen, um Ihr Potenzial zu maximieren.",
+      "subtitle": "Kundenauswahl"
+    },
+    "button": "Alle Produkte anzeigen",
+    "section_three": {
+      "title": "Werden Sie noch heute Partner",
+      "description": "Arbeiten Sie mit uns zusammen und profitieren Sie von unserem umfangreichen Netzwerk und unseren Ressourcen. Genießen Sie die Vorteile der Partnerschaft und erweitern Sie Ihr Geschäft mit unserer Unterstützung.",
+      "button": "Registrieren und verdienen"
+    },
+    "newsletter": {
+      "title": "Abonnieren Sie unseren Newsletter",
+      "message": "Erhalten Sie die neuesten Nachrichten, Artikel und Ressourcen wöchentlich in Ihrem Posteingang.",
+      "button": "Abonnieren",
+      "placeholder": "Geben Sie Ihre E-Mail-Adresse ein"
+    }
+  },
+  "Header": {
+    "home": "Startseite",
+    "apply": "Bewerben",
+    "shop": "Shop",
+    "cart": "Warenkorb",
+    "contact": "Kontakt"
+  },
+  "Footer": {
+    "text": "Neudefinition des Einkaufsparadigmas durch zukunftsweisende Technologie und unübertroffene kundenorientierte Erlebnisse.",
+    "placeholder": "Geben Sie Ihre E-Mail-Adresse ein",
+    "subscribe": "Abonnieren",
+    "link_1": {
+      "title": "Unternehmen",
+      "about": "Über uns",
+      "careers": "Karriere",
+      "brand": "Markenzentrum",
+      "blog": "Blog"
+    },
+    "link_2": {
+      "title": "Hilfecenter",
+      "discord": "Discord-Server",
+      "twitter": "X Twitter",
+      "facebook": "Facebook",
+      "contact": "Kontaktieren Sie uns"
+    },
+    "link_3": {
+      "title": "Datenschutzrichtlinie",
+      "licensing": "Lizenzierung",
+      "terms": "Bedingungen"
+    },
+    "rights": "© 2024 Lachoshop. Alle Rechte vorbehalten."
+  },
+  "Shop": {
+    "title": "Bringen Sie Ihr Unternehmen auf die nächste Stufe",
+    "description": "Entfesseln Sie die Kraft von benutzerdefinierten Shops, Promo-Codes, Empfehlungslinks und Expertenberatung zur Ernährung.",
+    "button_1": "Jetzt beginnen",
+    "button_2": "Mehr erfahren",
+    "filter": "Filtern",
+    "products": "Produkt(e)"
+  },
+  "Cart": {
+    "checkout": "Zur Kasse",
+    "your_cart": "Ihr Warenkorb",
+    "description": "Überprüfen und ändern Sie Ihren Warenkorb",
+    "empty": "Ihr Warenkorb ist leer",
+    "empty_description": "Fügen Sie einige Artikel zu Ihrem Warenkorb hinzu, um fortzufahren",
+    "subtotal": "Zwischensumme",
+    "shipping": "Versand",
+    "total": "Gesamt",
+    "button": "Bestellung aufgeben",
+    "shipping_payment": "Versand & Zahlung",
+    "shipping_description": "Geben Sie Ihre Daten ein, um die Bestellung abzuschließen",
+    "last_button": "Bestellung abschließen",
+    "validation_fullName": "Der Name muss mindestens 2 Zeichen lang sein.",
+    "validation_email": "Ungültige E-Mail-Adresse.",
+    "validation_address": "Die Adresse muss mindestens 5 Zeichen lang sein.",
+    "validation_city": "Die Stadt muss mindestens 2 Zeichen lang sein.",
+    "validation_postalCode": "Die Postleitzahl muss mindestens 3 Zeichen lang sein.",
+    "validation_phoneNumber": "Die Telefonnummer muss mindestens 9 Ziffern lang sein.",
+    "validation_cardNumber": "Die Kartennummer muss 16 Ziffern lang sein.",
+    "validation_cardExpiry": "Das Ablaufdatum muss im Format MM/JJ vorliegen.",
+    "validation_cardCVC": "Der CVC muss 3 oder 4 Ziffern lang sein.",
+    "labels_fullName": "Vollständiger Name",
+    "labels_email": "E-Mail",
+    "labels_address": "Adresse",
+    "labels_city": "Stadt",
+    "labels_postalCode": "Postleitzahl",
+    "labels_paymentMethod": "Zahlungsmethode",
+    "labels_creditCard": "Kreditkarte",
+    "labels_orangeMoney": "Orange Money",
+    "labels_mtnMobileMoney": "MTN Mobile Money",
+    "labels_cardNumber": "Kartennummer",
+    "labels_cardExpiry": "Ablaufdatum",
+    "labels_cardCVC": "CVC",
+    "labels_phoneNumber": "Telefonnummer",
+    "labels_phoneNumberPlaceholder": "Geben Sie Ihre Telefonnummer ein"
+  },
+  "Product": {
+    "description": "Beschreibung",
+    "specifications": "Spezifikationen",
+    "reviews": "Bewertungen",
+    "write_review": "Eine Bewertung schreiben",
+    "name": "Name",
+    "email": "E-Mail",
+    "rating": "Bewertung",
+    "review": "Bewertung",
+    "submit_review": "Bewertung absenden",
+    "product_added": "Produkt zum Warenkorb hinzugefügt",
+    "product_added_message": "wurde Ihrem Warenkorb hinzugefügt.",
+    "free_shipping": "Kostenloser Versand ab 50.000 FCFA",
+    "return_policy": "30-tägige Rückgaberecht",
+    "see_all_reviews": "Alle Bewertungen ansehen",
+    "price": "Preis",
+    "color": "Farbe",
+    "size": "Größe",
+    "quantity": "Menge",
+    "available": "verfügbar",
+    "stock": "Lagerbestand",
+    "low": "Niedrig",
+    "medium": "Mittel",
+    "high": "Hoch",
+    "add_to_cart": ""
+  }
+}

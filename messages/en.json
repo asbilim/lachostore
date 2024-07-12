@@ -1,0 +1,135 @@
+{
+  "Index": {
+    "section_one": {
+      "title": "Start Selling with Us Today",
+      "description": "Join our vibrant community of sellers and expand your market reach. Begin your journey with us and experience seamless selling with comprehensive support every step of the way.",
+      "subtitle": "Featured Products"
+    },
+    "section_two": {
+      "title": "Achieve Your Goals: Talk to a Professional",
+      "description": "Connect with our experts for personalized advice to help you reach your business objectives. Benefit from tailored strategies and insights to maximize your potential.",
+      "subtitle": "Customer Choices"
+    },
+    "button": "View All Products",
+    "section_three": {
+      "title": "Become a Partner Today",
+      "description": "Collaborate with us and take advantage of our extensive network and resources. Enjoy the benefits of partnership and grow your business with our support.",
+      "button": "Sign Up and Earn"
+    },
+    "newsletter": {
+      "title": "Subscribe to Our Newsletter",
+      "message": "Get the latest news, articles, and resources delivered to your inbox weekly.",
+      "button": "Subscribe",
+      "placeholder": "Enter Your Email"
+    }
+  },
+  "Header": {
+    "home": "Home",
+    "apply": "Apply",
+    "shop": "Shop",
+    "cart": "Cart",
+    "contact": "Contact"
+  },
+  "Footer": {
+    "text": "Redefining the shopping paradigm through avant-garde technology and unparalleled customer-centric experiences.",
+    "placeholder": "Enter your email",
+    "subscribe": "Subscribe",
+    "link_1": {
+      "title": "Company",
+      "about": "About",
+      "careers": "Careers",
+      "brand": "Brand Center",
+      "blog": "Blog"
+    },
+    "link_2": {
+      "title": "Help Center",
+      "discord": "Discord Server",
+      "twitter": "X Twitter",
+      "facebook": "Facebook",
+      "contact": "Contact Us"
+    },
+    "link_3": {
+      "title": "Privacy Policy",
+      "licensing": "Licensing",
+      "terms": "Terms"
+    },
+    "rights": "© 2024 Lachoshop. All rights reserved."
+  },
+  "Shop": {
+    "title": "Elevate Your Business",
+    "description": "Unleash the power of custom shops, promo codes, referral links, and expert nutrition advice.",
+    "button_1": "Start Now",
+    "button_2": "Read More",
+    "filter": "Filter",
+    "products": "Product(s)"
+  },
+  "Cart": {
+    "checkout": "Checkout",
+    "your_cart": "Your Cart",
+    "description": "Review and modify your cart",
+    "empty": "Your cart is empty",
+    "empty_description": "Add some items to your cart to proceed with checkout",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "total": "Total",
+    "button": "Place Order",
+    "shipping_payment": "Shipping & Payment",
+    "shipping_description": "Enter your details to complete the order",
+    "last_button": "Complete Order",
+    "validation_fullName": "Name must be at least 2 characters.",
+    "validation_email": "Invalid email address.",
+    "validation_address": "Address must be at least 5 characters.",
+    "validation_city": "City must be at least 2 characters.",
+    "validation_postalCode": "Postal code must be at least 3 characters.",
+    "validation_phoneNumber": "Phone number must be at least 9 digits.",
+    "validation_cardNumber": "Card number must be 16 digits.",
+    "validation_cardExpiry": "Expiry date must be in MM/YY format.",
+    "validation_cardCVC": "CVC must be 3 or 4 digits.",
+    "labels_fullName": "Full Name",
+    "labels_email": "Email",
+    "labels_address": "Address",
+    "labels_city": "City",
+    "labels_postalCode": "Postal Code",
+    "labels_paymentMethod": "Payment Method",
+    "labels_creditCard": "Credit Card",
+    "labels_orangeMoney": "Orange Money",
+    "labels_mtnMobileMoney": "MTN Mobile Money",
+    "labels_cardNumber": "Card Number",
+    "labels_cardExpiry": "Expiry Date",
+    "labels_cardCVC": "CVC",
+    "labels_phoneNumber": "Phone Number",
+    "labels_phoneNumberPlaceholder": "Enter your phone number"
+  },
+  "Product": {
+    "description": "Description",
+    "specifications": "Specifications",
+    "reviews": "Reviews",
+    "write_review": "Write a Review",
+    "name": "Name",
+    "email": "Email",
+    "rating": "Rating",
+    "review": "Review",
+    "submit_review": "Submit Review",
+    "product_added": "Product added to cart",
+    "product_added_message": "has been added to your cart.",
+    "free_shipping": "Free shipping over FCFA 50,000",
+    "return_policy": "30-day return policy",
+    "see_all_reviews": "See all reviews",
+    "price": "Price",
+    "color": "Color",
+    "size": "Size",
+    "quantity": "Quantity",
+    "available": "available",
+    "stock": "Stock",
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "new_arrival": "New Arrival",
+    "view_store": "View Store",
+    "remove": "Remove",
+    "continue_to_cart": "Continue to Cart",
+    "add_to_cart": "Add to cart",
+    "products": "Products",
+    "shop": "Shop"
+  }
+}

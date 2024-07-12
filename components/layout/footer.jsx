@@ -1,46 +1,127 @@
-import Link from "next/link";
-import { Facebook, Twitter, Instagram } from "lucide-react";
+"use client";
+import { Link } from "../navigation";
+import { ChevronDown, Globe, ArrowRight } from "lucide-react";
+import { usePathname } from "../navigation";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-export default function Footer() {
+const languages = [
+  { code: "en", name: "English" },
+  { code: "fr", name: "Français" },
+  { code: "de", name: "Deutsche" },
+  { code: "tr", name: "Turkish" },
+];
+
+export default function Footer({
+  locale,
+  text,
+  placeholder,
+  subscribe,
+  link_1,
+  link_2,
+  link_3,
+  rights,
+}) {
+  const pathname = usePathname();
+  const currentLanguage =
+    languages.find((lang) => lang.code === locale) || languages[0];
+
   return (
-    <footer className="bg-secondary">
-      <div className="container grid grid-cols-1 md:grid-cols-3 items-center justify-center gap-4 px-4 py-6 text-center md:py-8 md:gap-6 lg:gap-8 xl:gap-12">
-        <div className="flex flex-col items-start space-y-2 md:items-center md:space-y-0">
-          <Link href="#" className="inline-block" prefetch={false}>
-            <span className="sr-only">Lachoshop</span>
-            <div className="h-6 w-auto fill-current" />
-          </Link>
-          <p className="text-xs">Revolutionizing the shopping experience.</p>
-        </div>
-        <nav className="flex items-center justify-center space-x-4 text-sm md:space-x-6 md:order-last md:justify-center lg:order-2">
-          <Link href="#" className="" prefetch={false}>
-            Home
-          </Link>
-          <Link href="#" className="" prefetch={false}>
-            Features
-          </Link>
-          <Link href="#" className="" prefetch={false}>
-            Pricing
-          </Link>
-          <Link href="#" className="" prefetch={false}>
-            Contact
-          </Link>
-        </nav>
-        <div className="flex items-center justify-start space-x-4 text-sm md:justify-end md:order-2 lg:space-x-6 lg:order-last">
-          <div className="flex items-center space-x-4">
-            <Link href="#" className="" prefetch={false}>
-              <Facebook className="w-4 h-4" />
-              <span className="sr-only">Facebook</span>
+    <footer className="bg-background">
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-6">
+            <Link
+              href="/"
+              className="inline-block"
+              prefetch={false}
+              locale={locale}>
+              <span className="sr-only">Lachoshop</span>
+              <div className="h-8 w-auto">{/* Add your logo SVG here */}</div>
             </Link>
-            <Link href="#" className="" prefetch={false}>
-              <Twitter className="w-4 h-4" />
-              <span className="sr-only">Twitter</span>
-            </Link>
-            <Link href="#" className="" prefetch={false}>
-              <Instagram className="w-4 h-4" />
-              <span className="sr-only">Instagram</span>
-            </Link>
+            <p className="text-sm font-light max-w-md">{text}</p>
+            <div className="flex items-center space-x-4">
+              <Input
+                type="email"
+                placeholder={placeholder}
+                className="max-w-xs"
+              />
+              <Button>
+                {subscribe}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
           </div>
+          <div className="md:pl-8">
+            <ScrollArea className="h-[300px] md:h-auto">
+              <Accordion type="multiple" className="w-full">
+                {[link_1, link_2, link_3].map((section, index) => (
+                  <AccordionItem value={`item-${index}`} key={index}>
+                    <AccordionTrigger className="text-lg font-semibold">
+                      {section.title}
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <ul className="space-y-2">
+                        {Object.values(section)
+                          .slice(1)
+                          .map((link, linkIndex) => (
+                            <li key={linkIndex}>
+                              <Link
+                                href="#"
+                                className="text-sm hover:underline"
+                                prefetch={false}>
+                                {link}
+                              </Link>
+                            </li>
+                          ))}
+                      </ul>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </ScrollArea>
+          </div>
+        </div>
+        <Separator className="my-8" />
+        <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+          <p className="text-sm font-light">{rights}</p>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm">
+                <Globe className="mr-2 h-4 w-4" />
+                {currentLanguage.name}
+                <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {languages.map((lang) => (
+                <DropdownMenuItem key={lang.code}>
+                  <a
+                    href={`/${lang.code}${pathname}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.location.href = `/${lang.code}${pathname}`;
+                    }}>
+                    {lang.name}
+                  </a>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </footer>

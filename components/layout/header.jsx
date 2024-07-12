@@ -1,20 +1,24 @@
 "use client";
+import { useState } from "react";
 import Image from "next/image";
 import logo from "@/public/lachostore.png";
 import { Input } from "../ui/input";
 import { Menu, Search, ShoppingBag, UserRound } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Badge } from "../ui/badge";
-import Link from "next/link";
-import { Button, buttonVariants } from "../ui/button";
+import { Link } from "../navigation";
 import { usePathname } from "next/navigation";
+import { useCart } from "@/providers/cart";
+import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "next-themes";
+
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
+
 import {
   Sheet,
   SheetContent,
@@ -24,105 +28,160 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-const pathNames = [
-  {
-    name: "Home",
-    path: "/",
-  },
-  {
-    name: "Shop",
-    path: "/shop",
-  },
-  {
-    name: "Cart",
-    path: "/cart",
-  },
-  {
-    name: "Application",
-    path: "/application",
-  },
-  {
-    name: "Contact",
-    path: "/contact",
-  },
-];
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
-export default function Header() {
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { Command, CommandInput } from "@/components/ui/command";
+
+export default function Header({
+  locale,
+  home,
+  shop,
+  header_cart,
+  apply,
+  contact,
+}) {
+  const pathNames = [
+    { name: home, path: "/" },
+    { name: shop, path: "/products" },
+    { name: header_cart, path: "/cart" },
+    { name: apply, path: "/application" },
+    { name: contact, path: "https://lachofit.com/contact" },
+  ];
+
   const pathName = usePathname();
+  const { cart } = useCart();
+  const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const { setTheme, theme } = useTheme();
+
+  const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
 
   return (
-    <div className="flex bg-secondary px-4 md:px-12 md:pb-6 flex-col gap-6 items-center justify-center">
-      <div className="layer_one flex w-full gap-3 justify-between items-center">
-        {/* logo */}
-        <Link href="/">
-          <Image
-            src={logo}
-            width={300}
-            alt="lachofit logo"
-            className="hidden md:block"
-          />
-          <Image
-            src={logo}
-            width={140}
-            alt="lachofit logo"
-            className="md:hidden"
-          />
-        </Link>
-        {/* search part */}
-        <div className="research md:flex hidden items-center  border rounded-2xl p-1 gap-2 bg-white w-full max-w-xl">
-          <Input
-            className="bg-transparent border-0 focus:outline-none outline-none"
-            placeholder="search a product..."
-          />
-          <Search className="cursor-pointer" />
-        </div>
-        {/* action parts */}
-        <div className="actions flex gap-6 items-center  justify-center">
-          <DynamicCartIcon itemCount={5} />
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <UserRound className="cursor-pointer" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Login</DropdownMenuItem>
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <div
-            variant="outline"
-            className={"md:hidden flex items-center " + buttonVariants}>
+    <header className="bg-background px-4 md:px-8 lg:px-12 py-4 shadow-md">
+      <div className="container mx-auto">
+        <div className="flex items-center justify-between">
+          <Link locale={locale} href="/" className="flex-shrink-0">
+            <Image
+              src={logo}
+              width={200}
+              alt="lachofit logo"
+              className="hidden md:block"
+            />
+            <Image
+              src={logo}
+              width={120}
+              alt="lachofit logo"
+              className="md:hidden"
+            />
+          </Link>
+
+          <NavigationMenu className="hidden md:flex">
+            <NavigationMenuList>
+              {pathNames.map((path) => (
+                <NavigationMenuItem key={path.name}>
+                  <Link
+                    href={path.path}
+                    locale={locale}
+                    className={`px-3 py-2 text-sm font-medium transition-colors hover:text-primary
+                      ${
+                        path.path === pathName
+                          ? "text-primary font-bold"
+                          : "text-muted-foreground"
+                      }`}>
+                    {path.name}
+                  </Link>
+                </NavigationMenuItem>
+              ))}
+            </NavigationMenuList>
+          </NavigationMenu>
+
+          <div className="flex items-center space-x-4">
+            <AnimatePresence>
+              {isSearchOpen && (
+                <motion.div
+                  initial={{ width: 0, opacity: 0 }}
+                  animate={{ width: "auto", opacity: 1 }}
+                  exit={{ width: 0, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="hidden md:block">
+                  <Command className="rounded-lg border shadow-md">
+                    <CommandInput placeholder="Search products..." />
+                  </Command>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleSearch}
+              className="hidden md:flex">
+              <Search className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all" />
+            </Button>
+
+            <Link locale={locale} href="/cart" className="relative">
+              <ShoppingBag className="w-6 h-6 text-muted-foreground" />
+              {itemCount > 0 && (
+                <Badge
+                  variant="destructive"
+                  className="absolute -top-2 -right-2 w-5 h-5 flex items-center justify-center rounded-full p-0 text-xs">
+                  {itemCount}
+                </Badge>
+              )}
+            </Link>
+
+            <HoverCard>
+              <HoverCardTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <UserRound className="w-6 h-6 text-muted-foreground" />
+                </Button>
+              </HoverCardTrigger>
+              <HoverCardContent className="w-80">
+                <div className="flex justify-between space-x-4">
+                  <div className="space-y-1">
+                    <h4 className="text-sm font-semibold">Your Account</h4>
+                    <p className="text-sm">
+                      Manage your profile and settings here.
+                    </p>
+                  </div>
+                </div>
+              </HoverCardContent>
+            </HoverCard>
+
             <Sheet>
-              <SheetTrigger>
-                <Menu />
+              <SheetTrigger className="md:hidden">
+                <Menu className="w-6 h-6 text-muted-foreground" />
               </SheetTrigger>
               <SheetContent>
                 <SheetHeader>
-                  <SheetTitle>Lachofit the place to be</SheetTitle>
+                  <SheetTitle>Menu</SheetTitle>
                   <SheetDescription>
-                    <div className="flex flex-col  justify-center w-full items-center gap-6 mt-12">
-                      {pathNames.map((path) => {
-                        return (
-                          <h2
-                            key={path.name}
-                            className={
+                    <nav className="flex flex-col space-y-4 mt-8">
+                      {pathNames.map((path) => (
+                        <Link
+                          locale={locale}
+                          key={path.name}
+                          href={path.path}
+                          className={`text-sm font-medium transition-colors hover:text-primary
+                            ${
                               path.path === pathName
                                 ? "text-primary font-bold"
-                                : "hover:text-primary"
-                            }>
-                            <Link href={path.path}>{path.name}</Link>
-                          </h2>
-                        );
-                      })}
-                    </div>
-                    <div className="research my-12 flex items-center  border rounded-2xl p-1 gap-2 bg-white w-full max-w-xl">
-                      <Input
-                        className="bg-transparent border-0 focus:outline-none outline-none"
-                        placeholder="search a product..."
-                      />
-                      <Search className="cursor-pointer" />
+                                : "text-muted-foreground"
+                            }`}>
+                          {path.name}
+                        </Link>
+                      ))}
+                    </nav>
+                    <div className="mt-8">
+                      <Command className="rounded-lg border shadow-md">
+                        <CommandInput placeholder="Search products..." />
+                      </Command>
                     </div>
                   </SheetDescription>
                 </SheetHeader>
@@ -131,50 +190,6 @@ export default function Header() {
           </div>
         </div>
       </div>
-      {/* second parts with links */}
-      <div className="md:flex hidden justify-center w-full items-center gap-12">
-        {pathNames.map((path) => {
-          return (
-            <h2
-              key={path.name}
-              className={
-                path.path === pathName
-                  ? "text-primary font-bold"
-                  : "hover:text-primary"
-              }>
-              <Link href={path.path}>{path.name}</Link>
-            </h2>
-          );
-        })}
-      </div>
-    </div>
+    </header>
   );
 }
-
-export const DynamicCartIcon = ({ itemCount }) => {
-  return (
-    <div className="flex">
-      {itemCount && itemCount > 0 ? (
-        <div className="flex relative">
-          <Badge
-            style={{
-              position: "absolute",
-              top: "0",
-              right: "0",
-              transform: "translate(50%, -50%)",
-              color: "white",
-              borderRadius: "50%",
-              padding: "0.2em 0.4em",
-              fontSize: "12px",
-              fontWeight: "bold",
-            }}>
-            {itemCount}
-          </Badge>
-          <ShoppingBag className="cursor-pointer" />
-        </div>
-      ) : (
-        <ShoppingBag className="cursor-pointer" />
-      )}
-    </div>
-  );
-};

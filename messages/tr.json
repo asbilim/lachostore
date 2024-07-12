@@ -1,0 +1,128 @@
+{
+  "Index": {
+    "section_one": {
+      "title": "Bugün Bizimle Satışa Başlayın",
+      "description": "Satıcı topluluğumuza katılın ve pazar erişiminizi genişletin. Bizimle yolculuğunuza başlayın ve her adımda kapsamlı destekle sorunsuz satış deneyimi yaşayın.",
+      "subtitle": "Öne Çıkan Ürünler"
+    },
+    "section_two": {
+      "title": "Hedeflerinize Ulaşın: Bir Profesyonelle Konuşun",
+      "description": "İş hedeflerinize ulaşmanıza yardımcı olacak kişiselleştirilmiş tavsiyeler için uzmanlarımızla bağlantı kurun. Potansiyelinizi en üst düzeye çıkarmak için özel stratejiler ve içgörülerden yararlanın.",
+      "subtitle": "Müşteri Seçimleri"
+    },
+    "button": "Tüm Ürünleri Görüntüle",
+    "section_three": {
+      "title": "Bugün Ortak Olun",
+      "description": "Bizimle işbirliği yapın ve geniş ağımız ve kaynaklarımızdan yararlanın. Ortaklığın avantajlarından yararlanın ve desteğimizle işinizi büyütün.",
+      "button": "Kaydolun ve Kazanın"
+    },
+    "newsletter": {
+      "title": "Bültenimize Abone Olun",
+      "message": "En son haberleri, makaleleri ve kaynakları haftalık olarak gelen kutunuza alın.",
+      "button": "Abone Ol",
+      "placeholder": "E-posta adresinizi girin"
+    }
+  },
+  "Header": {
+    "home": "Anasayfa",
+    "apply": "Başvur",
+    "shop": "Mağaza",
+    "cart": "Sepet",
+    "contact": "İletişim"
+  },
+  "Footer": {
+    "text": "Alışveriş paradigmasını öncü teknoloji ve eşsiz müşteri odaklı deneyimlerle yeniden tanımlamak.",
+    "placeholder": "E-posta adresinizi girin",
+    "subscribe": "Abone Ol",
+    "link_1": {
+      "title": "Şirket",
+      "about": "Hakkımızda",
+      "careers": "Kariyer",
+      "brand": "Marka Merkezi",
+      "blog": "Blog"
+    },
+    "link_2": {
+      "title": "Yardım Merkezi",
+      "discord": "Discord Sunucusu",
+      "twitter": "Twitter X",
+      "facebook": "Facebook",
+      "contact": "Bize Ulaşın"
+    },
+    "link_3": {
+      "title": "Gizlilik Politikası",
+      "licensing": "Lisanslama",
+      "terms": "Şartlar"
+    },
+    "rights": "© 2024 Lachoshop. Tüm hakları saklıdır."
+  },
+  "Shop": {
+    "title": "İşinizi Yükseltin",
+    "description": "Özel mağazalar, promosyon kodları, tavsiye bağlantıları ve uzman beslenme tavsiyelerinin gücünü ortaya çıkarın.",
+    "button_1": "Şimdi Başlayın",
+    "button_2": "Daha Fazla Bilgi",
+    "filter": "Filtrele",
+    "products": "Ürün(ler)"
+  },
+  "Cart": {
+    "checkout": "Ödeme",
+    "your_cart": "Sepetiniz",
+    "description": "Sepetinizi gözden geçirin ve düzenleyin",
+    "empty": "Sepetiniz boş",
+    "empty_description": "Ödeme işlemine devam etmek için sepetinize bazı ürünler ekleyin",
+    "subtotal": "Ara Toplam",
+    "shipping": "Kargo",
+    "total": "Toplam",
+    "button": "Sipariş Ver",
+    "shipping_payment": "Kargo & Ödeme",
+    "shipping_description": "Siparişi tamamlamak için bilgilerinizi girin",
+    "last_button": "Siparişi Tamamla",
+    "validation_fullName": "İsim en az 2 karakter olmalıdır.",
+    "validation_email": "Geçersiz e-posta adresi.",
+    "validation_address": "Adres en az 5 karakter olmalıdır.",
+    "validation_city": "Şehir en az 2 karakter olmalıdır.",
+    "validation_postalCode": "Posta kodu en az 3 karakter olmalıdır.",
+    "validation_phoneNumber": "Telefon numarası en az 9 hane olmalıdır.",
+    "validation_cardNumber": "Kart numarası 16 hane olmalıdır.",
+    "validation_cardExpiry": "Son kullanma tarihi AA/YY formatında olmalıdır.",
+    "validation_cardCVC": "CVC 3 veya 4 hane olmalıdır.",
+    "labels_fullName": "Tam Adı",
+    "labels_email": "E-posta",
+    "labels_address": "Adres",
+    "labels_city": "Şehir",
+    "labels_postalCode": "Posta Kodu",
+    "labels_paymentMethod": "Ödeme Yöntemi",
+    "labels_creditCard": "Kredi Kartı",
+    "labels_orangeMoney": "Orange Money",
+    "labels_mtnMobileMoney": "MTN Mobile Money",
+    "labels_cardNumber": "Kart Numarası",
+    "labels_cardExpiry": "Son Kullanma Tarihi",
+    "labels_cardCVC": "CVC",
+    "labels_phoneNumber": "Telefon Numarası",
+    "labels_phoneNumberPlaceholder": "Telefon numaranızı girin"
+  },
+  "Product": {
+    "description": "Açıklama",
+    "specifications": "Özellikler",
+    "reviews": "Yorumlar",
+    "write_review": "Yorum Yaz",
+    "name": "İsim",
+    "email": "E-posta",
+    "rating": "Puan",
+    "review": "Yorum",
+    "submit_review": "Yorumu Gönder",
+    "product_added": "Ürün sepete eklendi",
+    "product_added_message": "sepetinize eklendi.",
+    "free_shipping": "50.000 FCFA üzeri ücretsiz kargo",
+    "return_policy": "30 günlük iade politikası",
+    "see_all_reviews": "Tüm yorumları gör",
+    "price": "Fiyat",
+    "color": "Renk",
+    "size": "Beden",
+    "quantity": "Miktar",
+    "available": "mevcut",
+    "stock": "Stok",
+    "low": "Düşük",
+    "medium": "Orta",
+    "high": "Yüksek"
+  }
+}
