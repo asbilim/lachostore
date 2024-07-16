@@ -2,13 +2,12 @@
 import { useState } from "react";
 import Image from "next/image";
 import logo from "@/public/lachostore.png";
-import { Input } from "../ui/input";
 import { Menu, Search, ShoppingBag, UserRound } from "lucide-react";
 import { Link } from "../navigation";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/providers/cart";
-import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
+import AdvancedSearchModal from "../reusables/advanced-search";
 
 import {
   NavigationMenu,
@@ -36,7 +35,6 @@ import {
 
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { Command, CommandInput } from "@/components/ui/command";
 
 export default function Header({
   locale,
@@ -45,6 +43,7 @@ export default function Header({
   header_cart,
   apply,
   contact,
+  products,
 }) {
   const pathNames = [
     { name: home, path: "/" },
@@ -57,10 +56,9 @@ export default function Header({
   const pathName = usePathname();
   const { cart } = useCart();
   const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const { setTheme, theme } = useTheme();
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
-  const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
+  const toggleSearchModal = () => setIsSearchModalOpen(!isSearchModalOpen);
 
   return (
     <header className="bg-background px-4 md:px-8 lg:px-12 py-4 shadow-md">
@@ -102,25 +100,10 @@ export default function Header({
           </NavigationMenu>
 
           <div className="flex items-center space-x-4">
-            <AnimatePresence>
-              {isSearchOpen && (
-                <motion.div
-                  initial={{ width: 0, opacity: 0 }}
-                  animate={{ width: "auto", opacity: 1 }}
-                  exit={{ width: 0, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="hidden md:block">
-                  <Command className="rounded-lg border shadow-md">
-                    <CommandInput placeholder="Search products..." />
-                  </Command>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
             <Button
               variant="ghost"
               size="icon"
-              onClick={toggleSearch}
+              onClick={toggleSearchModal}
               className="hidden md:flex">
               <Search className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all" />
             </Button>
@@ -179,14 +162,23 @@ export default function Header({
                       ))}
                     </nav>
                     <div className="mt-8">
-                      <Command className="rounded-lg border shadow-md">
-                        <CommandInput placeholder="Search products..." />
-                      </Command>
+                      <Button
+                        variant="outline"
+                        onClick={toggleSearchModal}
+                        className="w-full">
+                        <Search className="mr-2 h-4 w-4" /> Search Products
+                      </Button>
                     </div>
                   </SheetDescription>
                 </SheetHeader>
               </SheetContent>
             </Sheet>
+
+            <AdvancedSearchModal
+              products={products}
+              isOpen={isSearchModalOpen}
+              onClose={() => setIsSearchModalOpen(false)}
+            />
           </div>
         </div>
       </div>

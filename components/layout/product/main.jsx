@@ -12,7 +12,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Star, TruckIcon, ShieldCheck, Share2, Gift } from "lucide-react";
@@ -127,8 +127,8 @@ export default function Main(props) {
     <motion.div
       initial="hidden"
       animate="visible"
-      className="flex w-full my-12 flex-col items-center justify-center py-3 px-4 md:px-0">
-      <div className="flex w-full max-w-7xl flex-col gap-6">
+      className="flex w-full my-6 md:my-12 flex-col items-center justify-center py-3 px-4 md:px-0">
+      <div className="flex w-full max-w-7xl flex-col gap-4 md:gap-6">
         <BreadcrumbComponent items={breadcrumbItems} />
         <motion.div
           ref={titleRef}
@@ -136,7 +136,7 @@ export default function Main(props) {
           animate={titleInView ? "visible" : "hidden"}
           variants={fadeInUp}
           className="flex flex-col md:flex-row justify-between items-start md:items-center">
-          <h1 className="text-3xl font-bold mb-2 md:mb-0">
+          <h1 className="text-2xl md:text-3xl font-bold mb-2 md:mb-0">
             {props.product.name}
           </h1>
           <Badge variant="outline" className="text-sm">
@@ -144,7 +144,7 @@ export default function Main(props) {
           </Badge>
         </motion.div>
       </div>
-      <div className="grid md:grid-cols-2 w-full gap-6 lg:gap-12 items-start max-w-7xl mx-auto py-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-6 lg:gap-12 items-start max-w-7xl mx-auto py-6">
         <motion.div
           ref={imageRef}
           initial="hidden"
@@ -158,6 +158,7 @@ export default function Main(props) {
               width={600}
               height={900}
               className="aspect-[3/3] object-cover w-full transition-transform duration-300 hover:scale-105"
+              layout="responsive"
             />
             {props.product.is_new && (
               <Badge className="absolute top-4 left-4">New Arrival</Badge>
@@ -201,15 +202,15 @@ export default function Main(props) {
           initial="hidden"
           animate={detailsInView ? "visible" : "hidden"}
           variants={stagger}
-          className="grid gap-6 md:gap-10 items-start">
+          className="grid gap-4 md:gap-6 items-start">
           <motion.div variants={fadeInUp} className="grid gap-4">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <h2 className="text-primary text-2xl font-bold">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+              <div className="flex items-center gap-2 mb-2 sm:mb-0">
+                <h2 className="text-primary text-xl md:text-2xl font-bold">
                   FCFA {parseFloat(props.product.price).toLocaleString()}
                 </h2>
                 {props.product.sale_price && (
-                  <h2 className="line-through text-gray-500 text-lg">
+                  <h2 className="line-through text-gray-500 text-base md:text-lg">
                     FCFA {parseFloat(props.product.sale_price).toLocaleString()}
                   </h2>
                 )}
@@ -218,41 +219,48 @@ export default function Main(props) {
                 {[1, 2, 3, 4, 5].map((star) => (
                   <Star
                     key={star}
-                    className={`w-5 h-5 ${
+                    className={`w-4 h-4 md:w-5 md:h-5 ${
                       star <= props.product.rating
                         ? "text-yellow-400 fill-yellow-400"
                         : "text-gray-300"
                     }`}
                   />
                 ))}
-                <span className="ml-2 text-sm text-gray-600">
+                <span className="ml-2 text-xs md:text-sm text-gray-600">
                   ({props.product.review_count} reviews)
                 </span>
               </div>
             </div>
-            <p className="text-gray-600">{props.product.description}</p>
+            <p className="text-sm md:text-base text-gray-600">
+              {props.product.description}
+            </p>
           </motion.div>
           <motion.div
             variants={fadeInUp}
-            className="flex items-center gap-4 bg-gray-100 p-4 rounded-lg hover:shadow-md transition-shadow duration-300">
+            className="flex items-center gap-4 bg-gray-100 p-3 md:p-4 rounded-lg hover:shadow-md transition-shadow duration-300">
             <Avatar>
               <AvatarImage src={props.product.vendor.avatar} />
               <AvatarFallback>{props.product.vendor.name[0]}</AvatarFallback>
             </Avatar>
             <div>
-              <p className="font-semibold">{props.product.vendor.name}</p>
-              <p className="text-sm text-gray-600">
+              <p className="font-semibold text-sm md:text-base">
+                {props.product.vendor.name}
+              </p>
+              <p className="text-xs md:text-sm text-gray-600">
                 {props.product.vendor.address}
               </p>
             </div>
-            <Button variant="outline" size="sm" className="ml-auto">
+            <Button
+              variant="outline"
+              size="sm"
+              className="ml-auto text-xs md:text-sm">
               View Store
             </Button>
           </motion.div>
-          <motion.form variants={fadeInUp} className="grid gap-6">
+          <motion.form variants={fadeInUp} className="grid gap-4 sm:gap-6">
             {props.product.colors && props.product.colors.length > 0 && (
               <div className="grid gap-2">
-                <Label htmlFor="color" className="text-base">
+                <Label htmlFor="color" className="text-sm md:text-base">
                   {translations.color}
                 </Label>
                 <RadioGroup
@@ -264,7 +272,7 @@ export default function Main(props) {
                     <Label
                       key={color}
                       htmlFor={`color-${color}`}
-                      className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted transition-colors duration-200">
+                      className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted transition-colors duration-200 text-xs md:text-sm">
                       <RadioGroupItem id={`color-${color}`} value={color} />
                       {color.charAt(0).toUpperCase() + color.slice(1)}
                     </Label>
@@ -274,7 +282,7 @@ export default function Main(props) {
             )}
             {props.product.sizes && props.product.sizes.length > 0 && (
               <div className="grid gap-2">
-                <Label htmlFor="size" className="text-base">
+                <Label htmlFor="size" className="text-sm md:text-base">
                   {translations.size}
                 </Label>
                 <RadioGroup
@@ -286,7 +294,7 @@ export default function Main(props) {
                     <Label
                       key={size}
                       htmlFor={`size-${size}`}
-                      className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted transition-colors duration-200">
+                      className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted transition-colors duration-200 text-xs md:text-sm">
                       <RadioGroupItem id={`size-${size}`} value={size} />
                       {size.toUpperCase()}
                     </Label>
@@ -295,7 +303,7 @@ export default function Main(props) {
               </div>
             )}
             <div className="grid gap-2">
-              <Label htmlFor="quantity" className="text-base">
+              <Label htmlFor="quantity" className="text-sm md:text-base">
                 {translations.quantity}
               </Label>
               <div className="flex items-center gap-4">
@@ -318,78 +326,85 @@ export default function Main(props) {
                     ))}
                   </SelectContent>
                 </Select>
-                <span className="text-sm text-gray-600">
+                <span className="text-xs md:text-sm text-gray-600">
                   {props.product.stock} {translations.available}
                 </span>
-                <div className={`w-4 h-4 rounded-full ${stockColor()}`}></div>
-                <span className="text-sm text-gray-600">
+                <div
+                  className={`w-3 h-3 md:w-4 md:h-4 rounded-full ${stockColor()}`}></div>
+                <span className="text-xs md:text-sm text-gray-600">
                   {translations.stock}: {stockLevel()}
                 </span>
               </div>
             </div>
             {isProductInCart ? (
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <Button
                   size="lg"
                   variant="secondary"
                   onClick={handleRemoveFromCart}
-                  className="bg-red-500 hover:bg-red-700 transition-colors duration-300">
+                  className="w-full sm:w-auto bg-red-500 hover:bg-red-700 transition-colors duration-300 text-sm md:text-base">
                   Remove
                 </Button>
                 <Button
                   size="lg"
-                  className="bg-primary hover:bg-primary-dark transition-colors duration-300">
+                  className="w-full sm:w-auto bg-primary hover:bg-primary-dark transition-colors duration-300 text-sm md:text-base">
                   <Link href="/cart">Continue to Cart</Link>
                 </Button>
               </div>
             ) : (
               <Button
                 size="lg"
-                className="bg-primary hover:bg-primary-dark transition-colors duration-300"
+                className="w-full sm:w-auto bg-primary hover:bg-primary-dark transition-colors duration-300 text-sm md:text-base"
                 onClick={handleAddToCart}>
                 Add to cart
               </Button>
             )}
           </motion.form>
-          <motion.div variants={fadeInUp} className="flex gap-4">
-            <Button
+          <motion.div
+            variants={fadeInUp}
+            className="flex flex-col sm:flex-row gap-4">
+            <div
+              className={`${buttonVariants(
+                "outline"
+              )}  flex items-center justify-around gap-2`}
               variant="outline"
-              size="lg"
-              className="flex items-center gap-2">
-              <Share2 className="w-5 h-5" />
-              Share
-              <div className="flex gap-2">
+              size="lg">
+              <div className="flex items-center gap-2">
+                <Share2 className="w-4 h-4 md:w-5 md:h-5" />
+                Share
+              </div>
+              <div className="flex gap-2 mt-2 sm:mt-0">
                 <FacebookShareButton url={window.location.href}>
-                  <FacebookIcon size={32} round />
+                  <FacebookIcon size={24} round />
                 </FacebookShareButton>
                 <TwitterShareButton url={window.location.href}>
-                  <TwitterIcon size={32} round />
+                  <TwitterIcon size={24} round />
                 </TwitterShareButton>
                 <WhatsappShareButton url={window.location.href}>
-                  <WhatsappIcon size={32} round />
+                  <WhatsappIcon size={24} round />
                 </WhatsappShareButton>
                 <EmailShareButton url={window.location.href}>
-                  <EmailIcon size={32} round />
+                  <EmailIcon size={24} round />
                 </EmailShareButton>
               </div>
-            </Button>
+            </div>
             <Button
               variant="outline"
               size="lg"
-              className="flex items-center gap-2">
-              <Gift className="w-5 h-5" />
+              className="flex items-center gap-2 w-full sm:w-auto text-sm md:text-base">
+              <Gift className="w-4 h-4 md:w-5 md:h-5" />
               Refer & Earn
             </Button>
           </motion.div>
           <motion.div
             variants={fadeInUp}
-            className="flex flex-col sm:flex-row justify-between items-center text-sm text-gray-600">
+            className="flex flex-col sm:flex-row justify-between items-center text-xs md:text-sm text-gray-600">
             <div className="flex items-center gap-2 mb-2 sm:mb-0">
-              <TruckIcon className="w-5 h-5" />
+              <TruckIcon className="w-4 h-4 md:w-5 md:h-5" />
               {translations.free_shipping}
             </div>
             <div className="flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5" />
+              <ShieldCheck className="w-4 h-4 md:w-5 md:h-5" />
               {translations.return_policy}
             </div>
           </motion.div>

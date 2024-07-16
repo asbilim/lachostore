@@ -7,7 +7,9 @@ import { CartProvider } from "@/providers/cart";
 import { getTranslations } from "next-intl/server";
 import FloatingChat from "@/components/chats/floating";
 import { keepServerAwake } from "@/components/reusables/ping";
+import { getProducts } from "@/server/get-products";
 import { Toaster } from "@/components/ui/sonner";
+import { revalidateTag } from "next/cache";
 
 const inter = Inte({
   subsets: ["latin"],
@@ -25,14 +27,19 @@ export default async function RootLayout({ children, params }) {
   const { locale } = params;
   const tHeader = await getTranslations("Header");
   const tFooter = await getTranslations("Footer");
+  const products = await getProducts();
+  revalidateTag("products");
   // keepServerAwake(process.env.BACKEND_URL);
 
   return (
-    <html lang={locale} dangerouslyAllowSVG={true}>
+    <html
+      lang={locale}
+      dangerouslyAllowSVG={true}
+      suppressHydrationWarning={true}>
       <CartProvider>
         <body className={inter.className}>
           <Toaster />
-          <FloatingChat />
+          <FloatingChat products={products} />
           <PreHeader />
           <Header
             locale={locale}
@@ -41,6 +48,7 @@ export default async function RootLayout({ children, params }) {
             apply={tHeader("apply")}
             shop={tHeader("shop")}
             header_cart={tHeader("cart")}
+            products={products}
           />
           {children}
           <Footer

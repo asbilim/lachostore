@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.15.0",
     "@hookform/resolvers": "^3.7.0",
     "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-avatar": "^1.1.0",
@@ -39,6 +40,7 @@
     "embla-carousel-react": "^8.1.6",
     "emoji-picker-react": "^4.11.1",
     "framer-motion": "^11.2.12",
+    "fuse": "^0.12.1",
     "gsap": "^3.12.5",
     "iron-session": "^8.0.2",
     "lucide-react": "^0.394.0",
