@@ -49,6 +49,8 @@ export default async function Cart() {
       last_button={t("last_button")}
       validationMessages={validationMessages}
       labels={labels}
+      promo={t("promo")}
+      promo_button={t("promo_button")}
     />
   );
 }

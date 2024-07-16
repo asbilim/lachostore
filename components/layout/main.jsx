@@ -6,6 +6,9 @@ import slugify from "react-slugify";
 import { Input } from "../ui/input";
 import { useTranslations } from "next-intl";
 import { revalidateTag } from "next/cache";
+import { subscribeToNewsletter } from "@/server/add-to-newsletter";
+import { useSonner } from "sonner";
+import NewsletterSubscribe from "../reusables/newsletter";
 export default function ShopMain({ products }) {
   revalidateTag("products");
   const t = useTranslations("Index");
@@ -30,7 +33,7 @@ export default function ShopMain({ products }) {
                 <div className="flex flex-col gap-2 w-[150px] md:w-[250px]">
                   <Image
                     src={item.image}
-                    alt="banana"
+                    alt={item.name}
                     width="600"
                     height={400}
                     className="w-full h-48 object-contain"
@@ -69,7 +72,7 @@ export default function ShopMain({ products }) {
                 <div className="flex flex-col gap-2 w-[150px] md:w-[250px]">
                   <Image
                     src={item.image}
-                    alt="banana"
+                    alt={item.name}
                     width="600"
                     height={400}
                     className="w-full h-48 object-contain"
@@ -124,10 +127,10 @@ export default function ShopMain({ products }) {
             <h2 className="font-bold">{t("newsletter.title")}</h2>
             <p className="text-sm">{t("newsletter.message")}</p>
           </div>
-          <div className="flex gap-2">
-            <Input placeholder={t("newsletter.placeholder")} />
-            <Button>{t("newsletter.button")}</Button>
-          </div>
+          <NewsletterSubscribe
+            placeholder={t("newsletter.placeholder")}
+            content={t("newsletter.button")}
+          />
         </div>
       </div>
       <div className="flex max-w-6xl w-full items-center">

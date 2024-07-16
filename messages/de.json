@@ -98,7 +98,9 @@
     "labels_cardExpiry": "Ablaufdatum",
     "labels_cardCVC": "CVC",
     "labels_phoneNumber": "Telefonnummer",
-    "labels_phoneNumberPlaceholder": "Geben Sie Ihre Telefonnummer ein"
+    "labels_phoneNumberPlaceholder": "Geben Sie Ihre Telefonnummer ein",
+    "promo": "Geben Sie den Gutscheincode ein",
+    "promo_button": "Anwenden"
   },
   "Product": {
     "description": "Beschreibung",
@@ -125,5 +127,127 @@
     "medium": "Mittel",
     "high": "Hoch",
     "add_to_cart": ""
+  },
+  "NutritionistShowcase": {
+    "title": "Verwandeln Sie Ihre Gesundheitsreise",
+    "sections": {
+      "nutritionist": {
+        "title": "Treffen Sie Dr. Jane Doe",
+        "cards": {
+          "education": {
+            "title": "Bildung und Erfahrung",
+            "items": [
+              "PhD in Ernährungswissenschaften, Harvard Universität",
+              "Über 10 Jahre klinische Erfahrung",
+              "Forschungsstipendium an der Johns Hopkins Universität",
+              "Ehemalige Ernährungsberaterin für olympische Athleten"
+            ]
+          },
+          "certifications": {
+            "title": "Zertifizierungen",
+            "items": [
+              "Zertifizierter Ernährungsspezialist (CNS)",
+              "Registrierte Diätassistentin (RDN)",
+              "Zertifizierte Diabetesberaterin (CDE)",
+              "Sporternährungsberaterin",
+              "Zertifizierung in Präzisionsernährung Level 2"
+            ]
+          },
+          "publications": {
+            "title": "Publikationen und Medien",
+            "items": [
+              "Autorin des Bestsellers \"Intelligent Essen, Gut Leben\"",
+              "Regelmäßige Mitarbeiterin des Nutrition Today Journals",
+              "Vorgestellte Expertin im National Health Radio",
+              "TEDx-Rednerin über \"Die Zukunft der personalisierten Ernährung\""
+            ]
+          },
+          "specializations": {
+            "title": "Spezialisierungen",
+            "items": [
+              "Darmgesundheit und Mikrobiom-Optimierung",
+              "Sporternährung und Leistungssteigerung",
+              "Gewichtsmanagement und metabolische Gesundheit",
+              "Nutrigenomik und personalisierte Ernährung",
+              "Pflanzenbasierte Ernährung und nachhaltiges Essen"
+            ]
+          }
+        }
+      },
+      "form": {
+        "title": "Verwandeln Sie Ihre Gesundheitsreise",
+        "fields": {
+          "height": "Größe (cm)",
+          "age": "Alter",
+          "gender": {
+            "label": "Geschlecht",
+            "options": {
+              "male": "Männlich",
+              "female": "Weiblich",
+              "other": "Andere"
+            }
+          },
+          "exerciseFrequency": "Trainingshäufigkeit (Tage pro Woche)",
+          "alcoholConsumption": {
+            "label": "Alkoholkonsum",
+            "options": {
+              "none": "Keiner",
+              "occasional": "Gelegentlich",
+              "moderate": "Mäßig",
+              "heavy": "Stark"
+            }
+          },
+          "smokingStatus": {
+            "label": "Raucherstatus",
+            "options": {
+              "non_smoker": "Nichtraucher",
+              "former_smoker": "Ehemaliger Raucher",
+              "current_smoker": "Aktueller Raucher"
+            }
+          },
+          "pregnancyStatus": "Schwangerschaftsstatus",
+          "breastfeedingStatus": "Stillstatus",
+          "digestiveIssues": {
+            "label": "Verdauungsprobleme",
+            "options": [
+              "Blähungen",
+              "Verstopfung",
+              "Durchfall",
+              "Sodbrennen",
+              "Reizdarmsyndrom"
+            ]
+          },
+          "cookingSkills": {
+            "label": "Kochfähigkeiten",
+            "options": {
+              "beginner": "Anfänger",
+              "intermediate": "Fortgeschritten",
+              "advanced": "Experte"
+            }
+          },
+          "mealPrepTime": {
+            "label": "Zeitaufwand für die Zubereitung von Mahlzeiten",
+            "options": {
+              "minimal": "Minimal",
+              "moderate": "Moderat",
+              "extensive": "Umfangreich"
+            }
+          },
+          "budgetConstraints": {
+            "label": "Budgetbeschränkungen",
+            "options": {
+              "low": "Gering",
+              "medium": "Mittel",
+              "high": "Hoch"
+            }
+          },
+          "foodPreferences": {
+            "label": "Ernährungsvorlieben",
+            "options": ["Scharf", "Süß", "Herzhaft", "Bitter", "Sauer"]
+          }
+        },
+        "submitButton": "Beginnen Sie Ihre Transformation"
+      }
+    }
   }
 }

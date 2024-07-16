@@ -98,7 +98,9 @@
     "labels_cardExpiry": "Son Kullanma Tarihi",
     "labels_cardCVC": "CVC",
     "labels_phoneNumber": "Telefon Numarası",
-    "labels_phoneNumberPlaceholder": "Telefon numaranızı girin"
+    "labels_phoneNumberPlaceholder": "Telefon numaranızı girin",
+    "promo": "Promosyon kodunu girin",
+    "promo_button": "Uygula"
   },
   "Product": {
     "description": "Açıklama",
@@ -124,5 +126,121 @@
     "low": "Düşük",
     "medium": "Orta",
     "high": "Yüksek"
+  },
+  "NutritionistShowcase": {
+    "title": "Sağlık Yolculuğunuzu Dönüştürün",
+    "sections": {
+      "nutritionist": {
+        "title": "Dr. Jane Doe ile Tanışın",
+        "cards": {
+          "education": {
+            "title": "Eğitim ve Deneyim",
+            "items": [
+              "Harvard Üniversitesi, Beslenme Bilimleri Doktorası",
+              "10+ yıl klinik deneyim",
+              "Johns Hopkins Üniversitesi'nde araştırma bursu",
+              "Olimpiyat sporcuları için eski beslenme uzmanı"
+            ]
+          },
+          "certifications": {
+            "title": "Sertifikalar",
+            "items": [
+              "Sertifikalı Beslenme Uzmanı (CNS)",
+              "Kayıtlı Diyetisyen Beslenme Uzmanı (RDN)",
+              "Sertifikalı Diyabet Eğitmeni (CDE)",
+              "Spor Beslenme Uzmanı",
+              "Seviye 2 Hassas Beslenme Sertifikası"
+            ]
+          },
+          "publications": {
+            "title": "Yayınlar ve Medya",
+            "items": [
+              "\"Akıllıca Ye, İyi Yaşa\" adlı çok satan kitabın yazarı",
+              "Nutrition Today dergisine düzenli katkı sağlayan",
+              "Ulusal Sağlık Radyosu'nda öne çıkan uzman",
+              "\"Kişiselleştirilmiş Beslenmenin Geleceği\" üzerine TEDx konuşmacısı"
+            ]
+          },
+          "specializations": {
+            "title": "Uzmanlık Alanları",
+            "items": [
+              "Bağırsak sağlığı ve mikrobiyom optimizasyonu",
+              "Spor beslenmesi ve performans arttırma",
+              "Kilo yönetimi ve metabolik sağlık",
+              "Nutrigenomik ve kişiselleştirilmiş beslenme",
+              "Bitki bazlı beslenme ve sürdürülebilir beslenme"
+            ]
+          }
+        }
+      },
+      "form": {
+        "title": "Sağlık Yolculuğunuzu Dönüştürün",
+        "fields": {
+          "height": "Boy (cm)",
+          "age": "Yaş",
+          "gender": {
+            "label": "Cinsiyet",
+            "options": {
+              "male": "Erkek",
+              "female": "Kadın",
+              "other": "Diğer"
+            }
+          },
+          "exerciseFrequency": "Egzersiz Sıklığı (haftada gün)",
+          "alcoholConsumption": {
+            "label": "Alkol Tüketimi",
+            "options": {
+              "none": "Hiç",
+              "occasional": "Ara sıra",
+              "moderate": "Orta",
+              "heavy": "Yoğun"
+            }
+          },
+          "smokingStatus": {
+            "label": "Sigara İçme Durumu",
+            "options": {
+              "non_smoker": "Sigara içmeyen",
+              "former_smoker": "Eski sigara içici",
+              "current_smoker": "Mevcut sigara içici"
+            }
+          },
+          "pregnancyStatus": "Gebelik Durumu",
+          "breastfeedingStatus": "Emzirme Durumu",
+          "digestiveIssues": {
+            "label": "Sindirim Sorunları",
+            "options": ["Şişkinlik", "Kabızlık", "İshal", "Asit Reflü", "IBS"]
+          },
+          "cookingSkills": {
+            "label": "Yemek Yapma Becerileri",
+            "options": {
+              "beginner": "Başlangıç",
+              "intermediate": "Orta seviye",
+              "advanced": "İleri seviye"
+            }
+          },
+          "mealPrepTime": {
+            "label": "Yemek Hazırlama Süresi",
+            "options": {
+              "minimal": "Minimal",
+              "moderate": "Orta",
+              "extensive": "Yoğun"
+            }
+          },
+          "budgetConstraints": {
+            "label": "Bütçe Kısıtlamaları",
+            "options": {
+              "low": "Düşük",
+              "medium": "Orta",
+              "high": "Yüksek"
+            }
+          },
+          "foodPreferences": {
+            "label": "Yiyecek Tercihleri",
+            "options": ["Baharatlı", "Tatlı", "Lezzetli", "Acı", "Ekşi"]
+          }
+        },
+        "submitButton": "Dönüşümünüze Başlayın"
+      }
+    }
   }
 }

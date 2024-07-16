@@ -98,7 +98,9 @@
     "labels_cardExpiry": "Date d'expiration",
     "labels_cardCVC": "CVC",
     "labels_phoneNumber": "Numéro de téléphone",
-    "labels_phoneNumberPlaceholder": "Entrez votre numéro de téléphone"
+    "labels_phoneNumberPlaceholder": "Entrez votre numéro de téléphone",
+    "promo": "Entrez le code promo",
+    "promo_button": "Appliquer"
   },
   "Product": {
     "description": "Description",
@@ -124,5 +126,127 @@
     "low": "Faible",
     "medium": "Moyen",
     "high": "Élevé"
+  },
+  "NutritionistShowcase": {
+    "title": "Transformez votre parcours de santé",
+    "sections": {
+      "nutritionist": {
+        "title": "Rencontrez Dr. Jane Doe",
+        "cards": {
+          "education": {
+            "title": "Éducation et Expérience",
+            "items": [
+              "Doctorat en sciences de la nutrition, Université de Harvard",
+              "Plus de 10 ans d'expérience clinique",
+              "Bourse de recherche à l'Université Johns Hopkins",
+              "Ancienne nutritionniste pour les athlètes olympiques"
+            ]
+          },
+          "certifications": {
+            "title": "Certifications",
+            "items": [
+              "Spécialiste en nutrition certifié (CNS)",
+              "Diététicienne-nutritionniste enregistrée (RDN)",
+              "Éducateur certifié en diabète (CDE)",
+              "Spécialiste en nutrition sportive",
+              "Certification Niveau 2 en nutrition de précision"
+            ]
+          },
+          "publications": {
+            "title": "Publications et Médias",
+            "items": [
+              "Auteur du best-seller \"Mangez intelligemment, vivez bien\"",
+              "Contributeur régulier au journal Nutrition Today",
+              "Expert présenté à la radio nationale de santé",
+              "Conférencière TEDx sur \"L'avenir de la nutrition personnalisée\""
+            ]
+          },
+          "specializations": {
+            "title": "Spécialisations",
+            "items": [
+              "Santé intestinale et optimisation du microbiome",
+              "Nutrition sportive et amélioration des performances",
+              "Gestion du poids et santé métabolique",
+              "Nutrigenomique et nutrition personnalisée",
+              "Nutrition à base de plantes et alimentation durable"
+            ]
+          }
+        }
+      },
+      "form": {
+        "title": "Transformez votre parcours de santé",
+        "fields": {
+          "height": "Taille (cm)",
+          "age": "Âge",
+          "gender": {
+            "label": "Genre",
+            "options": {
+              "male": "Homme",
+              "female": "Femme",
+              "other": "Autre"
+            }
+          },
+          "exerciseFrequency": "Fréquence d'exercice (jours par semaine)",
+          "alcoholConsumption": {
+            "label": "Consommation d'alcool",
+            "options": {
+              "none": "Aucune",
+              "occasional": "Occasionnelle",
+              "moderate": "Modérée",
+              "heavy": "Importante"
+            }
+          },
+          "smokingStatus": {
+            "label": "Statut tabagique",
+            "options": {
+              "non_smoker": "Non-fumeur",
+              "former_smoker": "Ancien fumeur",
+              "current_smoker": "Fumeur actuel"
+            }
+          },
+          "pregnancyStatus": "Statut de grossesse",
+          "breastfeedingStatus": "Statut d'allaitement",
+          "digestiveIssues": {
+            "label": "Problèmes digestifs",
+            "options": [
+              "Ballonnements",
+              "Constipation",
+              "Diarrhée",
+              "Reflux acide",
+              "SII"
+            ]
+          },
+          "cookingSkills": {
+            "label": "Compétences culinaires",
+            "options": {
+              "beginner": "Débutant",
+              "intermediate": "Intermédiaire",
+              "advanced": "Avancé"
+            }
+          },
+          "mealPrepTime": {
+            "label": "Temps de préparation des repas",
+            "options": {
+              "minimal": "Minime",
+              "moderate": "Modéré",
+              "extensive": "Étendu"
+            }
+          },
+          "budgetConstraints": {
+            "label": "Contraintes budgétaires",
+            "options": {
+              "low": "Faible",
+              "medium": "Moyenne",
+              "high": "Élevée"
+            }
+          },
+          "foodPreferences": {
+            "label": "Préférences alimentaires",
+            "options": ["Épicé", "Sucré", "Savoureux", "Amer", "Acide"]
+          }
+        },
+        "submitButton": "Commencez votre transformation"
+      }
+    }
   }
 }

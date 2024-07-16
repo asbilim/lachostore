@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Star, TruckIcon, ShieldCheck, ArrowRight } from "lucide-react";
+import { Star, TruckIcon, ShieldCheck, Share2, Gift } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ProductDetails from "./parts";
 import { motion, AnimatePresence } from "framer-motion";
@@ -23,6 +23,16 @@ import { useInView } from "react-intersection-observer";
 import { useCart } from "@/providers/cart";
 import { useToast } from "@/components/ui/use-toast";
 import { Link } from "@/components/navigation";
+import {
+  FacebookShareButton,
+  TwitterShareButton,
+  WhatsappShareButton,
+  EmailShareButton,
+  FacebookIcon,
+  TwitterIcon,
+  WhatsappIcon,
+  EmailIcon,
+} from "react-share";
 
 export default function Main(props) {
   const { cart, addToCart, removeFromCart } = useCart();
@@ -341,6 +351,36 @@ export default function Main(props) {
               </Button>
             )}
           </motion.form>
+          <motion.div variants={fadeInUp} className="flex gap-4">
+            <Button
+              variant="outline"
+              size="lg"
+              className="flex items-center gap-2">
+              <Share2 className="w-5 h-5" />
+              Share
+              <div className="flex gap-2">
+                <FacebookShareButton url={window.location.href}>
+                  <FacebookIcon size={32} round />
+                </FacebookShareButton>
+                <TwitterShareButton url={window.location.href}>
+                  <TwitterIcon size={32} round />
+                </TwitterShareButton>
+                <WhatsappShareButton url={window.location.href}>
+                  <WhatsappIcon size={32} round />
+                </WhatsappShareButton>
+                <EmailShareButton url={window.location.href}>
+                  <EmailIcon size={32} round />
+                </EmailShareButton>
+              </div>
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              className="flex items-center gap-2">
+              <Gift className="w-5 h-5" />
+              Refer & Earn
+            </Button>
+          </motion.div>
           <motion.div
             variants={fadeInUp}
             className="flex flex-col sm:flex-row justify-between items-center text-sm text-gray-600">

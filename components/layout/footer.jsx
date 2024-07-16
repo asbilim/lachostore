@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import NewsletterSubscribe from "../reusables/newsletter";
 
 const languages = [
   { code: "en", name: "English" },
@@ -54,17 +55,11 @@ export default function Footer({
               <div className="h-8 w-auto">{/* Add your logo SVG here */}</div>
             </Link>
             <p className="text-sm font-light max-w-md">{text}</p>
-            <div className="flex items-center space-x-4">
-              <Input
-                type="email"
-                placeholder={placeholder}
-                className="max-w-xs"
-              />
-              <Button>
-                {subscribe}
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
+
+            <NewsletterSubscribe
+              placeholder={placeholder}
+              content={subscribe}
+            />
           </div>
           <div className="md:pl-8">
             <ScrollArea className="h-[300px] md:h-auto">

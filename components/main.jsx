@@ -7,7 +7,9 @@ import { Link } from "@/components/navigation";
 import slugify from "react-slugify";
 import { useCart } from "@/hooks/use-cart";
 import HeroShop from "./hero";
+
 const ProductCard = ({ product, locale }) => {
+  
   const [isAdding, setIsAdding] = useState(false);
   const { cart, addToCart, removeFromCart, error } = useCart();
   const isInCart = cart.some((item) => item.id === product.id);

@@ -7,7 +7,7 @@
     },
     "section_two": {
       "title": "Achieve Your Goals: Talk to a Professional",
-      "description": "Connect with our experts for personalized advice to help you reach your business objectives. Benefit from tailored strategies and insights to maximize your potential.",
+      "description": "Connect with our experts for personalized advice to help you reach your fitness goals. Benefit from tailored strategies and insights to maximize your potential.",
       "subtitle": "Customer Choices"
     },
     "button": "View All Products",
@@ -98,7 +98,9 @@
     "labels_cardExpiry": "Expiry Date",
     "labels_cardCVC": "CVC",
     "labels_phoneNumber": "Phone Number",
-    "labels_phoneNumberPlaceholder": "Enter your phone number"
+    "labels_phoneNumberPlaceholder": "Enter your phone number",
+    "promo": "Enter promo code",
+    "promo_button": "Apply"
   },
   "Product": {
     "description": "Description",
@@ -131,5 +133,127 @@
     "add_to_cart": "Add to cart",
     "products": "Products",
     "shop": "Shop"
+  },
+  "NutritionistShowcase": {
+    "title": "Transform Your Health Journey",
+    "sections": {
+      "nutritionist": {
+        "title": "Meet Dr. Jane Doe",
+        "cards": {
+          "education": {
+            "title": "Education and Experience",
+            "items": [
+              "PhD in Nutritional Sciences, Harvard University",
+              "10+ years of clinical experience",
+              "Research fellowship at Johns Hopkins University",
+              "Former nutritionist for Olympic athletes"
+            ]
+          },
+          "certifications": {
+            "title": "Certifications",
+            "items": [
+              "Certified Nutrition Specialist (CNS)",
+              "Registered Dietitian Nutritionist (RDN)",
+              "Certified Diabetes Educator (CDE)",
+              "Sports Nutrition Specialist",
+              "Precision Nutrition Level 2 Certified"
+            ]
+          },
+          "publications": {
+            "title": "Publications and Media",
+            "items": [
+              "Author of \"Eat Smart, Live Well\" bestseller",
+              "Regular contributor to Nutrition Today journal",
+              "Featured expert on National Health Radio",
+              "TEDx speaker on \"The Future of Personalized Nutrition\""
+            ]
+          },
+          "specializations": {
+            "title": "Specializations",
+            "items": [
+              "Gut health and microbiome optimization",
+              "Sports nutrition and performance enhancement",
+              "Weight management and metabolic health",
+              "Nutrigenomics and personalized nutrition",
+              "Plant-based nutrition and sustainable eating"
+            ]
+          }
+        }
+      },
+      "form": {
+        "title": "Transform Your Health Journey",
+        "fields": {
+          "height": "Height (cm)",
+          "age": "Age",
+          "gender": {
+            "label": "Gender",
+            "options": {
+              "male": "Male",
+              "female": "Female",
+              "other": "Other"
+            }
+          },
+          "exerciseFrequency": "Exercise Frequency (days per week)",
+          "alcoholConsumption": {
+            "label": "Alcohol Consumption",
+            "options": {
+              "none": "None",
+              "occasional": "Occasional",
+              "moderate": "Moderate",
+              "heavy": "Heavy"
+            }
+          },
+          "smokingStatus": {
+            "label": "Smoking Status",
+            "options": {
+              "non_smoker": "Non-smoker",
+              "former_smoker": "Former smoker",
+              "current_smoker": "Current smoker"
+            }
+          },
+          "pregnancyStatus": "Pregnancy Status",
+          "breastfeedingStatus": "Breastfeeding Status",
+          "digestiveIssues": {
+            "label": "Digestive Issues",
+            "options": [
+              "Bloating",
+              "Constipation",
+              "Diarrhea",
+              "Acid Reflux",
+              "IBS"
+            ]
+          },
+          "cookingSkills": {
+            "label": "Cooking Skills",
+            "options": {
+              "beginner": "Beginner",
+              "intermediate": "Intermediate",
+              "advanced": "Advanced"
+            }
+          },
+          "mealPrepTime": {
+            "label": "Meal Preparation Time",
+            "options": {
+              "minimal": "Minimal",
+              "moderate": "Moderate",
+              "extensive": "Extensive"
+            }
+          },
+          "budgetConstraints": {
+            "label": "Budget Constraints",
+            "options": {
+              "low": "Low",
+              "medium": "Medium",
+              "high": "High"
+            }
+          },
+          "foodPreferences": {
+            "label": "Food Preferences",
+            "options": ["Spicy", "Sweet", "Savory", "Bitter", "Sour"]
+          }
+        },
+        "submitButton": "Begin Your Transformation"
+      }
+    }
   }
 }
