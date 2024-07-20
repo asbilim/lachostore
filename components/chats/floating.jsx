@@ -19,7 +19,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 
 // Initialize the Gemini API
-const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
+const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY, {
+  model: "",
+});
 
 // Lachofit information array
 const LACHOFIT_INFO = [
@@ -419,9 +421,7 @@ const MessageBubble = React.memo(({ message }) => {
           )}
           whileHover={{ scale: 1.05 }}>
           {message.content}
-          <div className="mt-1 text-xs opacity-70">
-            {new Date().toLocaleTimeString()}
-          </div>
+          <div className="mt-1 text-xs opacity-70"></div>
         </motion.div>
       </motion.div>
       {message.sentiment !== "neutral" && (
