@@ -178,6 +178,10 @@
         "fields": {
           "height": "Boy (cm)",
           "age": "Yaş",
+          "appointmentDate": {
+            "label": "Randevu Tarihi",
+            "placeholder": "Randevu tarih ve saatini seçin"
+          },
           "gender": {
             "label": "Cinsiyet",
             "options": {
@@ -218,6 +222,9 @@
               "advanced": "İleri seviye"
             }
           },
+          "fullName": "Tam Ad",
+          "email": "E-posta Adresi",
+          "phoneNumber": "Telefon Numarası",
           "mealPrepTime": {
             "label": "Yemek Hazırlama Süresi",
             "options": {

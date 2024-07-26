@@ -49,11 +49,24 @@ export default function Page({ locale }) {
       form: {
         title: t("sections.form.title"),
         fields: {
+          fullName: {
+            label: t("sections.form.fields.fullName"),
+          },
+          email: {
+            label: t("sections.form.fields.email"),
+          },
+          phoneNumber: {
+            label: t("sections.form.fields.phoneNumber"),
+          },
           height: {
             label: t("sections.form.fields.height"),
           },
           age: {
             label: t("sections.form.fields.age"),
+          },
+          appointmentDate: {
+            label: t("sections.form.fields.appointmentDate.label"),
+            placeholder: t("sections.form.fields.appointmentDate.placeholder"),
           },
           gender: {
             label: t("sections.form.fields.gender.label"),

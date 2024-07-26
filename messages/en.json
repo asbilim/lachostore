@@ -184,6 +184,10 @@
         "title": "Transform Your Health Journey",
         "fields": {
           "height": "Height (cm)",
+          "appointmentDate": {
+            "label": "Appointment Date",
+            "placeholder": "Select appointment date and time"
+          },
           "age": "Age",
           "gender": {
             "label": "Gender",
@@ -203,6 +207,9 @@
               "heavy": "Heavy"
             }
           },
+          "fullName": "Full Name",
+          "email": "Email Address",
+          "phoneNumber": "Phone Number",
           "smokingStatus": {
             "label": "Smoking Status",
             "options": {

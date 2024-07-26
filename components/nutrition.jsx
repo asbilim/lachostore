@@ -11,6 +11,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/components/ui/use-toast";
+import { Toaster } from "@/components/ui/toaster";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import CustomTimeInput from "./ui/custom-calendar";
+import { cn } from "@/lib/utils";
 import {
   Select,
   SelectContent,
@@ -25,10 +31,26 @@ import { Checkbox } from "@/components/ui/checkbox";
 gsap.registerPlugin(ScrollTrigger);
 
 const schema = z.object({
-  height: z.number().optional(),
-  age: z.number().optional(),
+  height: z
+    .string()
+    .refine((val) => !val || (Number(val) > 0 && Number(val) <= 300), {
+      message: "Height must be a positive number up to 300 cm",
+    }),
+  appointmentDate: z.date().refine((date) => date > new Date(), {
+    message: "Appointment date must be in the future",
+  }),
+  age: z
+    .string()
+    .refine((val) => !val || (Number(val) >= 18 && Number(val) <= 120), {
+      message: "Age must be between 18 and 120",
+    }),
   gender: z.string().optional(),
-  exerciseFrequency: z.number().optional(),
+  exerciseFrequency: z
+    .number()
+    .transform(Number)
+    .refine((val) => val >= 0 && val <= 7, {
+      message: "Exercise frequency must be between 0 and 7 days per week",
+    }),
   alcoholConsumption: z.string().optional(),
   smokingStatus: z.string().optional(),
   pregnancyStatus: z.boolean().optional(),
@@ -41,33 +63,49 @@ const schema = z.object({
   allergies: z.array(z.string()).optional(),
   dietaryRestrictions: z.string().optional(),
   preferredMealTypes: z.array(z.string()).optional(),
+  fullName: z.string().min(2, "Full name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
+  phoneNumber: z.string().min(8, "Phone number must be at least 10 digits"),
 });
 
 const NutritionistShowcase = ({ locale, translations }) => {
+  const { toast } = useToast();
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      height: "",
-      age: "",
-      gender: "",
+      height: undefined,
+      age: undefined,
+      gender: undefined,
       exerciseFrequency: 0,
-      alcoholConsumption: "",
-      smokingStatus: "",
+      appointmentDate: null,
+      alcoholConsumption: undefined,
+      smokingStatus: undefined,
       pregnancyStatus: false,
       breastfeedingStatus: false,
       digestiveIssues: [],
-      cookingSkills: "",
-      mealPrepTime: "",
-      budgetConstraints: "",
+      cookingSkills: undefined,
+      mealPrepTime: undefined,
+      budgetConstraints: undefined,
       foodPreferences: [],
       allergies: [],
-      dietaryRestrictions: "",
+      dietaryRestrictions: undefined,
       preferredMealTypes: [],
     },
+    mode: "onChange",
   });
 
   const onSubmit = (data) => {
     console.log(data);
+  };
+
+  const onError = (errors) => {
+    Object.values(errors).forEach((error) => {
+      toast({
+        title: "Validation Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    });
   };
 
   const cardRefs = useRef([]);
@@ -143,7 +181,9 @@ const NutritionistShowcase = ({ locale, translations }) => {
             <CardTitle>{translations.sections.form.title}</CardTitle>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <form
+              onSubmit={handleSubmit(onSubmit, onError)}
+              className="space-y-6">
               {Object.entries(translations.sections.form.fields).map(
                 ([fieldName, fieldData]) => (
                   <div key={fieldName} className="space-y-2">
@@ -153,11 +193,20 @@ const NutritionistShowcase = ({ locale, translations }) => {
                       control={control}
                       render={({ field }) => {
                         switch (fieldName) {
+                          case "fullName":
+                          case "email":
+                          case "phoneNumber":
                           case "height":
                           case "age":
                             return (
                               <Input
-                                type="number"
+                                type={
+                                  fieldName === "email"
+                                    ? "email"
+                                    : fieldName === "phoneNumber"
+                                    ? "tel"
+                                    : "text"
+                                }
                                 id={fieldName}
                                 placeholder={fieldData.label}
                                 {...field}
@@ -250,6 +299,40 @@ const NutritionistShowcase = ({ locale, translations }) => {
                   </div>
                 )
               )}
+              <Label htmlFor="appointmentDate">
+                {translations.sections.form.fields.appointmentDate.label}
+              </Label>
+              <Controller
+                name="appointmentDate"
+                control={control}
+                render={({ field }) => (
+                  <DatePicker
+                    selected={field.value}
+                    onChange={(date) => field.onChange(date)}
+                    showTimeSelect
+                    dateFormat="MMMM d, yyyy h:mm aa"
+                    minDate={new Date()}
+                    className={cn(
+                      "w-full p-2 rounded-md border",
+                      "bg-background text-foreground",
+                      "focus:outline-none focus:ring-2 focus:ring-ring focus:border-input"
+                    )}
+                    placeholderText={
+                      translations.sections.form.fields.appointmentDate
+                        .placeholder
+                    }
+                    customTimeInput={<CustomTimeInput />}
+                    popperClassName="react-datepicker-popper"
+                    calendarClassName="bg-background border border-input rounded-md shadow-md"
+                    dayClassName={(date) =>
+                      cn(
+                        "rounded-full hover:bg-accent hover:text-accent-foreground",
+                        "mx-1 py-1.5 px-2"
+                      )
+                    }
+                  />
+                )}
+              />
               <Button type="submit" className="w-full">
                 {translations.sections.form.submitButton}
               </Button>
