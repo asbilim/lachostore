@@ -1,4 +1,5 @@
 import ProductSkeleton from "@/components/skeletons/product";
+import PaymentDialog from "@/components/reusables/pay-modal";
 export default function ProductGridSkeleton() {
   return (
     <div className="container mx-auto px-4 py-8">

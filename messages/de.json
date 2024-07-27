@@ -178,6 +178,10 @@
         "title": "Verwandeln Sie Ihre Gesundheitsreise",
         "fields": {
           "height": "Größe (cm)",
+          "appointmentDate": {
+            "label": "Termindatum",
+            "placeholder": "Wählen Sie Datum und Uhrzeit des Termins"
+          },
           "age": "Alter",
           "gender": {
             "label": "Geschlecht",
@@ -225,6 +229,9 @@
               "advanced": "Experte"
             }
           },
+          "fullName": "Vollständiger Name",
+          "email": "E-Mail-Adresse",
+          "phoneNumber": "Telefonnummer",
           "mealPrepTime": {
             "label": "Zeitaufwand für die Zubereitung von Mahlzeiten",
             "options": {

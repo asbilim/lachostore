@@ -177,6 +177,10 @@
         "title": "Transformez votre parcours de santé",
         "fields": {
           "height": "Taille (cm)",
+          "appointmentDate": {
+            "label": "Date du rendez-vous",
+            "placeholder": "Sélectionnez la date et l'heure du rendez-vous"
+          },
           "age": "Âge",
           "gender": {
             "label": "Genre",
@@ -232,6 +236,9 @@
               "extensive": "Étendu"
             }
           },
+          "fullName": "Nom complet",
+          "email": "Adresse e-mail",
+          "phoneNumber": "Numéro de téléphone",
           "budgetConstraints": {
             "label": "Contraintes budgétaires",
             "options": {
