@@ -38,6 +38,7 @@ import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { countries } from "countries-list";
 import { motion } from "framer-motion";
+import PaymentDialog from "./reusables/pay-modal";
 
 export const CheckoutPage = ({
   checkout,
@@ -61,6 +62,8 @@ export const CheckoutPage = ({
     useCart();
   const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState(0);
+
+  console.log(cart);
 
   const formSchema = z.object({
     fullName: z.string().min(2, { message: validationMessages.fullName }),
@@ -152,6 +155,9 @@ export const CheckoutPage = ({
                 <div className="text-center py-8">
                   <h3 className="text-xl font-semibold mb-2">{empty}</h3>
                   <p className="text-gray-500">{empty_description}</p>
+                  <Button onClick={() => document.location.reload()}>
+                    Refresh
+                  </Button>
                 </div>
               ) : (
                 <ScrollArea className="h-[300px] rounded-md border p-4">
@@ -242,7 +248,7 @@ export const CheckoutPage = ({
             </CardFooter>
           </Card>
         </motion.div>
-
+        {/* 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -444,7 +450,9 @@ export const CheckoutPage = ({
               </Form>
             </CardContent>
           </Card>
-        </motion.div>
+        </motion.div> */}
+
+        <PaymentDialog amount={parseFloat(subtotal).toFixed(2)} />
       </div>
     </div>
   );

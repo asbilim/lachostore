@@ -27,6 +27,7 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
+import PaymentDialog from "./reusables/pay-modal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -183,7 +184,7 @@ const NutritionistShowcase = ({ locale, translations }) => {
           <CardContent>
             <form
               onSubmit={handleSubmit(onSubmit, onError)}
-              className="space-y-6">
+              className="space-y-6 flex flex-col">
               {Object.entries(translations.sections.form.fields).map(
                 ([fieldName, fieldData]) => (
                   <div key={fieldName} className="space-y-2">
@@ -333,9 +334,16 @@ const NutritionistShowcase = ({ locale, translations }) => {
                   />
                 )}
               />
-              <Button type="submit" className="w-full">
-                {translations.sections.form.submitButton}
-              </Button>
+              <div className="flex w-full">
+                <PaymentDialog
+                  type="submit"
+                  className="w-full"
+                  onPaymentComplete={(method, data) => {
+                    console.log("Payment completed", method, data);
+                  }}>
+                  {translations.sections.form.submitButton}
+                </PaymentDialog>
+              </div>
             </form>
           </CardContent>
         </Card>
