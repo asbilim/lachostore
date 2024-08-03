@@ -3,11 +3,10 @@ import Image from "next/image";
 import { Link } from "../navigation";
 import { Button } from "@/components/ui/button";
 import slugify from "react-slugify";
-import { Input } from "../ui/input";
 import { useTranslations } from "next-intl";
 import { revalidateTag } from "next/cache";
-import { subscribeToNewsletter } from "@/server/add-to-newsletter";
-import { useSonner } from "sonner";
+import MainPageProductCard from "./main-product";
+
 import NewsletterSubscribe from "../reusables/newsletter";
 export default function ShopMain({ products }) {
   revalidateTag("products");
@@ -25,32 +24,7 @@ export default function ShopMain({ products }) {
         <h2 className="text-primary mb-12">{t("section_two.subtitle")}</h2>
         <div className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {products.map((item) => {
-            return (
-              <Link
-                href={"/shop/product/" + slugify(item.name)}
-                key={item.id}
-                prefetch={true}>
-                <div className="flex flex-col gap-2 w-[150px] md:w-[250px]">
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    width="600"
-                    height={400}
-                    className="w-full h-48 object-contain"
-                    dangerouslyAllowSVG={true}
-                  />
-                  <h3 className="text-sm truncate">{item.name}</h3>
-                  <div className="flex gap-2 items-center ">
-                    <span className="text-primary text-sm">
-                      FCFA {item.sale_price}
-                    </span>
-                    <span className="text-gray-500 text-xs line-through">
-                      {item.price}
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            );
+            return <MainPageProductCard item={item} key={item.name} />;
           })}
         </div>
       </div>
@@ -64,32 +38,7 @@ export default function ShopMain({ products }) {
         <h2 className="text-primary mb-12">{t("section_two.subtitle")}</h2>
         <div className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {products.map((item) => {
-            return (
-              <Link
-                href={"/shop/product/" + slugify(item.name)}
-                key={item.id}
-                prefetch={true}>
-                <div className="flex flex-col gap-2 w-[150px] md:w-[250px]">
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    width="600"
-                    height={400}
-                    className="w-full h-48 object-contain"
-                    dangerouslyAllowSVG={true}
-                  />
-                  <h3 className="text-sm truncate">{item.name}</h3>
-                  <div className="flex gap-2 items-center ">
-                    <span className="text-primary text-sm">
-                      FCFA {item.sale_price}
-                    </span>
-                    <span className="text-gray-500 text-xs line-through">
-                      {item.price}
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            );
+            return <MainPageProductCard item={item} key={item.name} />;
           })}
         </div>
       </div>

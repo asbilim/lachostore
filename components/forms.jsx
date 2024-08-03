@@ -39,7 +39,7 @@ import "react-phone-number-input/style.css";
 import { countries } from "countries-list";
 import { motion } from "framer-motion";
 import PaymentDialog from "./reusables/pay-modal";
-
+import { useCurrency } from "@/providers/currency";
 export const CheckoutPage = ({
   checkout,
   cart_text,
@@ -63,6 +63,17 @@ export const CheckoutPage = ({
   const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState(0);
 
+  const {
+    currency,
+    changeCurrency,
+    supportedCurrencies,
+    getCurrentRatio,
+    convertCurrency,
+  } = useCurrency();
+
+  console.log(getCurrentRatio());
+
+  console.log(convertCurrency(1000, currency, "XAF"));
   console.log(cart);
 
   const formSchema = z.object({
@@ -179,7 +190,10 @@ export const CheckoutPage = ({
                         <div>
                           <h3 className="font-semibold">{item.name}</h3>
                           <p className="text-sm text-gray-500">
-                            FCFA {parseFloat(item.price).toFixed(2)}
+                            {currency + " "}
+                            {parseFloat(
+                              convertCurrency(item.price, "XAF", currency)
+                            ).toFixed(2)}
                           </p>
                         </div>
                       </div>
@@ -225,25 +239,32 @@ export const CheckoutPage = ({
               <div className="flex justify-between w-full">
                 <div>
                   <p className="text-sm text-gray-500">
-                    {subtotal_text}: XAF {parseFloat(subtotal).toFixed(2)}
+                    {subtotal_text}:{" "}
+                    {parseFloat(
+                      convertCurrency(subtotal, "XAF", currency)
+                    ).toFixed(2)}
                   </p>
                   <p className="text-sm text-gray-500">
-                    {shipping_text}: XAF {parseFloat(shipping).toFixed(2)}
+                    {shipping_text}: {currency + " "}
+                    {parseFloat(
+                      convertCurrency(shipping, "XAF", currency)
+                    ).toFixed(2)}
                   </p>
                   {discount > 0 && (
                     <p className="text-sm text-green-500">
-                      Discount: XAF {parseFloat(discount).toFixed(2)}
+                      Discount: {currency + " "}
+                      {parseFloat(
+                        convertCurrency(discount, "XAF", currency)
+                      ).toFixed(2)}
                     </p>
                   )}
                   <p className="font-semibold">
-                    {total_text}: XAF {parseFloat(total).toFixed(2)}
+                    {total_text}:{currency + " "}
+                    {parseFloat(
+                      convertCurrency(total, "XAF", currency)
+                    ).toFixed(2)}
                   </p>
                 </div>
-                <Button
-                  onClick={() => form.handleSubmit(onSubmit)()}
-                  disabled={cart.length === 0}>
-                  {button}
-                </Button>
               </div>
             </CardFooter>
           </Card>

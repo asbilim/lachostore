@@ -2,6 +2,7 @@
 import { Link } from "../navigation";
 import { ChevronDown, Globe, ArrowRight } from "lucide-react";
 import { usePathname } from "../navigation";
+import { DollarSign } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -19,7 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import NewsletterSubscribe from "../reusables/newsletter";
-
+import { useCurrency } from "@/providers/currency";
 const languages = [
   { code: "en", name: "English" },
   { code: "fr", name: "Français" },
@@ -40,6 +41,13 @@ export default function Footer({
   const pathname = usePathname();
   const currentLanguage =
     languages.find((lang) => lang.code === locale) || languages[0];
+  const {
+    currency,
+    changeCurrency,
+    supportedCurrencies,
+    getCurrentRatio,
+    convertCurrency,
+  } = useCurrency();
 
   return (
     <footer className="bg-background">
@@ -117,6 +125,55 @@ export default function Footer({
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
+        </div>
+        <Separator className="my-8" />
+        <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+          <p className="text-sm font-light">{rights}</p>
+          <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Globe className="mr-2 h-4 w-4" />
+                  {currentLanguage.name}
+                  <ChevronDown className="ml-2 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {languages.map((lang) => (
+                  <DropdownMenuItem key={lang.code}>
+                    <a
+                      href={`/${lang.code}${pathname}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        window.location.href = `/${lang.code}${pathname}`;
+                      }}>
+                      {lang.name}
+                    </a>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <DollarSign className="mr-2 h-4 w-4" />
+                  {currency}
+                  <ChevronDown className="ml-2 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {supportedCurrencies.map((curr) => (
+                  <DropdownMenuItem
+                    key={curr.code}
+                    onSelect={() => {
+                      changeCurrency(curr.code);
+                    }}>
+                    {curr.name} ({curr.code})
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </div>
     </footer>

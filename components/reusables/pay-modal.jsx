@@ -20,13 +20,7 @@ import { CreditCard, DollarSign, Mountain, ShoppingCart } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
-
-const mtnPhoneRegex = /^(67|65|68)\d{7}$/;
-const orangePhoneRegex = /^(69|65|68|66|67)\d{7}$/;
-const cardNumberRegex = /^(\d{4}\s?){4}$/;
-const cardExpiryRegex = /^(0[1-9]|1[0-2])\/\d{2}$/;
-const cardCvcRegex = /^\d{3,4}$/;
-
+import { useCurrency } from "@/providers/currency";
 const paymentSchema = z.object({
   phone: z.string().optional(),
   email: z.string().email("Invalid email address"),
@@ -203,7 +197,6 @@ const PaymentForm = ({ control, errors, paymentMethod }) => (
 export default function PaymentDialog({
   onPaymentComplete,
   amount = 2000,
-  currency = "XAF",
   paymentMethods = ["credit-card", "orange-money", "mtn-money", "paypal"],
   triggerButtonText = "Pay Now",
 }) {
@@ -213,6 +206,7 @@ export default function PaymentDialog({
   const paymentWindowRef = useRef(null);
   const [defaultOpen, setOpen] = useState(false);
   const router = useRouter();
+  const { currency, convertCurrency } = useCurrency();
   const {
     control,
     handleSubmit,
@@ -328,7 +322,9 @@ export default function PaymentDialog({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
                 className="text-xl font-semibold text-primary text-center">
-                Amount: {amount} {currency}
+                Amount:{" "}
+                {Number(convertCurrency(amount, "XAF", currency)).toFixed(2)}{" "}
+                {currency}
               </motion.p>
               <Controller
                 name="paymentMethod"

@@ -33,10 +33,14 @@ import {
   WhatsappIcon,
   EmailIcon,
 } from "react-share";
+import { useCurrency } from "@/providers/currency";
+import { usePathname } from "@/components/navigation";
 
 export default function Main(props) {
   const { cart, addToCart, removeFromCart } = useCart();
   const { toast } = useToast();
+  const { currency, convertCurrency } = useCurrency();
+  const pathname = usePathname();
 
   const translations = props.translations;
 
@@ -207,11 +211,17 @@ export default function Main(props) {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
               <div className="flex items-center gap-2 mb-2 sm:mb-0">
                 <h2 className="text-primary text-xl md:text-2xl font-bold">
-                  FCFA {parseFloat(props.product.price).toLocaleString()}
+                  {currency + " "}
+                  {parseFloat(
+                    convertCurrency(props.product.price, "XAF", currency)
+                  ).toFixed(2)}
                 </h2>
                 {props.product.sale_price && (
                   <h2 className="line-through text-gray-500 text-base md:text-lg">
-                    FCFA {parseFloat(props.product.sale_price).toLocaleString()}
+                    {currency + " "}
+                    {parseFloat(
+                      convertCurrency(props.product.sale_price, "XAF", currency)
+                    ).toFixed(2)}
                   </h2>
                 )}
               </div>
@@ -374,16 +384,19 @@ export default function Main(props) {
                 Share
               </div>
               <div className="flex gap-2 mt-2 sm:mt-0">
-                <FacebookShareButton url={window.location.href}>
+                <FacebookShareButton
+                  url={"https://shop.lachofit.com/" + pathname}>
                   <FacebookIcon size={24} round />
                 </FacebookShareButton>
-                <TwitterShareButton url={window.location.href}>
+                <TwitterShareButton
+                  url={"https://shop.lachofit.com/" + pathname}>
                   <TwitterIcon size={24} round />
                 </TwitterShareButton>
-                <WhatsappShareButton url={window.location.href}>
+                <WhatsappShareButton
+                  url={"https://shop.lachofit.com/" + pathname}>
                   <WhatsappIcon size={24} round />
                 </WhatsappShareButton>
-                <EmailShareButton url={window.location.href}>
+                <EmailShareButton url={"https://shop.lachofit.com" + pathname}>
                   <EmailIcon size={24} round />
                 </EmailShareButton>
               </div>

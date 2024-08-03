@@ -11,6 +11,7 @@ import { getProducts } from "@/server/get-products";
 import { Toaster } from "@/components/ui/sonner";
 import { revalidateTag } from "next/cache";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { CurrencyProvider } from "@/providers/currency";
 
 const inter = Inte({
   subsets: ["latin"],
@@ -37,51 +38,53 @@ export default async function RootLayout({ children, params }) {
       lang={locale}
       dangerouslyAllowSVG={true}
       suppressHydrationWarning={true}>
-      <CartProvider>
-        <TooltipProvider>
-          <body className={inter.className}>
-            <Toaster />
-            <FloatingChat products={products} />
-            <PreHeader />
-            <Header
-              locale={locale}
-              home={tHeader("home")}
-              contact={tHeader("contact")}
-              apply={tHeader("apply")}
-              shop={tHeader("shop")}
-              header_cart={tHeader("cart")}
-              products={products}
-            />
-            {children}
-            <Footer
-              locale={locale}
-              text={tFooter("text")}
-              placeholder={tFooter("placeholder")}
-              subscribe={tFooter("subscribe")}
-              link_1={{
-                title: tFooter("link_1.title"),
-                about: tFooter("link_1.about"),
-                careers: tFooter("link_1.careers"),
-                brand: tFooter("link_1.brand"),
-                blog: tFooter("link_1.blog"),
-              }}
-              link_2={{
-                title: tFooter("link_2.title"),
-                discord: tFooter("link_2.discord"),
-                twitter: tFooter("link_2.twitter"),
-                facebook: tFooter("link_2.facebook"),
-                contact: tFooter("link_2.contact"),
-              }}
-              link_3={{
-                title: tFooter("link_3.title"),
-                licensing: tFooter("link_3.licensing"),
-                terms: tFooter("link_3.terms"),
-              }}
-              rights={tFooter("rights")}
-            />
-          </body>
-        </TooltipProvider>
-      </CartProvider>
+      <CurrencyProvider>
+        <CartProvider>
+          <TooltipProvider>
+            <body className={inter.className}>
+              <Toaster />
+              <FloatingChat products={products} />
+              <PreHeader />
+              <Header
+                locale={locale}
+                home={tHeader("home")}
+                contact={tHeader("contact")}
+                apply={tHeader("apply")}
+                shop={tHeader("shop")}
+                header_cart={tHeader("cart")}
+                products={products}
+              />
+              {children}
+              <Footer
+                locale={locale}
+                text={tFooter("text")}
+                placeholder={tFooter("placeholder")}
+                subscribe={tFooter("subscribe")}
+                link_1={{
+                  title: tFooter("link_1.title"),
+                  about: tFooter("link_1.about"),
+                  careers: tFooter("link_1.careers"),
+                  brand: tFooter("link_1.brand"),
+                  blog: tFooter("link_1.blog"),
+                }}
+                link_2={{
+                  title: tFooter("link_2.title"),
+                  discord: tFooter("link_2.discord"),
+                  twitter: tFooter("link_2.twitter"),
+                  facebook: tFooter("link_2.facebook"),
+                  contact: tFooter("link_2.contact"),
+                }}
+                link_3={{
+                  title: tFooter("link_3.title"),
+                  licensing: tFooter("link_3.licensing"),
+                  terms: tFooter("link_3.terms"),
+                }}
+                rights={tFooter("rights")}
+              />
+            </body>
+          </TooltipProvider>
+        </CartProvider>
+      </CurrencyProvider>
     </html>
   );
 }
