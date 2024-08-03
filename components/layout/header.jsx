@@ -3,11 +3,17 @@ import { useState } from "react";
 import Image from "next/image";
 import logo from "@/public/lachostore.png";
 import { Menu, Search, ShoppingBag, UserRound } from "lucide-react";
-import { Link } from "../navigation";
-import { usePathname } from "next/navigation";
+import { Link, usePathname } from "../navigation";
 import { useCart } from "@/providers/cart";
-import { useTheme } from "next-themes";
 import AdvancedSearchModal from "../reusables/advanced-search";
+import { useCurrency } from "@/providers/currency";
+import { Globe, ChevronDown, DollarSign } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 import {
   NavigationMenu,
@@ -36,6 +42,59 @@ import {
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 
+const languages = [
+  { code: "en", name: "English" },
+  { code: "fr", name: "Français" },
+  { code: "de", name: "Deutsche" },
+  { code: "tr", name: "Turkish" },
+];
+
+const LanguageCurrencyDropdowns = ({ currentLanguage, pathname }) => {
+  const { currency, changeCurrency, supportedCurrencies } = useCurrency();
+  console.log(pathname);
+
+  return (
+    <div className="flex space-x-2">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" size="sm" className="hidden md:flex">
+            <Globe className="mr-2 h-4 w-4" />
+            {currentLanguage.name}
+            <ChevronDown className="ml-2 h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          {languages.map((lang) => (
+            <DropdownMenuItem key={lang.code}>
+              <Link href={`/${pathname}`} locale={lang.code}>
+                {lang.name}
+              </Link>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" size="sm" className="hidden md:flex">
+            <DollarSign className="mr-2 h-4 w-4" />
+            {currency}
+            <ChevronDown className="ml-2 h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          {supportedCurrencies.map((curr) => (
+            <DropdownMenuItem
+              key={curr.code}
+              onSelect={() => changeCurrency(curr.code)}>
+              {curr.name} ({curr.code})
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  );
+};
+
 export default function Header({
   locale,
   home,
@@ -57,6 +116,10 @@ export default function Header({
   const { cart } = useCart();
   const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+
+  const currentLanguage =
+    languages.find((lang) => lang.code === locale) || languages[0];
+  const { currency, changeCurrency, supportedCurrencies } = useCurrency();
 
   const toggleSearchModal = () => setIsSearchModalOpen(!isSearchModalOpen);
 
@@ -136,7 +199,11 @@ export default function Header({
                 </div>
               </HoverCardContent>
             </HoverCard>
-
+            <LanguageCurrencyDropdowns
+              currentLanguage={currentLanguage}
+              currency={currency}
+              pathname={pathName}
+            />
             <Sheet>
               <SheetTrigger className="md:hidden">
                 <Menu className="w-6 h-6 text-muted-foreground" />
@@ -168,6 +235,11 @@ export default function Header({
                         className="w-full">
                         <Search className="mr-2 h-4 w-4" /> Search Products
                       </Button>
+                      <LanguageCurrencyDropdowns
+                        currentLanguage={currentLanguage}
+                        currency={currency}
+                        pathname={pathName}
+                      />
                     </div>
                   </SheetDescription>
                 </SheetHeader>

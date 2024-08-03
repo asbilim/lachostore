@@ -41,6 +41,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
+import { useCurrency } from "@/providers/currency";
 
 const AdvancedSearchModal = ({ products, isOpen, onClose }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -50,6 +51,7 @@ const AdvancedSearchModal = ({ products, isOpen, onClose }) => {
   const [sortBy, setSortBy] = useState("relevance");
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { currency, convertCurrency } = useCurrency();
 
   const router = useRouter();
   const { toast } = useToast();
@@ -290,7 +292,14 @@ const AdvancedSearchModal = ({ products, isOpen, onClose }) => {
                                   {product.name}
                                 </span>
                                 <span className="text-sm text-gray-500">
-                                  {product.price} FCFA
+                                  {parseFloat(
+                                    convertCurrency(
+                                      product.sale_price,
+                                      "XAF",
+                                      currency
+                                    )
+                                  ).toFixed(2)}
+                                  {currency + " "}
                                 </span>
                               </div>
                             </CardContent>

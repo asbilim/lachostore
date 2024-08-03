@@ -7,12 +7,14 @@ import { Link } from "@/components/navigation";
 import slugify from "react-slugify";
 import { useCart } from "@/hooks/use-cart";
 import HeroShop from "./hero";
+import { useCurrency } from "@/providers/currency";
 
 const ProductCard = ({ product, locale }) => {
-  
   const [isAdding, setIsAdding] = useState(false);
   const { cart, addToCart, removeFromCart, error } = useCart();
   const isInCart = cart.some((item) => item.id === product.id);
+
+  const { currency, convertCurrency } = useCurrency();
 
   if (error) {
     alert(error);
@@ -70,15 +72,24 @@ const ProductCard = ({ product, locale }) => {
             {product.sale_price ? (
               <>
                 <span className="text-green-900 font-bold">
-                  {parseFloat(product.sale_price).toLocaleString()} FCFA
+                  {parseFloat(
+                    convertCurrency(product.sale_price, "XAF", currency)
+                  ).toFixed(2)}
+                  {currency + " "}
                 </span>
                 <span className="text-green-600 line-through ml-2">
-                  {parseFloat(product.price).toLocaleString()} FCFA
+                  {parseFloat(
+                    convertCurrency(product.price, "XAF", currency)
+                  ).toFixed(2)}
+                  {currency + " "}
                 </span>
               </>
             ) : (
               <span className="text-green-900 font-bold">
-                {parseFloat(product.price).toLocaleString()} FCFA
+                {parseFloat(
+                  convertCurrency(product.price, "XAF", currency)
+                ).toFixed(2)}
+                {currency + " "}
               </span>
             )}
           </div>
