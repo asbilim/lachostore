@@ -51,22 +51,26 @@ const languages = [
 
 const LanguageCurrencyDropdowns = ({ currentLanguage, pathname }) => {
   const { currency, changeCurrency, supportedCurrencies } = useCurrency();
-  console.log(pathname);
 
   return (
-    <div className="flex space-x-2">
+    <div className="flex flex-col space-y-2 w-full md:flex-row md:space-x-2 md:space-y-0 md:w-auto">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm" className="hidden md:flex">
-            <Globe className="mr-2 h-4 w-4" />
-            {currentLanguage.name}
-            <ChevronDown className="ml-2 h-4 w-4" />
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full md:w-auto justify-between">
+            <div className="flex items-center">
+              <Globe className="mr-2 h-4 w-4" />
+              <span className="mr-1">{currentLanguage.name}</span>
+            </div>
+            <ChevronDown className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           {languages.map((lang) => (
             <DropdownMenuItem key={lang.code}>
-              <Link href={`/${pathname}`} locale={lang.code}>
+              <Link href={`/${pathname}`} locale={lang.code} className="w-full">
                 {lang.name}
               </Link>
             </DropdownMenuItem>
@@ -75,17 +79,23 @@ const LanguageCurrencyDropdowns = ({ currentLanguage, pathname }) => {
       </DropdownMenu>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm" className="hidden md:flex">
-            <DollarSign className="mr-2 h-4 w-4" />
-            {currency}
-            <ChevronDown className="ml-2 h-4 w-4" />
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full md:w-auto justify-between">
+            <div className="flex items-center">
+              <DollarSign className="mr-2 h-4 w-4" />
+              <span className="mr-1">{currency}</span>
+            </div>
+            <ChevronDown className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           {supportedCurrencies.map((curr) => (
             <DropdownMenuItem
               key={curr.code}
-              onSelect={() => changeCurrency(curr.code)}>
+              onSelect={() => changeCurrency(curr.code)}
+              className="w-full">
               {curr.name} ({curr.code})
             </DropdownMenuItem>
           ))}
@@ -94,7 +104,6 @@ const LanguageCurrencyDropdowns = ({ currentLanguage, pathname }) => {
     </div>
   );
 };
-
 export default function Header({
   locale,
   home,
@@ -119,7 +128,6 @@ export default function Header({
 
   const currentLanguage =
     languages.find((lang) => lang.code === locale) || languages[0];
-  const { currency, changeCurrency, supportedCurrencies } = useCurrency();
 
   const toggleSearchModal = () => setIsSearchModalOpen(!isSearchModalOpen);
 
@@ -199,11 +207,14 @@ export default function Header({
                 </div>
               </HoverCardContent>
             </HoverCard>
-            <LanguageCurrencyDropdowns
-              currentLanguage={currentLanguage}
-              currency={currency}
-              pathname={pathName}
-            />
+
+            <div className="hidden md:block">
+              <LanguageCurrencyDropdowns
+                currentLanguage={currentLanguage}
+                pathname={pathName}
+              />
+            </div>
+
             <Sheet>
               <SheetTrigger className="md:hidden">
                 <Menu className="w-6 h-6 text-muted-foreground" />
@@ -235,9 +246,10 @@ export default function Header({
                         className="w-full">
                         <Search className="mr-2 h-4 w-4" /> Search Products
                       </Button>
+                    </div>
+                    <div className="mt-4">
                       <LanguageCurrencyDropdowns
                         currentLanguage={currentLanguage}
-                        currency={currency}
                         pathname={pathName}
                       />
                     </div>
