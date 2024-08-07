@@ -20,10 +20,101 @@ const inter = Inte({
   display: "swap",
 });
 
-export const metadata = {
-  title: "Lachofit Store | Official",
-  description: "The official web store of Lachofit",
-};
+export function generateMetadata() {
+  const siteName = "Lachofit Store";
+  const baseUrl = "https://www.shop.lachofit.com";
+  const defaultDescription =
+    "Discover authentic African products at Lachofit Store. We offer a wide range of local goods from Cameroon and across Africa, with multi-currency support and worldwide shipping.";
+  const defaultImage = `https://images.pexels.com/photos/25388946/pexels-photo-25388946/free-photo-of-strawberries-in-boxes-at-market.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1`;
+
+  return {
+    title: {
+      default: `${siteName} - Authentic African Products`,
+      template: `%s | ${siteName}`,
+    },
+    description: defaultDescription,
+    keywords: [
+      "African products",
+      "Cameroon",
+      "e-commerce",
+      "multivendor",
+      "local goods",
+      "African fashion",
+      "African food",
+      "African art",
+      "multicurrency",
+      "global shipping",
+    ],
+    authors: [{ name: "Lachofit Team" }],
+    creator: "Lachofit Store",
+    publisher: "Lachofit Inc.",
+    metadataBase: new URL(baseUrl),
+    alternates: {
+      canonical: "/",
+      languages: {
+        "en-US": "/en",
+        "fr-FR": "/fr",
+        "de-DE": "/de",
+        "tr-TU": "/tr",
+      },
+    },
+    openGraph: {
+      type: "website",
+      siteName: siteName,
+      title: `${siteName} - Your Gateway to African Excellence`,
+      description: defaultDescription,
+      images: [
+        {
+          url: defaultImage,
+          width: 1200,
+          height: 630,
+          alt: "Lachofit Store - Showcasing African Products",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      site: "@lachofitstore",
+      title: `${siteName} - Authentic African Marketplace`,
+      description:
+        "Explore unique products from Cameroon and Africa. Multi-currency support, worldwide shipping!",
+      images: [defaultImage],
+    },
+    viewport: {
+      width: "device-width",
+      initialScale: 1,
+      maximumScale: 1,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
+    icons: {
+      icon: "/favicon.ico",
+      apple: [
+        { url: "/apple-icon.png" },
+        { url: "/apple-icon-x3.png", sizes: "180x180", type: "image/png" },
+      ],
+    },
+    manifest: `${baseUrl}/site.webmanifest`,
+    themeColor: [
+      { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+      { media: "(prefers-color-scheme: dark)", color: "#0f172a" },
+    ],
+    other: {
+      "google-site-verification": "your-google-site-verification-code",
+      "msvalidate.01": "your-bing-verification-code",
+      "facebook-domain-verification": "your-facebook-domain-verification-code",
+    },
+  };
+}
 
 export default async function RootLayout({ children, params }) {
   const { locale } = params;

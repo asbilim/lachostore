@@ -2,18 +2,29 @@ import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { Link } from "../navigation";
 import { Button } from "@/components/ui/button";
-import slugify from "react-slugify";
 import { useTranslations } from "next-intl";
 import { revalidateTag } from "next/cache";
 import MainPageProductCard from "./main-product";
-
 import NewsletterSubscribe from "../reusables/newsletter";
+import { StoreCarousel } from "../reusables/stores";
 export default function ShopMain({ products }) {
   revalidateTag("products");
   const t = useTranslations("Index");
 
   return (
     <div className="flex w-full h-full my-12  flex-col gap-8 items-center ">
+      <div className="w-full flex flex-col max-w-6xl gap-4">
+        <CustomLink text={t("section_store.title")} href="" />
+        <p className="text-sm leading-relaxed">
+          {t("section_store.description")}
+        </p>
+      </div>
+      <div className="w-full flex flex-col max-w-6xl  gap-4">
+        <h2 className="text-primary mb-12">{t("section_store.subtitle")}</h2>
+        <div className="w-full flex">
+          <StoreCarousel items={products} />
+        </div>
+      </div>
       <div className="w-full flex flex-col max-w-6xl gap-4">
         <CustomLink text={t("section_one.title")} href="" />
         <p className="text-sm leading-relaxed">

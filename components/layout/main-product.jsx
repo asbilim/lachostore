@@ -8,7 +8,7 @@ export default function MainPageProductCard({ item }) {
 
   return (
     <Link
-      href={"/shop/product/" + slugify(item.name)}
+      href={"/en/shop/product/" + slugify(item.name)}
       key={item.id}
       prefetch={true}>
       <div className="flex flex-col gap-2 w-[150px] md:w-[250px]">
