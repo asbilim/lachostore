@@ -1,5 +1,10 @@
 {
   "Index": {
+    "section_store": {
+      "title": "Onaylı Dünya Çapındaki Mağazalar Ağımızı Keşfedin",
+      "description": "Dünya çapında özenle seçilmiş, üstün kaliteli ürünler ve hizmet sunmak için titizlikle değerlendirilmiş mağazaların koleksiyonunu keşfedin.",
+      "subtitle": "Öne Çıkan Ortaklar"
+    },
     "section_one": {
       "title": "Bugün Bizimle Satışa Başlayın",
       "description": "Satıcı topluluğumuza katılın ve pazar erişiminizi genişletin. Bizimle yolculuğunuza başlayın ve her adımda kapsamlı destekle sorunsuz satış deneyimi yaşayın.",
@@ -248,6 +253,63 @@
         },
         "submitButton": "Dönüşümünüze Başlayın"
       }
+    }
+  },
+  "register_store": {
+    "cardTitle": "Mağazanızı Kaydedin",
+    "steps": [
+      "Temel Bilgiler",
+      "İletişim Bilgileri",
+      "Çevrimiçi Varlık",
+      "Çalışma Detayları",
+      "Avatar",
+      "Konum"
+    ],
+    "labels": {
+      "storeName": "Mağaza Adı",
+      "slug": "Slug",
+      "contactEmail": "İletişim E-postası",
+      "contactPhone": "İletişim Telefonu",
+      "address": "Adres",
+      "website": "Web Sitesi",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "twitter": "Twitter",
+      "operatingHours": "Çalışma Saatleri",
+      "description": "Açıklama",
+      "avatar": "Avatar",
+      "geoLocation": "Konum"
+    },
+    "placeholders": {
+      "storeName": "ör., Benim Harika Mağazam",
+      "slug": "ör., benim-harika-magazam",
+      "contactEmail": "ör., contact@example.com",
+      "contactPhone": "ör., (123) 456-7890",
+      "address": "ör., Ana Cadde 123",
+      "website": "ör., https://example.com",
+      "facebook": "ör., https://facebook.com/yourpage",
+      "instagram": "ör., https://instagram.com/yourpage",
+      "twitter": "ör., https://twitter.com/yourpage",
+      "operatingHours": "ör., Pzt-Cuma 9am-5pm",
+      "description": "ör., Mağazanızın kısa bir açıklaması",
+      "avatar": "Bir resmi buraya sürükleyip bırakın veya seçmek için tıklayın"
+    },
+    "buttons": {
+      "previous": "Önceki",
+      "next": "Sonraki",
+      "submit": "Gönder"
+    },
+    "messages": {
+      "fetchingLocation": "Konum alınıyor...",
+      "locationDescription": "Mağazanın konumunu ayarlamak için mevcut konumunuz kullanılır.",
+      "validationError": "Devam etmeden önce lütfen hataları düzeltin.",
+      "locationError": "Konumunuz alınamadı.",
+      "successTitle": "Başarılı",
+      "successDescription": "Mağaza başarıyla oluşturuldu!",
+      "errorTitle": "Hata",
+      "errorDescription": "Mağaza oluşturulurken bir hata oluştu.",
+      "imageUploadedTitle": "Resim Yüklendi",
+      "imageUploadedDescription": "Resim başarıyla yüklendi!"
     }
   }
 }

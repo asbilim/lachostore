@@ -9,7 +9,7 @@ import { useCart } from "@/hooks/use-cart";
 import HeroShop from "./hero";
 import { useCurrency } from "@/providers/currency";
 
-const ProductCard = ({ product, locale }) => {
+export const ProductCard = ({ product, locale }) => {
   const [isAdding, setIsAdding] = useState(false);
   const { cart, addToCart, removeFromCart, error } = useCart();
   const isInCart = cart.some((item) => item.id === product.id);

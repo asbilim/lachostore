@@ -2,12 +2,11 @@ import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { Link } from "../navigation";
 import { Button } from "@/components/ui/button";
-import slugify from "react-slugify";
 import { useTranslations } from "next-intl";
 import { revalidateTag } from "next/cache";
 import MainPageProductCard from "./main-product";
-
 import NewsletterSubscribe from "../reusables/newsletter";
+import { StoreCarousel } from "../reusables/stores";
 export default function ShopMain({ products }) {
   revalidateTag("products");
   const t = useTranslations("Index");
@@ -15,7 +14,19 @@ export default function ShopMain({ products }) {
   return (
     <div className="flex w-full h-full my-12  flex-col gap-8 items-center ">
       <div className="w-full flex flex-col max-w-6xl gap-4">
-        <CustomLink text={t("section_one.title")} href="" />
+        <CustomLink text={t("section_store.title")} href="/products" />
+        <p className="text-sm leading-relaxed">
+          {t("section_store.description")}
+        </p>
+      </div>
+      <div className="w-full flex flex-col max-w-6xl  gap-4">
+        <h2 className="text-primary mb-12">{t("section_store.subtitle")}</h2>
+        <div className="w-full flex">
+          <StoreCarousel items={products} />
+        </div>
+      </div>
+      <div className="w-full flex flex-col max-w-6xl gap-4">
+        <CustomLink text={t("section_one.title")} href="/store/register" />
         <p className="text-sm leading-relaxed">
           {t("section_one.description")}
         </p>
@@ -29,7 +40,7 @@ export default function ShopMain({ products }) {
         </div>
       </div>
       <div className="w-full flex flex-col max-w-6xl gap-4">
-        <CustomLink text={t("section_two.title")} href="" />
+        <CustomLink text={t("section_two.title")} href="/application" />
         <p className="text-sm leading-relaxed">
           {t("section_two.description")}
         </p>
@@ -44,7 +55,9 @@ export default function ShopMain({ products }) {
       </div>
       <div className="w-full flex flex-col max-w-6xl gap-4 my-16">
         <div className="flex">
-          <Button className="flex ">{t("button")}</Button>
+          <Button className="flex ">
+            <Link href="/products">{t("button")}</Link>
+          </Button>
         </div>
       </div>
       <section className="w-full flex flex-col max-w-6xl  gap-4">
@@ -58,7 +71,7 @@ export default function ShopMain({ products }) {
             </p>
 
             <Button>
-              <Link href="/">{t("section_three.button")}</Link>
+              <Link href="/auth/register">{t("section_three.button")}</Link>
             </Button>
           </div>
           <Image

@@ -1,5 +1,10 @@
 {
   "Index": {
+    "section_store": {
+      "title": "Discover Our Global Network of Approved Stores",
+      "description": "Explore a curated selection of top-quality stores from around the world, each vetted to ensure exceptional products and service.",
+      "subtitle": "Featured Partners"
+    },
     "section_one": {
       "title": "Start Selling with Us Today",
       "description": "Join our vibrant community of sellers and expand your market reach. Begin your journey with us and experience seamless selling with comprehensive support every step of the way.",
@@ -261,6 +266,63 @@
         },
         "submitButton": "Begin Your Transformation"
       }
+    }
+  },
+  "register_store": {
+    "cardTitle": "Register Your Store",
+    "steps": [
+      "Basic Info",
+      "Contact Details",
+      "Online Presence",
+      "Operating Details",
+      "Avatar",
+      "Location"
+    ],
+    "labels": {
+      "storeName": "Store Name",
+      "slug": "Slug",
+      "contactEmail": "Contact Email",
+      "contactPhone": "Contact Phone",
+      "address": "Address",
+      "website": "Website",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "twitter": "Twitter",
+      "operatingHours": "Operating Hours",
+      "description": "Description",
+      "avatar": "Avatar",
+      "geoLocation": "Location"
+    },
+    "placeholders": {
+      "storeName": "e.g., My Cool Store",
+      "slug": "e.g., my-cool-store",
+      "contactEmail": "e.g., contact@example.com",
+      "contactPhone": "e.g., (123) 456-7890",
+      "address": "e.g., 123 Main St",
+      "website": "e.g., https://example.com",
+      "facebook": "e.g., https://facebook.com/yourpage",
+      "instagram": "e.g., https://instagram.com/yourpage",
+      "twitter": "e.g., https://twitter.com/yourpage",
+      "operatingHours": "e.g., Mon-Fri 9am-5pm",
+      "description": "e.g., A brief description of your store",
+      "avatar": "Drag & drop an image here, or click to select one"
+    },
+    "buttons": {
+      "previous": "Previous",
+      "next": "Next",
+      "submit": "Submit"
+    },
+    "messages": {
+      "fetchingLocation": "Fetching location...",
+      "locationDescription": "Your current location is used to set the store's location.",
+      "validationError": "Please correct the errors before proceeding.",
+      "locationError": "Unable to retrieve your location.",
+      "successTitle": "Success",
+      "successDescription": "Store created successfully!",
+      "errorTitle": "Error",
+      "errorDescription": "An error occurred while creating the store.",
+      "imageUploadedTitle": "Image Uploaded",
+      "imageUploadedDescription": "Image uploaded successfully!"
     }
   }
 }
