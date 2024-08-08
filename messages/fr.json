@@ -260,5 +260,62 @@
         "submitButton": "Commencez votre transformation"
       }
     }
+  },
+  "register_store": {
+    "cardTitle": "Enregistrez Votre Magasin",
+    "steps": [
+      "Informations de Base",
+      "Coordonnées",
+      "Présence en Ligne",
+      "Détails de Fonctionnement",
+      "Avatar",
+      "Emplacement"
+    ],
+    "labels": {
+      "storeName": "Nom du Magasin",
+      "slug": "Slug",
+      "contactEmail": "Email de Contact",
+      "contactPhone": "Téléphone de Contact",
+      "address": "Adresse",
+      "website": "Site Web",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "twitter": "Twitter",
+      "operatingHours": "Heures d'Ouverture",
+      "description": "Description",
+      "avatar": "Avatar",
+      "geoLocation": "Emplacement"
+    },
+    "placeholders": {
+      "storeName": "par ex., Mon Super Magasin",
+      "slug": "par ex., mon-super-magasin",
+      "contactEmail": "par ex., contact@example.com",
+      "contactPhone": "par ex., (123) 456-7890",
+      "address": "par ex., 123 rue Principale",
+      "website": "par ex., https://example.com",
+      "facebook": "par ex., https://facebook.com/yourpage",
+      "instagram": "par ex., https://instagram.com/yourpage",
+      "twitter": "par ex., https://twitter.com/yourpage",
+      "operatingHours": "par ex., Lun-Ven 9h-17h",
+      "description": "par ex., Une brève description de votre magasin",
+      "avatar": "Glissez & déposez une image ici, ou cliquez pour en sélectionner une"
+    },
+    "buttons": {
+      "previous": "Précédent",
+      "next": "Suivant",
+      "submit": "Soumettre"
+    },
+    "messages": {
+      "fetchingLocation": "Récupération de l'emplacement...",
+      "locationDescription": "Votre emplacement actuel est utilisé pour définir l'emplacement du magasin.",
+      "validationError": "Veuillez corriger les erreurs avant de continuer.",
+      "locationError": "Impossible de récupérer votre emplacement.",
+      "successTitle": "Succès",
+      "successDescription": "Magasin créé avec succès!",
+      "errorTitle": "Erreur",
+      "errorDescription": "Une erreur est survenue lors de la création du magasin.",
+      "imageUploadedTitle": "Image Téléchargée",
+      "imageUploadedDescription": "Image téléchargée avec succès!"
+    }
   }
 }

@@ -261,5 +261,62 @@
         "submitButton": "Beginnen Sie Ihre Transformation"
       }
     }
+  },
+  "register_store": {
+    "cardTitle": "Registrieren Sie Ihr Geschäft",
+    "steps": [
+      "Grundinformationen",
+      "Kontaktdaten",
+      "Online-Präsenz",
+      "Betriebsdetails",
+      "Avatar",
+      "Standort"
+    ],
+    "labels": {
+      "storeName": "Geschäftsname",
+      "slug": "Slug",
+      "contactEmail": "Kontakt-E-Mail",
+      "contactPhone": "Kontakt-Telefon",
+      "address": "Adresse",
+      "website": "Website",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "twitter": "Twitter",
+      "operatingHours": "Öffnungszeiten",
+      "description": "Beschreibung",
+      "avatar": "Avatar",
+      "geoLocation": "Standort"
+    },
+    "placeholders": {
+      "storeName": "z.B., Mein Cooles Geschäft",
+      "slug": "z.B., mein-cooles-geschäft",
+      "contactEmail": "z.B., kontakt@example.com",
+      "contactPhone": "z.B., (123) 456-7890",
+      "address": "z.B., Hauptstraße 123",
+      "website": "z.B., https://example.com",
+      "facebook": "z.B., https://facebook.com/yourpage",
+      "instagram": "z.B., https://instagram.com/yourpage",
+      "twitter": "z.B., https://twitter.com/yourpage",
+      "operatingHours": "z.B., Mo-Fr 9-17 Uhr",
+      "description": "z.B., Eine kurze Beschreibung Ihres Geschäfts",
+      "avatar": "Ziehen Sie ein Bild hierher oder klicken Sie, um eines auszuwählen"
+    },
+    "buttons": {
+      "previous": "Zurück",
+      "next": "Weiter",
+      "submit": "Einreichen"
+    },
+    "messages": {
+      "fetchingLocation": "Standort wird abgerufen...",
+      "locationDescription": "Ihr aktueller Standort wird verwendet, um den Standort des Geschäfts festzulegen.",
+      "validationError": "Bitte korrigieren Sie die Fehler, bevor Sie fortfahren.",
+      "locationError": "Ihr Standort konnte nicht abgerufen werden.",
+      "successTitle": "Erfolg",
+      "successDescription": "Geschäft erfolgreich erstellt!",
+      "errorTitle": "Fehler",
+      "errorDescription": "Beim Erstellen des Geschäfts ist ein Fehler aufgetreten.",
+      "imageUploadedTitle": "Bild Hochgeladen",
+      "imageUploadedDescription": "Bild erfolgreich hochgeladen!"
+    }
   }
 }
