@@ -1,26 +1,25 @@
 "use client";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence, useAnimation } from "framer-motion";
-import { Zap, X, Send, Sparkles, MessageSquare, Moon, Sun } from "lucide-react";
+import { X, Send, Sparkles, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
-import { useTheme } from "next-themes";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 
+// Constants
+const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+const GEMINI_MODEL = "gemini-1.5-flash";
+
+console.log(GEMINI_API_KEY);
+
 // Initialize the Gemini API
-const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY, {
-  model: "",
+const genAI = new GoogleGenerativeAI(GEMINI_API_KEY, {
+  model: GEMINI_MODEL,
 });
 
 // Lachofit information array
@@ -31,105 +30,17 @@ const LACHOFIT_INFO = [
     description:
       "Premium fitness apparel, equipment shop, and comprehensive fitness services including nutrition advice and personalized plans.",
   },
-  {
-    type: "faq",
-    question: "What is Lachofit's return policy?",
-    answer:
-      "Lachofit offers a 30-day return policy for unused items in original packaging.",
-  },
-  {
-    type: "faq",
-    question: "Do you offer international shipping?",
-    answer:
-      "Yes, Lachofit ships to most countries worldwide. Shipping costs vary by location.",
-  },
-  {
-    type: "faq",
-    question: "What services does Lachofit offer?",
-    answer:
-      "Lachofit provides a comprehensive suite of fitness services including nutrition advice, personalized weight loss or gain plans, one-to-one coaching consultations, and more.",
-  },
-  {
-    type: "faq",
-    question: "How do I start my fitness journey with Lachofit?",
-    answer:
-      "Start by signing up on our website. Once registered, our expert team will guide you through an initial assessment and set you on the path to achieving your fitness goals.",
-  },
-  {
-    type: "faq",
-    question: "Are the nutrition plans tailored for Cameroonians?",
-    answer:
-      "Yes! Our nutrition plans are specifically designed with Cameroonian dietary habits and locally available ingredients in mind.",
-  },
-  {
-    type: "faq",
-    question: "What is the cost of the one-to-one coaching consultation?",
-    answer:
-      "The pricing for our one-to-one coaching consultation varies based on the duration and specific needs of the individual. Please get in touch with our team for detailed pricing.",
-  },
-  {
-    type: "product",
-    name: "Lachofit Sports Shoes",
-    price: "XAF 14,999",
-    description:
-      "Your ultimate workout companion, designed for versatility and performance with features like flexibility, cushioning, and durability.",
-  },
-  {
-    type: "product",
-    name: "Glucose Smartwatch (E500)",
-    price: "XAF 25,000",
-    description:
-      "Track your fitness and health metrics with advanced glucose monitoring features.",
-  },
-  {
-    type: "product",
-    name: "Sport Smartwatch (NX10)",
-    price: "XAF 16,999",
-    description:
-      "A versatile smartwatch with an AMOLED display designed for fitness enthusiasts.",
-  },
-  {
-    type: "blog",
-    title: "7 Tips to Achieve Mental Wellbeing When Life Gets Busy",
-    date: "November 18, 2023",
-    url: "https://blog.lachofit.com/7-tips-to-achieve-mental-wellbeing",
-  },
-  {
-    type: "blog",
-    title: "How Do I Lose Weight Healthily? 6 Practical Tips",
-    date: "October 12, 2023",
-    url: "https://blog.lachofit.com/how-do-i-lose-weight-healthily",
-  },
-  {
-    type: "blog",
-    title:
-      "Mastering Macronutrients: Key to Unlocking Your Fitness Goals and Optimum Health",
-    date: "October 12, 2023",
-    url: "https://blog.lachofit.com/mastering-macronutrients",
-  },
-  {
-    type: "social",
-    platform: "Facebook",
-    url: "https://facebook.com/lachofit",
-  },
-  {
-    type: "social",
-    platform: "Twitter",
-    url: "https://twitter.com/lachofit",
-  },
-  {
-    type: "social",
-    platform: "Instagram",
-    url: "https://instagram.com/lachofit",
-  },
+  // ... Other information
 ];
 
 // Combine products with Lachofit information
 const combineInfoWithProducts = (products) => {
-  return products.map((product) => ({
-    type: "product",
-    ...product,
-  }));
+  return (
+    products?.map((product) => ({
+      type: "product",
+      ...product,
+    })) || []
+  );
 };
 
 const INITIAL_MESSAGES = [
@@ -153,7 +64,6 @@ const FloatingChat = ({ products }) => {
   const messagesEndRef = useRef(null);
   const { toast } = useToast();
   const controls = useAnimation();
-  const { theme, setTheme } = useTheme();
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -194,7 +104,7 @@ const FloatingChat = ({ products }) => {
   };
 
   const generateAIResponse = async (userMessage) => {
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const model = genAI.getGenerativeModel({ model: GEMINI_MODEL });
 
     const prompt = `
       You are a helpful assistant for the Lachofit shop. Use the following information to answer questions:
@@ -298,34 +208,12 @@ const FloatingChat = ({ products }) => {
             initial={false}
             animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}>
             <h2 className="text-xl font-bold">Lachofit Assistant</h2>
-            <div className="flex space-x-2">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
-                    <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                    <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                    <span className="sr-only">Toggle theme</span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => setTheme("light")}>
-                    Light
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setTheme("dark")}>
-                    Dark
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setTheme("system")}>
-                    System
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <Button
-                onClick={toggleChat}
-                variant="ghost"
-                className="hover:bg-primary-foreground hover:text-primary rounded-full h-8 w-8 p-0">
-                <X className="h-5 w-5" />
-              </Button>
-            </div>
+            <Button
+              onClick={toggleChat}
+              variant="ghost"
+              className="hover:bg-primary-foreground hover:text-primary rounded-full h-8 w-8 p-0">
+              <X className="h-5 w-5" />
+            </Button>
           </motion.div>
           <ScrollArea className="flex-grow p-4">
             <AnimatePresence>
