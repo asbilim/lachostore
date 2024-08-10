@@ -199,10 +199,7 @@ export default function Header({
               <HoverCardContent className="w-80">
                 <div className="flex justify-between space-x-4">
                   <div className="space-y-1">
-                    <h4 className="text-sm font-semibold">Your Account</h4>
-                    <p className="text-sm">
-                      Manage your profile and settings here.
-                    </p>
+                    <Link href="/auth/login">Login</Link>
                   </div>
                 </div>
               </HoverCardContent>
