@@ -264,7 +264,9 @@ export default function Main(props) {
               variant="outline"
               size="sm"
               className="ml-auto text-xs md:text-sm">
-              View Store
+              <Link href={"/mystore/" + props?.product?.vendor?.slug}>
+                View Store
+              </Link>
             </Button>
           </motion.div>
           <motion.form variants={fadeInUp} className="grid gap-4 sm:gap-6">
