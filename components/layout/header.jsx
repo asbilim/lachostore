@@ -133,7 +133,7 @@ const UserMenu = ({ session }) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem asChild>
-          <Link href="/account" className="flex items-center">
+          <Link href="/accounts" className="flex items-center">
             <Settings className="mr-2 h-4 w-4" />
             Account
           </Link>
@@ -281,7 +281,7 @@ export default function Header({
                       {session ? (
                         <>
                           <Link
-                            href="/account"
+                            href="/accounts"
                             className="text-sm font-medium flex items-center">
                             <Settings className="mr-2 h-4 w-4" />
                             Account

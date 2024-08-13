@@ -2,7 +2,7 @@ import { getToken } from "next-auth/jwt";
 import createMiddleware from "next-intl/middleware";
 import { NextResponse } from "next/server";
 
-const protectedRoutes = ["/store/register"];
+const protectedRoutes = ["/store/register", "/accounts"];
 
 const intlMiddleware = createMiddleware({
   locales: ["en", "de", "fr", "tr"],
