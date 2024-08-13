@@ -2,7 +2,14 @@
 import { useState } from "react";
 import Image from "next/image";
 import logo from "@/public/lachostore.png";
-import { Menu, Search, ShoppingBag, UserRound } from "lucide-react";
+import {
+  Menu,
+  Search,
+  ShoppingBag,
+  UserRound,
+  LogOut,
+  Settings,
+} from "lucide-react";
 import { Link, usePathname } from "../navigation";
 import { useCart } from "@/providers/cart";
 import AdvancedSearchModal from "../reusables/advanced-search";
@@ -17,12 +24,11 @@ import {
 
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+
+import { useSession, signOut } from "next-auth/react";
 
 import {
   Sheet,
@@ -33,14 +39,9 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
-
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const languages = [
   { code: "en", name: "English" },
@@ -51,7 +52,6 @@ const languages = [
 
 const LanguageCurrencyDropdowns = ({ currentLanguage, pathname }) => {
   const { currency, changeCurrency, supportedCurrencies } = useCurrency();
-
   return (
     <div className="flex flex-col space-y-2 w-full md:flex-row md:space-x-2 md:space-y-0 md:w-auto">
       <DropdownMenu>
@@ -104,6 +104,49 @@ const LanguageCurrencyDropdowns = ({ currentLanguage, pathname }) => {
     </div>
   );
 };
+
+const UserMenu = ({ session }) => {
+  const handleLogout = () => {
+    signOut();
+  };
+
+  if (!session) {
+    return (
+      <Link href="/auth/login">
+        <Button variant="ghost" size="sm">
+          Login
+        </Button>
+      </Link>
+    );
+  }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="flex items-center space-x-2">
+          <Avatar className="w-8 h-8">
+            <AvatarFallback>{session.username[0].toUpperCase()}</AvatarFallback>
+          </Avatar>
+          <span className="hidden md:inline">Welcome, {session.username}</span>
+          <ChevronDown className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem asChild>
+          <Link href="/accounts" className="flex items-center">
+            <Settings className="mr-2 h-4 w-4" />
+            Account
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout} className="text-red-600">
+          <LogOut className="mr-2 h-4 w-4" />
+          Logout
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
+
 export default function Header({
   locale,
   home,
@@ -125,6 +168,7 @@ export default function Header({
   const { cart } = useCart();
   const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+  const { data: session } = useSession();
 
   const currentLanguage =
     languages.find((lang) => lang.code === locale) || languages[0];
@@ -190,20 +234,7 @@ export default function Header({
               )}
             </Link>
 
-            <HoverCard>
-              <HoverCardTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <UserRound className="w-6 h-6 text-muted-foreground" />
-                </Button>
-              </HoverCardTrigger>
-              <HoverCardContent className="w-80">
-                <div className="flex justify-between space-x-4">
-                  <div className="space-y-1">
-                    <Link href="/auth/login">Login</Link>
-                  </div>
-                </div>
-              </HoverCardContent>
-            </HoverCard>
+            <UserMenu session={session} />
 
             <div className="hidden md:block">
               <LanguageCurrencyDropdowns
@@ -220,6 +251,18 @@ export default function Header({
                 <SheetHeader>
                   <SheetTitle>Menu</SheetTitle>
                   <SheetDescription>
+                    {session && (
+                      <div className="flex items-center space-x-2 mb-4">
+                        <Avatar className="w-8 h-8">
+                          <AvatarFallback>
+                            {session.username[0].toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="text-sm font-medium">
+                          Welcome, {session.username}
+                        </span>
+                      </div>
+                    )}
                     <nav className="flex flex-col space-y-4 mt-8">
                       {pathNames.map((path) => (
                         <Link
@@ -235,6 +278,29 @@ export default function Header({
                           {path.name}
                         </Link>
                       ))}
+                      {session ? (
+                        <>
+                          <Link
+                            href="/accounts"
+                            className="text-sm font-medium flex items-center">
+                            <Settings className="mr-2 h-4 w-4" />
+                            Account
+                          </Link>
+                          <Button
+                            onClick={() => signOut()}
+                            variant="ghost"
+                            className="justify-start text-red-600">
+                            <LogOut className="mr-2 h-4 w-4" />
+                            Logout
+                          </Button>
+                        </>
+                      ) : (
+                        <Link
+                          href="/auth/login"
+                          className="text-sm font-medium">
+                          Login
+                        </Link>
+                      )}
                     </nav>
                     <div className="mt-8">
                       <Button

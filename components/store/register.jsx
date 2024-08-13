@@ -1,14 +1,12 @@
-"use client";
-
-import React, { useState, useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
+import React, { useState, useEffect, useRef } from "react";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { useToast } from "../ui/use-toast"; // Update the path if necessary
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
-
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import {
   Card,
   CardHeader,
@@ -29,146 +27,193 @@ import {
   FormMessage,
   FormDescription,
 } from "@/components/ui/form";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Toaster, toast } from "sonner";
 import Image from "next/image";
 
-// Static text object for easy editing
-
-// Define schemas for form validation
+// Define individual schemas for each step
 const basicInfoSchema = z.object({
   name: z.string().min(1, "Store name is required"),
   slug: z.string().optional(),
 });
 
 const contactDetailsSchema = z.object({
-  contactEmail: z.string().email("Invalid email address").optional(),
-  contactPhone: z.string().optional(),
-  address: z.string().optional(),
+  contact_email: z.string().email("Invalid email address"),
+  contact_phone: z.string().min(1, "Contact phone is required"),
+  address: z.string().min(1, "Address is required"),
 });
 
-const onlinePresenceSchema = z.object({
-  website: z.string().url("Invalid URL").optional(),
-  facebook: z.string().url("Invalid URL").optional(),
-  instagram: z.string().url("Invalid URL").optional(),
-  twitter: z.string().url("Invalid URL").optional(),
-});
-
-const operatingDetailsSchema = z.object({
-  operatingHours: z.string().optional(),
-  description: z.string().optional(),
-});
-
-const avatarSchema = z.object({
-  avatar: z.any().optional(),
-});
-
-const locationSchema = z.object({
-  geoLocation: z
+const socialMediaSchema = z.object({
+  social_media_links: z
     .object({
-      lat: z.number().optional(),
-      lng: z.number().optional(),
+      facebook: z.string().optional(),
+      instagram: z.string().optional(),
+      twitter: z.string().optional(),
     })
     .optional(),
 });
 
-// Steps for form progression
+const operatingDetailsSchema = z.object({
+  operating_hours: z.string().min(1, "Operating hours are required"),
+  description: z.string().min(1, "Description is required"),
+});
+
+const avatarUploadSchema = z.object({
+  avatar: z.any().optional(),
+});
+
+const locationSchema = z.object({
+  geo_location: z
+    .object({
+      lat: z.number(),
+      lng: z.number(),
+    })
+    .optional(),
+});
 
 const EnhancedStoreRegistration = ({ staticText }) => {
+  // State management
   const [currentStep, setCurrentStep] = useState(0);
   const [userLocation, setUserLocation] = useState(null);
-  const [formData, setFormData] = useState({});
   const [avatarFile, setAvatarFile] = useState(null);
-  const { toast } = useToast();
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { data: session } = useSession();
+  const router = useRouter();
   const steps = staticText.steps;
+  const popupRef = useRef(null);
 
-  const stepSchemas = [
+  // Schema and form setup
+  const schemaForStep = [
     basicInfoSchema,
     contactDetailsSchema,
-    onlinePresenceSchema,
+    socialMediaSchema,
     operatingDetailsSchema,
-    avatarSchema,
+    avatarUploadSchema,
     locationSchema,
   ];
 
-  const currentSchema = stepSchemas[currentStep];
-
   const form = useForm({
-    resolver: zodResolver(currentSchema),
+    resolver: zodResolver(schemaForStep[currentStep]),
     mode: "onChange",
     defaultValues: {
       name: "",
       slug: "",
+      contact_email: "",
+      contact_phone: "",
       address: "",
-      contactEmail: "",
-      contactPhone: "",
-      operatingHours: "",
-      facebook: "",
-      instagram: "",
-      twitter: "",
-      avatar: "",
-      website: "",
-      geoLocation: null,
+      social_media_links: {
+        facebook: "",
+        instagram: "",
+        twitter: "",
+      },
+      operating_hours: "",
       description: "",
+      avatar: "",
+      geo_location: null,
     },
   });
 
-  const { control, handleSubmit, trigger, getValues, setValue, formState } =
-    form;
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = form;
 
-  const onSubmit = async () => {
+  // Form submission logic
+  const onSubmit = async (data) => {
+    setIsSubmitting(true);
     try {
-      const combinedData = { ...formData, ...getValues() };
-      const formDataToSend = new FormData();
+      const formData = new FormData();
+      const combinedData = { ...form.getValues(), ...data };
+
       Object.entries(combinedData).forEach(([key, value]) => {
         if (key === "avatar" && avatarFile) {
-          formDataToSend.append(key, avatarFile);
-        } else if (typeof value === "object" && value !== null) {
-          formDataToSend.append(key, JSON.stringify(value));
-        } else {
-          formDataToSend.append(key, value);
+          formData.append(key, avatarFile);
+        } else if (value !== null) {
+          formData.append(
+            key,
+            typeof value === "object" ? JSON.stringify(value) : value
+          );
         }
       });
 
-      await axios.post(
+      // Open a popup with a loading message
+      popupRef.current = window.open("", "_blank");
+      updatePopupContent(
+        "Redirecting to Payment",
+        "Please wait...",
+        "We are redirecting you to the payment page. This may take a few moments."
+      );
+
+      const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/store/create/`,
-        formDataToSend,
+        formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${session?.accessToken}`,
           },
         }
       );
-      toast({
-        title: staticText.messages.successTitle,
-        description: staticText.messages.successDescription,
-        status: "success",
-      });
+
+      if (response.data.payment_url) {
+        // Redirect the popup to the payment URL
+        popupRef.current.location.href = response.data.payment_url;
+        setShowSuccessModal(true);
+      } else {
+        throw new Error("Payment URL not received from the server.");
+      }
     } catch (error) {
-      toast({
-        title: staticText.messages.errorTitle,
-        description: staticText.messages.errorDescription,
-        status: "error",
-      });
+      console.error("Store creation error:", error);
+      if (popupRef.current) popupRef.current.close();
+      setErrorMessage(
+        error.response?.data?.error ||
+          error.message ||
+          "An unexpected error occurred during store creation."
+      );
+      setShowErrorModal(true);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const handleNextStep = async () => {
-    const isValid = await trigger(); // Trigger validation for current step
+  // Popup content updater
+  const updatePopupContent = (title, heading, message) => {
+    if (popupRef.current) {
+      popupRef.current.document.write(`
+        <html>
+          <head><title>${title}</title></head>
+          <body>
+            <h1>${heading}</h1>
+            <p>${message}</p>
+          </body>
+        </html>
+      `);
+    }
+  };
 
+  // Step navigation logic
+  const handleNextStep = async () => {
+    const isValid = await form.trigger();
     if (isValid) {
-      setFormData({ ...formData, ...getValues() });
       if (currentStep === steps.length - 1) {
-        // Submit the form if it's the last step
         handleSubmit(onSubmit)();
       } else {
-        // Otherwise, move to the next step
         setCurrentStep((prev) => prev + 1);
       }
     } else {
-      toast({
-        title: staticText.messages.validationError,
-        description: staticText.messages.validationError,
-        status: "error",
-      });
+      toast.error(staticText.messages.validationError);
     }
   };
 
@@ -178,385 +223,392 @@ const EnhancedStoreRegistration = ({ staticText }) => {
 
   useEffect(() => {
     if (currentStep === steps.length - 1 && !userLocation) {
-      // Automatically fetch location when reaching the location step
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          setValue("geoLocation", {
-            lat: latitude,
-            lng: longitude,
-          });
+          setValue("geo_location", { lat: latitude, lng: longitude });
           setUserLocation({ lat: latitude, lng: longitude });
         },
         (error) => {
-          toast({
-            title: staticText.messages.locationError,
-            description: staticText.messages.locationError,
-            status: "error",
-          });
+          toast.error(staticText.messages.locationError);
         }
       );
     }
   }, [currentStep, userLocation, setValue]);
 
+  // Dropzone handling
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
     setAvatarFile(file);
-    // Set the file URL in the form
     const fileUrl = URL.createObjectURL(file);
     setValue("avatar", fileUrl);
-    toast({
-      title: staticText.messages.imageUploadedTitle,
-      description: staticText.messages.imageUploadedDescription,
-      status: "success",
-    });
+    toast.success(staticText.messages.imageUploadedDescription);
   };
 
   const { getRootProps, getInputProps, isDragActive, isDragReject } =
     useDropzone({
       onDrop,
-      accept: "image/*",
+      accept: { "image/*": [] },
       multiple: false,
     });
 
   return (
-    <Card className="w-full max-w-2xl mx-auto shadow-md border rounded-lg overflow-hidden">
-      <CardHeader>
-        <CardTitle>{staticText.cardTitle}</CardTitle>
-        <CardDescription>
-          Step {currentStep + 1} of {steps.length}: {steps[currentStep]}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form className="space-y-4">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentStep}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.5 }}>
-                {currentStep === 0 && (
-                  <>
-                    <FormField
-                      control={control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel htmlFor="name">
-                            {staticText.labels.storeName}
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              id="name"
-                              placeholder={staticText.placeholders.storeName}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={control}
-                      name="slug"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel htmlFor="slug">
-                            {staticText.labels.slug}
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              id="slug"
-                              placeholder={staticText.placeholders.slug}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </>
-                )}
-                {currentStep === 1 && (
-                  <>
-                    <FormField
-                      control={control}
-                      name="contactEmail"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel htmlFor="contactEmail">
-                            {staticText.labels.contactEmail}
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              id="contactEmail"
-                              placeholder={staticText.placeholders.contactEmail}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={control}
-                      name="contactPhone"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel htmlFor="contactPhone">
-                            {staticText.labels.contactPhone}
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              id="contactPhone"
-                              placeholder={staticText.placeholders.contactPhone}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={control}
-                      name="address"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel htmlFor="address">
-                            {staticText.labels.address}
-                          </FormLabel>
-                          <FormControl>
-                            <Textarea
-                              {...field}
-                              id="address"
-                              placeholder={staticText.placeholders.address}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </>
-                )}
-                {currentStep === 2 && (
-                  <>
-                    <FormField
-                      control={control}
-                      name="website"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel htmlFor="website">
-                            {staticText.labels.website}
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              id="website"
-                              placeholder={staticText.placeholders.website}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={control}
-                      name="facebook"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel htmlFor="facebook">
-                            {staticText.labels.facebook}
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              id="facebook"
-                              placeholder={staticText.placeholders.facebook}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={control}
-                      name="instagram"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel htmlFor="instagram">
-                            {staticText.labels.instagram}
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              id="instagram"
-                              placeholder={staticText.placeholders.instagram}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={control}
-                      name="twitter"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel htmlFor="twitter">
-                            {staticText.labels.twitter}
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              id="twitter"
-                              placeholder={staticText.placeholders.twitter}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </>
-                )}
-                {currentStep === 3 && (
-                  <>
-                    <FormField
-                      control={control}
-                      name="operatingHours"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel htmlFor="operatingHours">
-                            {staticText.labels.operatingHours}
-                          </FormLabel>
-                          <FormControl>
-                            <Textarea
-                              {...field}
-                              id="operatingHours"
-                              placeholder={
-                                staticText.placeholders.operatingHours
-                              }
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={control}
-                      name="description"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel htmlFor="description">
-                            {staticText.labels.description}
-                          </FormLabel>
-                          <FormControl>
-                            <Textarea
-                              {...field}
-                              id="description"
-                              placeholder={staticText.placeholders.description}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </>
-                )}
-                {currentStep === 4 && (
-                  <FormField
-                    control={control}
-                    name="avatar"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel htmlFor="avatar">
-                          {staticText.labels.avatar}
-                        </FormLabel>
-                        <FormControl>
-                          <div
-                            {...getRootProps({
-                              className: `border-dashed border-2 p-4 flex flex-col items-center justify-center ${
-                                isDragActive ? "bg-gray-200" : ""
-                              } ${isDragReject ? "bg-red-200" : ""}`,
-                            })}>
-                            <input {...getInputProps()} />
-                            <p>
-                              {isDragActive
-                                ? "Drop the image here..."
-                                : isDragReject
-                                ? "Unsupported file type..."
-                                : staticText.placeholders.avatar}
-                            </p>
-                            {field.value && (
-                              <Image
-                                src={field.value}
-                                alt="Avatar"
-                                className="mt-4 w-32 h-32 object-cover"
-                                width={1000}
-                                height={1000}
+    <>
+      <Toaster position="top-center" />
+      <Card className="w-full max-w-2xl mx-auto shadow-md border rounded-lg overflow-hidden">
+        <CardHeader>
+          <CardTitle>{staticText.cardTitle}</CardTitle>
+          <CardDescription>
+            Step {currentStep + 1} of {steps.length}: {steps[currentStep]}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form className="space-y-4">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentStep}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.5 }}>
+                  {/* Step 1: Basic Info */}
+                  {currentStep === 0 && (
+                    <>
+                      <FormField
+                        control={control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{staticText.labels.storeName}</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                placeholder={staticText.placeholders.storeName}
                               />
-                            )}
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
-                {currentStep === 5 && (
-                  <FormField
-                    control={control}
-                    name="geoLocation"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel htmlFor="geoLocation">
-                          {staticText.labels.geoLocation}
-                        </FormLabel>
-                        <FormDescription>
-                          {staticText.messages.locationDescription}
-                        </FormDescription>
-                        <FormControl>
-                          <Input
-                            id="geoLocation"
-                            value={
-                              field.value
-                                ? `Latitude: ${field.value.lat}, Longitude: ${field.value.lng}`
-                                : staticText.messages.fetchingLocation
-                            }
-                            readOnly
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
-              </motion.div>
-            </AnimatePresence>
-            <CardFooter className="flex justify-between">
-              {currentStep > 0 && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handlePreviousStep}>
-                  {staticText.buttons.previous}
-                </Button>
-              )}
-              {currentStep < steps.length - 1 ? (
-                <Button type="button" onClick={handleNextStep}>
-                  {staticText.buttons.next}
-                </Button>
-              ) : (
-                <Button type="button" onClick={handleNextStep}>
-                  {staticText.buttons.submit}
-                </Button>
-              )}
-            </CardFooter>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={control}
+                        name="slug"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{staticText.labels.slug}</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                placeholder={staticText.placeholders.slug}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </>
+                  )}
+
+                  {/* Step 2: Contact Details */}
+                  {currentStep === 1 && (
+                    <>
+                      <FormField
+                        control={control}
+                        name="contact_email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              {staticText.labels.contactEmail}
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                placeholder={
+                                  staticText.placeholders.contactEmail
+                                }
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={control}
+                        name="contact_phone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              {staticText.labels.contactPhone}
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                placeholder={
+                                  staticText.placeholders.contactPhone
+                                }
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={control}
+                        name="address"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{staticText.labels.address}</FormLabel>
+                            <FormControl>
+                              <Textarea
+                                {...field}
+                                placeholder={staticText.placeholders.address}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </>
+                  )}
+
+                  {/* Step 3: Social Media */}
+                  {currentStep === 2 && (
+                    <>
+                      <FormField
+                        control={control}
+                        name="social_media_links.facebook"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{staticText.labels.facebook}</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                placeholder={staticText.placeholders.facebook}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={control}
+                        name="social_media_links.instagram"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{staticText.labels.instagram}</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                placeholder={staticText.placeholders.instagram}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={control}
+                        name="social_media_links.twitter"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{staticText.labels.twitter}</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                placeholder={staticText.placeholders.twitter}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </>
+                  )}
+
+                  {/* Step 4: Operating Details */}
+                  {currentStep === 3 && (
+                    <>
+                      <FormField
+                        control={control}
+                        name="operating_hours"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              {staticText.labels.operatingHours}
+                            </FormLabel>
+                            <FormControl>
+                              <Textarea
+                                {...field}
+                                placeholder={
+                                  staticText.placeholders.operatingHours
+                                }
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={control}
+                        name="description"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              {staticText.labels.description}
+                            </FormLabel>
+                            <FormControl>
+                              <Textarea
+                                {...field}
+                                placeholder={
+                                  staticText.placeholders.description
+                                }
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </>
+                  )}
+
+                  {/* Step 5: Avatar Upload */}
+                  {currentStep === 4 && (
+                    <FormField
+                      control={control}
+                      name="avatar"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{staticText.labels.avatar}</FormLabel>
+                          <FormControl>
+                            <div
+                              {...getRootProps({
+                                className: `border-dashed border-2 p-4 flex flex-col items-center justify-center ${
+                                  isDragActive ? "bg-gray-200" : ""
+                                } ${isDragReject ? "bg-red-200" : ""}`,
+                              })}>
+                              <input {...getInputProps()} />
+                              <p>
+                                {isDragActive
+                                  ? "Drop the image here..."
+                                  : isDragReject
+                                  ? "Unsupported file type..."
+                                  : staticText.placeholders.avatar}
+                              </p>
+                              {field.value && (
+                                <Image
+                                  src={field.value}
+                                  alt="Avatar"
+                                  className="mt-4 w-32 h-32 object-cover"
+                                  width={128}
+                                  height={128}
+                                />
+                              )}
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+
+                  {/* Step 6: Location */}
+                  {currentStep === 5 && (
+                    <FormField
+                      control={control}
+                      name="geo_location"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{staticText.labels.geoLocation}</FormLabel>
+                          <FormDescription>
+                            {staticText.messages.locationDescription}
+                          </FormDescription>
+                          <FormControl>
+                            <Input
+                              value={
+                                field.value
+                                  ? `Latitude: ${field.value.lat}, Longitude: ${field.value.lng}`
+                                  : staticText.messages.fetchingLocation
+                              }
+                              readOnly
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                </motion.div>
+              </AnimatePresence>
+            </form>
+          </Form>
+        </CardContent>
+        <CardFooter className="flex justify-between">
+          {currentStep > 0 && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handlePreviousStep}>
+              {staticText.buttons.previous}
+            </Button>
+          )}
+          {currentStep < steps.length - 1 ? (
+            <Button type="button" onClick={handleNextStep}>
+              {staticText.buttons.next}
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              onClick={handleSubmit(onSubmit)}
+              disabled={isSubmitting}>
+              {isSubmitting ? "Submitting..." : staticText.buttons.submit}
+            </Button>
+          )}
+        </CardFooter>
+      </Card>
+
+      {/* Success Modal */}
+      <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{"Your store was added"}</DialogTitle>
+            <DialogDescription>
+              {"Your store was added , you can start selling on lachofit"}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              type="button"
+              onClick={() => {
+                setShowSuccessModal(false);
+                router.push("/en/");
+              }}>
+              Back Home
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Error Modal */}
+      <Dialog open={showErrorModal} onOpenChange={setShowErrorModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{"We could not create your store"}</DialogTitle>
+            <DialogDescription>
+              {errorMessage || "We had a problem creating your store"}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setShowErrorModal(false)}>
+              {"Close"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 
