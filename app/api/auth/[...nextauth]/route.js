@@ -33,7 +33,7 @@ const auth = NextAuth({
     }),
   ],
   pages: {
-    signIn: "/auth/login/",
+    signIn: "/en/auth/login/",
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -42,13 +42,15 @@ const auth = NextAuth({
         token.refreshToken = user.refresh;
       }
 
-      // Decode the access token and add the data to the token object
       if (token.accessToken) {
         const decoded = jwt.decode(token.accessToken);
         token.user_id = decoded.user_id;
         token.username = decoded.username;
         token.email = decoded.email;
         token.id = decoded.id;
+        token.is_owner = decoded.is_owner;
+        token.shops_count = decoded.shops_count;
+        token.shops = decoded.shops;
       }
 
       return token;
@@ -61,6 +63,9 @@ const auth = NextAuth({
       session.username = token.username;
       session.email = token.email;
       session.id = token.id;
+      session.is_owner = token.is_owner;
+      session.shops_count = token.shops_count;
+      session.shops = token.shops;
 
       return session;
     },

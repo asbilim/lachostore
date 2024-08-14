@@ -318,5 +318,112 @@
       "imageUploadedTitle": "Bild Hochgeladen",
       "imageUploadedDescription": "Bild erfolgreich hochgeladen!"
     }
+  },
+  "accounts": {
+    "noStoreAvailable": {
+      "title": "Kein Geschäft Verfügbar",
+      "description": "Es sieht so aus, als hätten Sie kein Geschäft mit Ihrem Konto verknüpft. Bitte kontaktieren Sie den Support, wenn Sie glauben, dass dies ein Fehler ist."
+    },
+    "storeNotActive": {
+      "title": "Geschäft Nicht Aktiv",
+      "description": "Sie haben für dieses Geschäft nicht bezahlt. Kontaktieren Sie uns unter info@lachofit.com, um Ihr Geschäft zu aktivieren.",
+      "selectPlaceholder": "Geschäft Auswählen"
+    },
+    "welcome": "Willkommen, ",
+    "dashboard": {
+      "title": "Dashboard",
+      "personalInfo": {
+        "title": "Persönliche Informationen",
+        "description": "Aktualisieren Sie Ihren Namen, Ihre E-Mail-Adresse und Ihre Kontaktdaten.",
+        "labels": {
+          "name": "Name",
+          "email": "E-Mail",
+          "phone": "Telefon"
+        },
+        "buttonText": "Änderungen Speichern"
+      },
+      "password": {
+        "title": "Passwort Ändern",
+        "description": "Aktualisieren Sie Ihr Passwort, um Ihr Konto zu sichern.",
+        "labels": {
+          "currentPassword": "Aktuelles Passwort",
+          "newPassword": "Neues Passwort",
+          "confirmPassword": "Passwort Bestätigen"
+        },
+        "buttonText": "Passwort Aktualisieren"
+      },
+      "orders": {
+        "title": "Neueste Bestellungen",
+        "description": "Sehen Sie sich Ihre neuesten Bestellungen an und verwalten Sie diese.",
+        "tableHeaders": {
+          "orderNumber": "Bestellung #",
+          "date": "Datum",
+          "status": "Status",
+          "total": "Gesamt",
+          "actions": "Aktionen"
+        },
+        "actions": {
+          "view": "Ansehen",
+          "return": "Zurückgeben"
+        },
+        "status": {
+          "fulfilled": "Erfüllt",
+          "pending": "Ausstehend",
+          "cancelled": "Storniert"
+        }
+      },
+      "products": {
+        "title": "Ihre Produkte",
+        "description": "Verwalten Sie Ihr Produktinventar",
+        "addProductButton": "Produkt Hinzufügen",
+        "addProductDialog": {
+          "title": "Neues Produkt Hinzufügen",
+          "description": "Geben Sie die Details Ihres neuen Produkts unten ein.",
+          "labels": {
+            "name": "Name",
+            "category": "Kategorie",
+            "price": "Preis",
+            "stock": "Bestand"
+          },
+          "buttonText": "Produkt Hinzufügen"
+        },
+        "tableHeaders": {
+          "name": "Name",
+          "category": "Kategorie",
+          "price": "Preis",
+          "stock": "Bestand",
+          "actions": "Aktionen"
+        },
+        "actions": {
+          "edit": "Bearbeiten",
+          "delete": "Löschen"
+        },
+        "pagination": {
+          "previous": "Zurück",
+          "next": "Weiter"
+        }
+      },
+      "storeInfo": {
+        "title": "Geschäftsinformationen",
+        "description": "Aktualisieren Sie Ihre Geschäftsdaten und Social-Media-Links.",
+        "labels": {
+          "storeName": "Geschäftsname",
+          "storeAddress": "Geschäftsadresse",
+          "storeAvatar": "Geschäftsavatar",
+          "storeDescription": "Geschäftsbeschreibung",
+          "socialMediaLinks": "Social-Media-Links"
+        },
+        "buttonText": "Änderungen Speichern"
+      },
+      "salesAnalytics": {
+        "title": "Verkaufsanalyse",
+        "description": "Sehen Sie sich die Verkaufsleistung Ihres Geschäfts an.",
+        "placeholders": {
+          "revenueChart": "[Umsatzdiagramm]",
+          "topProductsList": "[Top-Produktliste]",
+          "recentSalesTable": "[Tabelle der Neuesten Verkäufe]"
+        }
+      }
+    }
   }
 }

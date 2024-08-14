@@ -324,5 +324,112 @@
       "imageUploadedTitle": "Image Uploaded",
       "imageUploadedDescription": "Image uploaded successfully!"
     }
+  },
+  "accounts": {
+    "noStoreAvailable": {
+      "title": "No Store Available",
+      "description": "It looks like you don’t have any store linked to your account. Please contact support if you believe this is an error."
+    },
+    "storeNotActive": {
+      "title": "Store Not Active",
+      "description": "You did not pay for this store. Contact us at info@lachofit.com to activate your store.",
+      "selectPlaceholder": "Select Store"
+    },
+    "welcome": "Welcome, ",
+    "dashboard": {
+      "title": "Dashboard",
+      "personalInfo": {
+        "title": "Personal Information",
+        "description": "Update your name, email, and contact information.",
+        "labels": {
+          "name": "Name",
+          "email": "Email",
+          "phone": "Phone"
+        },
+        "buttonText": "Save Changes"
+      },
+      "password": {
+        "title": "Change Password",
+        "description": "Update your password to keep your account secure.",
+        "labels": {
+          "currentPassword": "Current Password",
+          "newPassword": "New Password",
+          "confirmPassword": "Confirm Password"
+        },
+        "buttonText": "Update Password"
+      },
+      "orders": {
+        "title": "Recent Orders",
+        "description": "View and manage your recent orders.",
+        "tableHeaders": {
+          "orderNumber": "Order #",
+          "date": "Date",
+          "status": "Status",
+          "total": "Total",
+          "actions": "Actions"
+        },
+        "actions": {
+          "view": "View",
+          "return": "Return"
+        },
+        "status": {
+          "fulfilled": "Fulfilled",
+          "pending": "Pending",
+          "cancelled": "Cancelled"
+        }
+      },
+      "products": {
+        "title": "Your Products",
+        "description": "Manage your product inventory",
+        "addProductButton": "Add Product",
+        "addProductDialog": {
+          "title": "Add New Product",
+          "description": "Enter the details of your new product below.",
+          "labels": {
+            "name": "Name",
+            "category": "Category",
+            "price": "Price",
+            "stock": "Stock"
+          },
+          "buttonText": "Add Product"
+        },
+        "tableHeaders": {
+          "name": "Name",
+          "category": "Category",
+          "price": "Price",
+          "stock": "Stock",
+          "actions": "Actions"
+        },
+        "actions": {
+          "edit": "Edit",
+          "delete": "Delete"
+        },
+        "pagination": {
+          "previous": "Previous",
+          "next": "Next"
+        }
+      },
+      "storeInfo": {
+        "title": "Store Information",
+        "description": "Update your store details and social media links.",
+        "labels": {
+          "storeName": "Store Name",
+          "storeAddress": "Store Address",
+          "storeAvatar": "Store Avatar",
+          "storeDescription": "Store Description",
+          "socialMediaLinks": "Social Media Links"
+        },
+        "buttonText": "Save Changes"
+      },
+      "salesAnalytics": {
+        "title": "Sales Analytics",
+        "description": "View your store's sales performance.",
+        "placeholders": {
+          "revenueChart": "[Revenue Chart]",
+          "topProductsList": "[Top Products List]",
+          "recentSalesTable": "[Recent Sales Table]"
+        }
+      }
+    }
   }
 }

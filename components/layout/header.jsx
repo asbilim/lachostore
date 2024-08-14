@@ -106,7 +106,20 @@ const LanguageCurrencyDropdowns = ({ currentLanguage, pathname }) => {
 };
 
 const UserMenu = ({ session }) => {
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/accounts/logout/`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + session?.accessToken,
+        },
+        body: JSON.stringify({
+          refresh_token: session?.refreshToken,
+        }),
+      }
+    );
     signOut();
   };
 
