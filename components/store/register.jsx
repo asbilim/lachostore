@@ -38,6 +38,7 @@ import {
 import { Toaster, toast } from "sonner";
 import Image from "next/image";
 
+
 // Define individual schemas for each step
 const basicInfoSchema = z.object({
   name: z.string().min(1, "Store name is required"),

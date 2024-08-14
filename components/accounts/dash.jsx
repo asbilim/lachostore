@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSession } from "next-auth/react";
 import {
   User,
   Lock,
@@ -13,6 +14,7 @@ import {
   Plus,
   ChevronLeft,
   ChevronRight,
+  Loader,
 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -53,29 +55,157 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import Image from "next/image";
+import { useCurrency } from "@/providers/currency";
 
-const UserDashboard = ({ userType }) => {
+const fetchStore = async (slug, accessToken) => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/store/details/${slug}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+  return await response.json();
+};
+
+// Dashboard Component
+const UserDashboard = ({ texts }) => {
+  const { data: session } = useSession();
+  const isOwner = session?.is_owner;
+  const shops = session?.shops || [];
+  const [selectedShopId, setSelectedShopId] = useState(shops[0]?.id || null);
+  const [selectedShop, setSelectedShop] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("personal-info");
 
-  // Conditional tabs based on user type
+  useEffect(() => {
+    const loadShopData = async () => {
+      if (selectedShopId) {
+        setLoading(true);
+        const shop = shops.find((shop) => shop.id === selectedShopId);
+        if (shop) {
+          const fetchedShop = await fetchStore(shop.slug, session?.accessToken);
+          setSelectedShop(fetchedShop);
+        }
+        setLoading(false);
+      } else {
+        setLoading(false);
+      }
+    };
+
+    loadShopData();
+  }, [selectedShopId, shops, session?.accessToken]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader className="animate-spin" size={48} />
+      </div>
+    );
+  }
+
+  if (!isOwner || shops.length === 0) {
+    return (
+      <div className="w-full my-16 p-4 sm:p-6 lg:p-8">
+        <div className="max-w-6xl mx-auto text-center">
+          <h1 className="text-3xl font-bold mb-4">
+            {texts.noStoreAvailable.title}
+          </h1>
+          <p className="text-lg mb-4">{texts.noStoreAvailable.description}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!selectedShop || !selectedShop.is_active) {
+    return (
+      <div className="w-full my-16 p-4 sm:p-6 lg:p-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center">
+            <h1 className="text-3xl font-bold mb-4">
+              {texts.storeNotActive.title}
+            </h1>
+            <p className="text-lg mb-4">
+              {texts.storeNotActive.description}{" "}
+              <a
+                href="mailto:info@lachofit.com"
+                className="text-blue-500 underline">
+                info@lachofit.com
+              </a>{" "}
+              to activate your store.
+            </p>
+            <Select
+              value={selectedShopId}
+              onValueChange={setSelectedShopId}
+              className="mt-4">
+              <SelectTrigger>
+                <SelectValue
+                  placeholder={texts.storeNotActive.selectPlaceholder}
+                />
+              </SelectTrigger>
+              <SelectContent>
+                {shops.map((shop) => (
+                  <SelectItem key={shop.id} value={shop.id}>
+                    {shop.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Tab configuration based on user type
   const tabContent = {
     "personal-info": { icon: User, component: PersonalInfoTab },
     password: { icon: Lock, component: PasswordTab },
     orders: { icon: ShoppingBag, component: OrdersTab },
-    ...(userType === "store-owner" && {
+  };
+
+  // Add shop owner tabs if the user is an owner
+  if (isOwner) {
+    Object.assign(tabContent, {
       products: { icon: Package, component: ProductsTab },
       "store-info": { icon: Store, component: StoreInfoTab },
       "sales-analytics": { icon: BarChart2, component: SalesAnalyticsTab },
-    }),
-  };
+    });
+  }
 
+  // Retrieve the active component based on the active tab
   const ActiveComponent = tabContent[activeTab].component;
 
   return (
     <div className="w-full min-h-screen bg-background p-4 sm:p-6 lg:p-8">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">User Dashboard</h1>
+          <h1 className="text-3xl font-bold">
+            {texts.welcome}
+            {session?.username}
+          </h1>
+          {isOwner && (
+            <Select
+              value={selectedShopId}
+              onValueChange={setSelectedShopId}
+              className="ml-auto">
+              <SelectTrigger>
+                <SelectValue
+                  placeholder={texts.storeNotActive.selectPlaceholder}
+                />
+              </SelectTrigger>
+              <SelectContent>
+                {shops.map((shop) => (
+                  <SelectItem key={shop.id} value={shop.id}>
+                    {shop.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" className="lg:hidden">
@@ -87,6 +217,7 @@ const UserDashboard = ({ userType }) => {
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
                 tabContent={tabContent}
+                texts={texts}
               />
             </SheetContent>
           </Sheet>
@@ -121,12 +252,12 @@ const UserDashboard = ({ userType }) => {
           <main className="flex-grow">
             <AnimatePresence mode="wait">
               <motion.div
-                key={activeTab}
+                key={`${selectedShopId}-${activeTab}`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.2 }}>
-                <ActiveComponent />
+                <ActiveComponent shop={selectedShop} texts={texts} />
               </motion.div>
             </AnimatePresence>
           </main>
@@ -136,10 +267,11 @@ const UserDashboard = ({ userType }) => {
   );
 };
 
-const MobileNavigation = ({ activeTab, setActiveTab, tabContent }) => (
+// Mobile Navigation Component
+const MobileNavigation = ({ activeTab, setActiveTab, tabContent, texts }) => (
   <ScrollArea className="h-full">
     <div className="py-4">
-      <h2 className="mb-4 text-lg font-semibold">Dashboard</h2>
+      <h2 className="mb-4 text-lg font-semibold">{texts.dashboard.title}</h2>
       <nav className="space-y-2">
         {Object.entries(tabContent).map(([key, { icon: Icon }]) => (
           <Button
@@ -157,80 +289,101 @@ const MobileNavigation = ({ activeTab, setActiveTab, tabContent }) => (
   </ScrollArea>
 );
 
-const PersonalInfoTab = () => (
+// Personal Information Tab Component
+const PersonalInfoTab = ({ texts }) => (
   <Card>
     <CardHeader>
-      <CardTitle>Personal Information</CardTitle>
+      <CardTitle>{texts.dashboard.personalInfo.title}</CardTitle>
       <CardDescription>
-        Update your name, email, and contact information.
+        {texts.dashboard.personalInfo.description}
       </CardDescription>
     </CardHeader>
     <CardContent className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1">
-          <Label htmlFor="name">Name</Label>
+          <Label htmlFor="name">
+            {texts.dashboard.personalInfo.labels.name}
+          </Label>
           <Input id="name" defaultValue="Jared Palmer" />
         </div>
         <div className="space-y-1">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">
+            {texts.dashboard.personalInfo.labels.email}
+          </Label>
           <Input id="email" type="email" defaultValue="jared@example.com" />
         </div>
       </div>
       <div className="space-y-1">
-        <Label htmlFor="phone">Phone</Label>
+        <Label htmlFor="phone">
+          {texts.dashboard.personalInfo.labels.phone}
+        </Label>
         <Input id="phone" type="tel" defaultValue="+1 (555) 555-5555" />
       </div>
     </CardContent>
     <CardFooter>
-      <Button>Save Changes</Button>
+      <Button>{texts.dashboard.personalInfo.buttonText}</Button>
     </CardFooter>
   </Card>
 );
 
-const PasswordTab = () => (
+// Password Tab Component
+const PasswordTab = ({ texts }) => (
   <Card>
     <CardHeader>
-      <CardTitle>Change Password</CardTitle>
-      <CardDescription>
-        Update your password to keep your account secure.
-      </CardDescription>
+      <CardTitle>{texts.dashboard.password.title}</CardTitle>
+      <CardDescription>{texts.dashboard.password.description}</CardDescription>
     </CardHeader>
     <CardContent className="space-y-4">
       <div className="space-y-1">
-        <Label htmlFor="current-password">Current Password</Label>
+        <Label htmlFor="current-password">
+          {texts.dashboard.password.labels.currentPassword}
+        </Label>
         <Input id="current-password" type="password" />
       </div>
       <div className="space-y-1">
-        <Label htmlFor="new-password">New Password</Label>
+        <Label htmlFor="new-password">
+          {texts.dashboard.password.labels.newPassword}
+        </Label>
         <Input id="new-password" type="password" />
       </div>
       <div className="space-y-1">
-        <Label htmlFor="confirm-password">Confirm Password</Label>
+        <Label htmlFor="confirm-password">
+          {texts.dashboard.password.labels.confirmPassword}
+        </Label>
         <Input id="confirm-password" type="password" />
       </div>
     </CardContent>
     <CardFooter>
-      <Button>Update Password</Button>
+      <Button>{texts.dashboard.password.buttonText}</Button>
     </CardFooter>
   </Card>
 );
 
-const OrdersTab = () => (
+// Orders Tab Component
+const OrdersTab = ({ texts }) => (
   <Card>
     <CardHeader>
-      <CardTitle>Recent Orders</CardTitle>
-      <CardDescription>View and manage your recent orders.</CardDescription>
+      <CardTitle>{texts.dashboard.orders.title}</CardTitle>
+      <CardDescription>{texts.dashboard.orders.description}</CardDescription>
     </CardHeader>
     <CardContent>
       <div className="overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Order #</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Total</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead>
+                {texts.dashboard.orders.tableHeaders.orderNumber}
+              </TableHead>
+              <TableHead>{texts.dashboard.orders.tableHeaders.date}</TableHead>
+              <TableHead>
+                {texts.dashboard.orders.tableHeaders.status}
+              </TableHead>
+              <TableHead className="text-right">
+                {texts.dashboard.orders.tableHeaders.total}
+              </TableHead>
+              <TableHead className="text-right">
+                {texts.dashboard.orders.tableHeaders.actions}
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -238,19 +391,19 @@ const OrdersTab = () => (
               {
                 id: "12345",
                 date: "2023-04-15",
-                status: "Fulfilled",
+                status: texts.dashboard.orders.status.fulfilled,
                 total: 99.99,
               },
               {
                 id: "12346",
                 date: "2023-04-10",
-                status: "Pending",
+                status: texts.dashboard.orders.status.pending,
                 total: 49.99,
               },
               {
                 id: "12347",
                 date: "2023-04-05",
-                status: "Cancelled",
+                status: texts.dashboard.orders.status.cancelled,
                 total: 79.99,
               },
             ].map((order) => (
@@ -260,7 +413,9 @@ const OrdersTab = () => (
                 <TableCell>
                   <Badge
                     variant={
-                      order.status === "Fulfilled" ? "secondary" : "outline"
+                      order.status === texts.dashboard.orders.status.fulfilled
+                        ? "secondary"
+                        : "outline"
                     }>
                     {order.status}
                   </Badge>
@@ -270,10 +425,10 @@ const OrdersTab = () => (
                 </TableCell>
                 <TableCell className="text-right">
                   <Button size="sm" variant="outline">
-                    View
+                    {texts.dashboard.orders.actions.view}
                   </Button>
                   <Button size="sm" variant="outline" className="ml-2">
-                    Return
+                    {texts.dashboard.orders.actions.return}
                   </Button>
                 </TableCell>
               </TableRow>
@@ -285,30 +440,9 @@ const OrdersTab = () => (
   </Card>
 );
 
-const ProductsTab = () => {
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: "Product 1",
-      category: "Electronics",
-      price: 99.99,
-      stock: 50,
-    },
-    {
-      id: 2,
-      name: "Product 2",
-      category: "Clothing",
-      price: 49.99,
-      stock: 100,
-    },
-    {
-      id: 3,
-      name: "Product 3",
-      category: "Home & Garden",
-      price: 79.99,
-      stock: 25,
-    },
-  ]);
+// Products Tab Component
+const ProductsTab = ({ shop, texts }) => {
+  const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
@@ -318,6 +452,13 @@ const ProductsTab = () => {
     price: "",
     stock: "",
   });
+
+  useEffect(() => {
+    // Load the products for the selected shop
+    if (shop?.products) {
+      setProducts(shop.products);
+    }
+  }, [shop]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -334,31 +475,38 @@ const ProductsTab = () => {
     setIsAddProductOpen(false);
   };
 
+  const { currency, convertCurrency } = useCurrency();
+
   return (
     <Card>
       <CardHeader>
         <div className="flex justify-between items-center">
           <div>
-            <CardTitle>Your Products</CardTitle>
-            <CardDescription>Manage your product inventory</CardDescription>
+            <CardTitle>{texts.dashboard.products.title}</CardTitle>
+            <CardDescription>
+              {texts.dashboard.products.description}
+            </CardDescription>
           </div>
           <Dialog open={isAddProductOpen} onOpenChange={setIsAddProductOpen}>
             <DialogTrigger asChild>
               <Button>
-                <Plus className="mr-2 h-4 w-4" /> Add Product
+                <Plus className="mr-2 h-4 w-4" />{" "}
+                {texts.dashboard.products.addProductButton}
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Add New Product</DialogTitle>
+                <DialogTitle>
+                  {texts.dashboard.products.addProductDialog.title}
+                </DialogTitle>
                 <DialogDescription>
-                  Enter the details of your new product below.
+                  {texts.dashboard.products.addProductDialog.description}
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="name" className="text-right">
-                    Name
+                    {texts.dashboard.products.addProductDialog.labels.name}
                   </Label>
                   <Input
                     id="name"
@@ -371,7 +519,7 @@ const ProductsTab = () => {
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="category" className="text-right">
-                    Category
+                    {texts.dashboard.products.addProductDialog.labels.category}
                   </Label>
                   <Select
                     onValueChange={(value) =>
@@ -391,7 +539,7 @@ const ProductsTab = () => {
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="price" className="text-right">
-                    Price
+                    {texts.dashboard.products.addProductDialog.labels.price}
                   </Label>
                   <Input
                     id="price"
@@ -405,7 +553,7 @@ const ProductsTab = () => {
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="stock" className="text-right">
-                    Stock
+                    {texts.dashboard.products.addProductDialog.labels.stock}
                   </Label>
                   <Input
                     id="stock"
@@ -419,7 +567,9 @@ const ProductsTab = () => {
                 </div>
               </div>
               <DialogFooter>
-                <Button onClick={handleAddProduct}>Add Product</Button>
+                <Button onClick={handleAddProduct}>
+                  {texts.dashboard.products.addProductDialog.buttonText}
+                </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -430,11 +580,21 @@ const ProductsTab = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead>Stock</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>
+                  {texts.dashboard.products.tableHeaders.name}
+                </TableHead>
+                <TableHead>
+                  {texts.dashboard.products.tableHeaders.category}
+                </TableHead>
+                <TableHead>
+                  {texts.dashboard.products.tableHeaders.price}
+                </TableHead>
+                <TableHead>
+                  {texts.dashboard.products.tableHeaders.stock}
+                </TableHead>
+                <TableHead className="text-right">
+                  {texts.dashboard.products.tableHeaders.actions}
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -442,14 +602,19 @@ const ProductsTab = () => {
                 <TableRow key={product.id}>
                   <TableCell className="font-medium">{product.name}</TableCell>
                   <TableCell>{product.category}</TableCell>
-                  <TableCell>${product.price.toFixed(2)}</TableCell>
+                  <TableCell>
+                    {currency + " "}
+                    {parseFloat(
+                      convertCurrency(product.price, "XAF", currency)
+                    ).toFixed(2)}
+                  </TableCell>
                   <TableCell>{product.stock}</TableCell>
                   <TableCell className="text-right">
                     <Button size="sm" variant="outline">
-                      Edit
+                      {texts.dashboard.products.actions.edit}
                     </Button>
                     <Button size="sm" variant="outline" className="ml-2">
-                      Delete
+                      {texts.dashboard.products.actions.delete}
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -492,73 +657,144 @@ const ProductsTab = () => {
   );
 };
 
-const StoreInfoTab = () => (
-  <Card>
-    <CardHeader>
-      <CardTitle>Store Information</CardTitle>
-      <CardDescription>
-        Update your store details and social media links.
-      </CardDescription>
-    </CardHeader>
-    <CardContent className="space-y-4">
-      <div className="space-y-1">
-        <Label htmlFor="store-name">Store Name</Label>
-        <Input id="store-name" defaultValue="My Awesome Store" />
-      </div>
-      <div className="space-y-1">
-        <Label htmlFor="store-address">Store Address</Label>
-        <Input id="store-address" defaultValue="123 Store St, Shop City" />
-      </div>
-      <div className="space-y-1">
-        <Label htmlFor="store-avatar">Store Avatar</Label>
-        <Input id="store-avatar" type="file" accept="image/*" />
-      </div>
-      <div className="space-y-1">
-        <Label htmlFor="store-description">Store Description</Label>
-        <Input
-          id="store-description"
-          defaultValue="We sell awesome products!"
-        />
-      </div>
-      <div className="space-y-1">
-        <Label htmlFor="social-media-links">Social Media Links</Label>
-        <Input id="social-media-facebook" placeholder="Facebook URL" />
-        <Input id="social-media-instagram" placeholder="Instagram URL" />
-        <Input id="social-media-twitter" placeholder="Twitter URL" />
-      </div>
-    </CardContent>
-    <CardFooter>
-      <Button>Save Changes</Button>
-    </CardFooter>
-  </Card>
-);
+// Store Information Tab Component
+const StoreInfoTab = ({ shop, texts }) => {
+  const [avatar, setAvatar] = useState(shop.avatar);
 
-const SalesAnalyticsTab = () => (
-  <Card>
-    <CardHeader>
-      <CardTitle>Sales Analytics</CardTitle>
-      <CardDescription>
-        View your {"store's"} sales performance.
-      </CardDescription>
-    </CardHeader>
-    <CardContent>
-      {/* Placeholder for actual charts/graphs */}
-      <div className="space-y-4">
-        <div>
-          <h3 className="text-lg font-medium">Total Revenue</h3>
-          <div className="bg-gray-100 p-4 rounded-lg">[Revenue Chart]</div>
+  useEffect(() => {
+    // Load additional store information if needed
+    console.log(`Loaded store info for shop ID: ${shop.id}`);
+  }, [shop]);
+
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setAvatar(reader.result); // Update avatar state with the base64 encoded image
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{texts.dashboard.storeInfo.title}</CardTitle>
+        <CardDescription>
+          {texts.dashboard.storeInfo.description}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="space-y-1">
+          <Label htmlFor="store-name">
+            {texts.dashboard.storeInfo.labels.storeName}
+          </Label>
+          <Input id="store-name" defaultValue={shop.name} />
         </div>
-        <div>
-          <h3 className="text-lg font-medium">Top Products</h3>
-          <div className="bg-gray-100 p-4 rounded-lg">[Top Products List]</div>
+        <div className="space-y-1">
+          <Label htmlFor="store-address">
+            {texts.dashboard.storeInfo.labels.storeAddress}
+          </Label>
+          <Input id="store-address" defaultValue={shop.address} />
         </div>
-        <div>
-          <h3 className="text-lg font-medium">Recent Sales</h3>
-          <div className="bg-gray-100 p-4 rounded-lg">[Recent Sales Table]</div>
+        <div className="space-y-1">
+          <Label htmlFor="store-avatar">
+            {texts.dashboard.storeInfo.labels.storeAvatar}
+          </Label>
+          <Input
+            id="store-avatar"
+            type="file"
+            accept="image/*"
+            onChange={handleAvatarChange}
+          />
+          {avatar && (
+            <Image
+              src={avatar}
+              alt="Store Avatar Preview"
+              className="mt-2 w-32 h-32 object-cover rounded"
+              width={1000}
+              height={1000}
+            />
+          )}
         </div>
-      </div>
-    </CardContent>
-  </Card>
-);
+        <div className="space-y-1">
+          <Label htmlFor="store-description">
+            {texts.dashboard.storeInfo.labels.storeDescription}
+          </Label>
+          <Input
+            id="store-description"
+            defaultValue={shop.description || "No description provided"}
+          />
+        </div>
+        <div className="space-y-1">
+          <Label htmlFor="social-media-links">
+            {texts.dashboard.storeInfo.labels.socialMediaLinks}
+          </Label>
+          <Input
+            id="social-media-facebook"
+            placeholder="Facebook URL"
+            defaultValue={shop.social_media_links?.facebook}
+          />
+          <Input
+            id="social-media-instagram"
+            placeholder="Instagram URL"
+            defaultValue={shop.social_media_links?.instagram}
+          />
+          <Input
+            id="social-media-twitter"
+            placeholder="Twitter URL"
+            defaultValue={shop.social_media_links?.twitter}
+          />
+        </div>
+      </CardContent>
+      <CardFooter>
+        <Button>{texts.dashboard.storeInfo.buttonText}</Button>
+      </CardFooter>
+    </Card>
+  );
+};
+
+// Sales Analytics Tab Component
+const SalesAnalyticsTab = ({ shop, texts }) => {
+  useEffect(() => {
+    // Load sales analytics for the selected shop
+    console.log(`Fetching sales analytics for shop ID: ${shop.id}`);
+  }, [shop]);
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{texts.dashboard.salesAnalytics.title}</CardTitle>
+        <CardDescription>
+          {texts.dashboard.salesAnalytics.description}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        {/* Placeholder for actual charts/graphs */}
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-medium">Total Revenue</h3>
+            <div className="bg-gray-100 p-4 rounded-lg">
+              {texts.dashboard.salesAnalytics.placeholders.revenueChart}
+            </div>
+          </div>
+          <div>
+            <h3 className="text-lg font-medium">Top Products</h3>
+            <div className="bg-gray-100 p-4 rounded-lg">
+              {texts.dashboard.salesAnalytics.placeholders.topProductsList}
+            </div>
+          </div>
+          <div>
+            <h3 className="text-lg font-medium">Recent Sales</h3>
+            <div className="bg-gray-100 p-4 rounded-lg">
+              {texts.dashboard.salesAnalytics.placeholders.recentSalesTable}
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
 
 export default UserDashboard;
