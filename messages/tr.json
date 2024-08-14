@@ -311,5 +311,112 @@
       "imageUploadedTitle": "Resim Yüklendi",
       "imageUploadedDescription": "Resim başarıyla yüklendi!"
     }
+  },
+  "accounts": {
+    "noStoreAvailable": {
+      "title": "Mağaza Bulunamadı",
+      "description": "Hesabınıza bağlı herhangi bir mağaza görünmüyor. Bunun bir hata olduğunu düşünüyorsanız lütfen destek ile iletişime geçin."
+    },
+    "storeNotActive": {
+      "title": "Mağaza Aktif Değil",
+      "description": "Bu mağaza için ödeme yapmadınız. Mağazanızı etkinleştirmek için info@lachofit.com adresinden bizimle iletişime geçin.",
+      "selectPlaceholder": "Mağaza Seç"
+    },
+    "welcome": "Hoş geldiniz, ",
+    "dashboard": {
+      "title": "Gösterge Paneli",
+      "personalInfo": {
+        "title": "Kişisel Bilgiler",
+        "description": "Adınızı, e-posta adresinizi ve iletişim bilgilerinizi güncelleyin.",
+        "labels": {
+          "name": "Ad",
+          "email": "E-posta",
+          "phone": "Telefon"
+        },
+        "buttonText": "Değişiklikleri Kaydet"
+      },
+      "password": {
+        "title": "Şifreyi Değiştir",
+        "description": "Hesabınızı güvence altına almak için şifrenizi güncelleyin.",
+        "labels": {
+          "currentPassword": "Mevcut Şifre",
+          "newPassword": "Yeni Şifre",
+          "confirmPassword": "Şifreyi Onayla"
+        },
+        "buttonText": "Şifreyi Güncelle"
+      },
+      "orders": {
+        "title": "Son Siparişler",
+        "description": "Son siparişlerinizi görüntüleyin ve yönetin.",
+        "tableHeaders": {
+          "orderNumber": "Sipariş #",
+          "date": "Tarih",
+          "status": "Durum",
+          "total": "Toplam",
+          "actions": "İşlemler"
+        },
+        "actions": {
+          "view": "Görüntüle",
+          "return": "İade Et"
+        },
+        "status": {
+          "fulfilled": "Tamamlandı",
+          "pending": "Beklemede",
+          "cancelled": "İptal Edildi"
+        }
+      },
+      "products": {
+        "title": "Ürünleriniz",
+        "description": "Ürün envanterinizi yönetin",
+        "addProductButton": "Ürün Ekle",
+        "addProductDialog": {
+          "title": "Yeni Ürün Ekle",
+          "description": "Yeni ürününüzün ayrıntılarını aşağıya girin.",
+          "labels": {
+            "name": "Ad",
+            "category": "Kategori",
+            "price": "Fiyat",
+            "stock": "Stok"
+          },
+          "buttonText": "Ürünü Ekle"
+        },
+        "tableHeaders": {
+          "name": "Ad",
+          "category": "Kategori",
+          "price": "Fiyat",
+          "stock": "Stok",
+          "actions": "İşlemler"
+        },
+        "actions": {
+          "edit": "Düzenle",
+          "delete": "Sil"
+        },
+        "pagination": {
+          "previous": "Önceki",
+          "next": "Sonraki"
+        }
+      },
+      "storeInfo": {
+        "title": "Mağaza Bilgileri",
+        "description": "Mağaza bilgilerinizi ve sosyal medya bağlantılarınızı güncelleyin.",
+        "labels": {
+          "storeName": "Mağaza Adı",
+          "storeAddress": "Mağaza Adresi",
+          "storeAvatar": "Mağaza Avatarı",
+          "storeDescription": "Mağaza Açıklaması",
+          "socialMediaLinks": "Sosyal Medya Bağlantıları"
+        },
+        "buttonText": "Değişiklikleri Kaydet"
+      },
+      "salesAnalytics": {
+        "title": "Satış Analizi",
+        "description": "Mağazanızın satış performansını görüntüleyin.",
+        "placeholders": {
+          "revenueChart": "[Gelir Grafiği]",
+          "topProductsList": "[En Çok Satan Ürünler Listesi]",
+          "recentSalesTable": "[Son Satışlar Tablosu]"
+        }
+      }
+    }
   }
 }

@@ -106,7 +106,20 @@ const LanguageCurrencyDropdowns = ({ currentLanguage, pathname }) => {
 };
 
 const UserMenu = ({ session }) => {
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/accounts/logout/`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + session?.accessToken,
+        },
+        body: JSON.stringify({
+          refresh_token: session?.refreshToken,
+        }),
+      }
+    );
     signOut();
   };
 
@@ -133,7 +146,7 @@ const UserMenu = ({ session }) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem asChild>
-          <Link href="/account" className="flex items-center">
+          <Link href="/accounts" className="flex items-center">
             <Settings className="mr-2 h-4 w-4" />
             Account
           </Link>
@@ -281,7 +294,7 @@ export default function Header({
                       {session ? (
                         <>
                           <Link
-                            href="/account"
+                            href="/accounts"
                             className="text-sm font-medium flex items-center">
                             <Settings className="mr-2 h-4 w-4" />
                             Account

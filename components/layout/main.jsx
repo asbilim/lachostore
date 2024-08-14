@@ -7,6 +7,7 @@ import { revalidateTag } from "next/cache";
 import MainPageProductCard from "./main-product";
 import NewsletterSubscribe from "../reusables/newsletter";
 import { StoreCarousel } from "../reusables/stores";
+import AdvancedPartnerShowcase from "./partner";
 export default function ShopMain({ products }) {
   revalidateTag("products");
   const t = useTranslations("Index");
@@ -95,14 +96,7 @@ export default function ShopMain({ products }) {
           />
         </div>
       </div>
-      <div className="flex max-w-6xl w-full items-center">
-        <div className="flex w-full justify-around">
-          <p>partner1</p>
-          <p>partner 2</p>
-          <p>partner 2</p>
-          <p>partner 2</p>
-        </div>
-      </div>
+      <AdvancedPartnerShowcase />
     </div>
   );
 }

@@ -317,5 +317,112 @@
       "imageUploadedTitle": "Image Téléchargée",
       "imageUploadedDescription": "Image téléchargée avec succès!"
     }
+  },
+  "accounts": {
+    "noStoreAvailable": {
+      "title": "Aucune Boutique Disponible",
+      "description": "Il semble que vous n'ayez aucune boutique liée à votre compte. Veuillez contacter le support si vous pensez que c'est une erreur."
+    },
+    "storeNotActive": {
+      "title": "Boutique Inactive",
+      "description": "Vous n'avez pas payé pour cette boutique. Contactez-nous à info@lachofit.com pour activer votre boutique.",
+      "selectPlaceholder": "Sélectionner une Boutique"
+    },
+    "welcome": "Bienvenue, ",
+    "dashboard": {
+      "title": "Tableau de Bord",
+      "personalInfo": {
+        "title": "Informations Personnelles",
+        "description": "Mettez à jour votre nom, e-mail et informations de contact.",
+        "labels": {
+          "name": "Nom",
+          "email": "E-mail",
+          "phone": "Téléphone"
+        },
+        "buttonText": "Enregistrer les Modifications"
+      },
+      "password": {
+        "title": "Changer le Mot de Passe",
+        "description": "Mettez à jour votre mot de passe pour sécuriser votre compte.",
+        "labels": {
+          "currentPassword": "Mot de Passe Actuel",
+          "newPassword": "Nouveau Mot de Passe",
+          "confirmPassword": "Confirmer le Mot de Passe"
+        },
+        "buttonText": "Mettre à Jour le Mot de Passe"
+      },
+      "orders": {
+        "title": "Commandes Récentes",
+        "description": "Voir et gérer vos commandes récentes.",
+        "tableHeaders": {
+          "orderNumber": "Commande #",
+          "date": "Date",
+          "status": "Statut",
+          "total": "Total",
+          "actions": "Actions"
+        },
+        "actions": {
+          "view": "Voir",
+          "return": "Retourner"
+        },
+        "status": {
+          "fulfilled": "Accompli",
+          "pending": "En Attente",
+          "cancelled": "Annulé"
+        }
+      },
+      "products": {
+        "title": "Vos Produits",
+        "description": "Gérez votre inventaire de produits",
+        "addProductButton": "Ajouter un Produit",
+        "addProductDialog": {
+          "title": "Ajouter un Nouveau Produit",
+          "description": "Entrez les détails de votre nouveau produit ci-dessous.",
+          "labels": {
+            "name": "Nom",
+            "category": "Catégorie",
+            "price": "Prix",
+            "stock": "Stock"
+          },
+          "buttonText": "Ajouter le Produit"
+        },
+        "tableHeaders": {
+          "name": "Nom",
+          "category": "Catégorie",
+          "price": "Prix",
+          "stock": "Stock",
+          "actions": "Actions"
+        },
+        "actions": {
+          "edit": "Éditer",
+          "delete": "Supprimer"
+        },
+        "pagination": {
+          "previous": "Précédent",
+          "next": "Suivant"
+        }
+      },
+      "storeInfo": {
+        "title": "Informations sur la Boutique",
+        "description": "Mettez à jour les détails de votre boutique et les liens des réseaux sociaux.",
+        "labels": {
+          "storeName": "Nom de la Boutique",
+          "storeAddress": "Adresse de la Boutique",
+          "storeAvatar": "Avatar de la Boutique",
+          "storeDescription": "Description de la Boutique",
+          "socialMediaLinks": "Liens des Réseaux Sociaux"
+        },
+        "buttonText": "Enregistrer les Modifications"
+      },
+      "salesAnalytics": {
+        "title": "Analyse des Ventes",
+        "description": "Voir les performances des ventes de votre boutique.",
+        "placeholders": {
+          "revenueChart": "[Graphique des Revenus]",
+          "topProductsList": "[Liste des Meilleurs Produits]",
+          "recentSalesTable": "[Tableau des Ventes Récentes]"
+        }
+      }
+    }
   }
 }
