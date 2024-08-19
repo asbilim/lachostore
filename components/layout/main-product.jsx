@@ -13,7 +13,7 @@ export default function MainPageProductCard({ item }) {
       prefetch={true}>
       <div className="flex flex-col gap-2 w-[150px] md:w-[250px]">
         <Image
-          src={item.image}
+          src={item.image || "https://placehold.co/400x600.png"}
           alt={item.name}
           width="600"
           height={400}

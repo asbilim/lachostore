@@ -64,7 +64,7 @@ export default function LoginComponent() {
   };
 
   return (
-    <div className="flex h-screen w-full items-center justify-center bg-background px-4">
+    <div className="flex h-screen w-full items-center justify-center  px-4">
       <Card className="w-full max-w-md">
         <CardHeader>
           <h1 className="text-3xl font-bold text-center">Login</h1>
@@ -124,7 +124,7 @@ export default function LoginComponent() {
                   )}
                 />
                 <Link
-                  href="/auth/forgot-password"
+                  href="/auth/reset/"
                   className="text-sm underline"
                   prefetch={false}>
                   Forgot password?

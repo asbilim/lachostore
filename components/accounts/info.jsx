@@ -11,7 +11,13 @@ import {
   BarChart2,
   Store,
   Menu,
+  Plus,
+  ChevronLeft,
+  ChevronRight,
   Loader,
+  Loader2,
+  Minus,
+  X,
 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -37,6 +43,15 @@ import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
   Select,
   SelectTrigger,
   SelectValue,
@@ -44,27 +59,26 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import Image from "next/image";
+import { useCurrency } from "@/providers/currency";
+import { useForm, useFieldArray } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { fetchData } from "../functions/fetch-data";
-
-import { ProductsTab } from "./products";
+import { useDropzone } from "react-dropzone";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "../ui/pagination";
+import { useToast } from "../ui/use-toast";
+import { FixedSizeList as List } from "react-window";
 
 const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-const fetchStore = async (slug, accessToken) => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/store/details/${slug}`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }
-  );
-  return await response.json();
-};
-
-export const productSchema = z.object({
+const productSchema = z.object({
   name: z.string().nonempty({ message: "Product name is required" }),
   category: z.string().nonempty({ message: "Category is required" }),
   brand: z.string().nonempty({ message: "Brand is required" }),
@@ -92,7 +106,19 @@ export const productSchema = z.object({
     .nonempty({ message: "At least one image is required" }),
 });
 
-// Dashboard Component
+const fetchStore = async (slug, accessToken) => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/store/details/${slug}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+  return await response.json();
+};
+
 const UserDashboard = ({ texts }) => {
   const { data: session } = useSession();
   const isOwner = session?.is_owner;
@@ -128,7 +154,7 @@ const UserDashboard = ({ texts }) => {
         "sizes",
       ]);
       const specificationsKeyData = await fetchData(
-        `${baseUrl}/store/api/specification-keys/`,
+        `${baseUrl}/store/api/specifications-keys/`,
         ["specifications"]
       );
 
@@ -222,7 +248,6 @@ const UserDashboard = ({ texts }) => {
     );
   }
 
-  // Tab configuration based on user type
   const tabContent = {
     "personal-info": { icon: User, component: PersonalInfoTab },
     password: { icon: Lock, component: PasswordTab },
@@ -232,7 +257,6 @@ const UserDashboard = ({ texts }) => {
     "sales-analytics": { icon: BarChart2, component: SalesAnalyticsTab },
   };
 
-  // Retrieve the active component based on the active tab
   const ActiveComponent = tabContent[activeTab].component;
 
   return (
@@ -332,7 +356,6 @@ const UserDashboard = ({ texts }) => {
   );
 };
 
-// Mobile Navigation Component
 const MobileNavigation = ({ activeTab, setActiveTab, tabContent, texts }) => (
   <ScrollArea className="h-full">
     <div className="py-4">
@@ -354,9 +377,504 @@ const MobileNavigation = ({ activeTab, setActiveTab, tabContent, texts }) => (
   </ScrollArea>
 );
 
-// Products Tab Component
+const ProductsTab = ({
+  shop,
+  texts,
+  colors,
+  brands,
+  categories,
+  features,
+  sizes,
+  specificationsKey,
+}) => {
+  const [products, setProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+  const [isAddProductOpen, setIsAddProductOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-// Personal Information Tab Component
+  const { toast } = useToast();
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    watch,
+  } = useForm({
+    resolver: zodResolver(productSchema),
+    defaultValues: {
+      specifications: [{ key: "", value: "" }],
+    },
+  });
+
+  const {
+    fields: specificationFields,
+    append: appendSpecification,
+    remove: removeSpecification,
+  } = useFieldArray({
+    control,
+    name: "specifications",
+  });
+
+  const { currency, convertCurrency } = useCurrency();
+
+  const onDrop = (acceptedFiles) => {
+    console.log(acceptedFiles);
+    // Handle file upload logic here
+  };
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: "image/*",
+    multiple: true,
+  });
+
+  const handleAddProduct = async (data) => {
+    setIsLoading(true);
+    try {
+      // Simulating API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setProducts([...products, { ...data, id: products.length + 1 }]);
+      reset();
+      setIsAddProductOpen(false);
+      toast({
+        title: "Product added successfully",
+        description: `${data.name} has been added to your products.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error adding product",
+        description: "There was an error adding the product. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (shop?.products) {
+      setProducts(shop.products);
+    }
+  }, [shop]);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = products.slice(indexOfFirstItem, indexOfLastItem);
+
+  const pageCount = Math.ceil(products.length / itemsPerPage);
+
+  const MultiSelectWithChips = ({ name, options, label, placeholder }) => {
+    const selectedValues = watch(name) || [];
+
+    const Row = ({ index, style }) => (
+      <div style={style}>
+        <SelectItem value={options[index].name}>
+          {options[index].name}
+        </SelectItem>
+      </div>
+    );
+
+    return (
+      <div className="grid grid-cols-4 items-center gap-4">
+        <Label htmlFor={name} className="text-right">
+          {label}
+        </Label>
+        <div className="col-span-3">
+          <Select id={name} {...register(name)} multiple>
+            <SelectTrigger>
+              <SelectValue placeholder={placeholder} />
+            </SelectTrigger>
+            <SelectContent>
+              <List
+                height={150}
+                itemCount={options.length}
+                itemSize={10}
+                width="100%">
+                {Row}
+              </List>
+            </SelectContent>
+          </Select>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {selectedValues.map((value) => (
+              <Badge key={value} variant="secondary">
+                {value}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newValues = selectedValues.filter((v) => v !== value);
+                    register(name).onChange(newValues);
+                  }}
+                  className="ml-1 text-xs">
+                  <X className="h-3 w-3" />
+                </button>
+              </Badge>
+            ))}
+          </div>
+        </div>
+        {errors[name] && (
+          <p className="text-red-500 text-sm col-span-4">
+            {errors[name].message}
+          </p>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex justify-between items-center">
+          <div>
+            <CardTitle>{texts.dashboard.products.title}</CardTitle>
+            <CardDescription>
+              {texts.dashboard.products.description}
+            </CardDescription>
+          </div>
+          <Dialog open={isAddProductOpen} onOpenChange={setIsAddProductOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                {texts.dashboard.products.addProductButton}
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[600px]">
+              <DialogHeader>
+                <DialogTitle>
+                  {texts.dashboard.products.addProductDialog.title}
+                </DialogTitle>
+                <DialogDescription>
+                  {texts.dashboard.products.addProductDialog.description}
+                </DialogDescription>
+              </DialogHeader>
+              <ScrollArea className="h-[400px]">
+                <form onSubmit={handleSubmit(handleAddProduct)}>
+                  <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="name" className="text-right">
+                        {texts.dashboard.products.addProductDialog.labels.name}
+                      </Label>
+                      <Input
+                        id="name"
+                        {...register("name")}
+                        className="col-span-3"
+                      />
+                      {errors.name && (
+                        <p className="text-red-500 text-sm col-span-4">
+                          {errors.name.message}
+                        </p>
+                      )}
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="category" className="text-right">
+                        {
+                          texts.dashboard.products.addProductDialog.labels
+                            .category
+                        }
+                      </Label>
+                      <Select
+                        id="category"
+                        {...register("category")}
+                        className="col-span-3">
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {categories.map((category) => (
+                            <SelectItem key={category.id} value={category.name}>
+                              {category.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {errors.category && (
+                        <p className="text-red-500 text-sm col-span-4">
+                          {errors.category.message}
+                        </p>
+                      )}
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="brand" className="text-right">
+                        {texts.dashboard.products.addProductDialog.labels.brand}
+                      </Label>
+                      <Select
+                        id="brand"
+                        {...register("brand")}
+                        className="col-span-3">
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a brand" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {brands.map((brand) => (
+                            <SelectItem key={brand.id} value={brand.name}>
+                              {brand.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {errors.brand && (
+                        <p className="text-red-500 text-sm col-span-4">
+                          {errors.brand.message}
+                        </p>
+                      )}
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="price" className="text-right">
+                        {texts.dashboard.products.addProductDialog.labels.price}
+                      </Label>
+                      <Input
+                        id="price"
+                        type="number"
+                        {...register("price")}
+                        className="col-span-3"
+                      />
+                      {errors.price && (
+                        <p className="text-red-500 text-sm col-span-4">
+                          {errors.price.message}
+                        </p>
+                      )}
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="stock" className="text-right">
+                        {texts.dashboard.products.addProductDialog.labels.stock}
+                      </Label>
+                      <Input
+                        id="stock"
+                        type="number"
+                        {...register("stock")}
+                        className="col-span-3"
+                      />
+                      {errors.stock && (
+                        <p className="text-red-500 text-sm col-span-4">
+                          {errors.stock.message}
+                        </p>
+                      )}
+                    </div>
+                    <MultiSelectWithChips
+                      name="colors"
+                      options={colors}
+                      label={
+                        texts.dashboard.products.addProductDialog.labels.colors
+                      }
+                      placeholder="Select colors"
+                    />
+                    <MultiSelectWithChips
+                      name="sizes"
+                      options={sizes}
+                      label={
+                        texts.dashboard.products.addProductDialog.labels.sizes
+                      }
+                      placeholder="Select sizes"
+                    />
+                    <div className="grid grid-cols-4 items-start gap-4">
+                      <Label
+                        htmlFor="specifications"
+                        className="text-right mt-2">
+                        {
+                          texts.dashboard.products.addProductDialog.labels
+                            .specifications
+                        }
+                      </Label>
+                      <div className="col-span-3 space-y-2">
+                        {specificationFields.map((field, index) => (
+                          <div key={field.id} className="flex space-x-2">
+                            <Select
+                              {...register(`specifications.${index}.key`)}
+                              className="w-1/2">
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select a key" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {specificationsKey?.map((spec) => (
+                                  <SelectItem key={spec.id} value={spec.name}>
+                                    {spec.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <Input
+                              {...register(`specifications.${index}.value`)}
+                              placeholder="Enter value"
+                              className="w-1/2"
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              onClick={() => removeSpecification(index)}>
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ))}
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            appendSpecification({ key: "", value: "" })
+                          }>
+                          <Plus className="mr-2 h-4 w-4" />
+                          Add Specification
+                        </Button>
+                      </div>
+                      {errors.specifications && (
+                        <p className="text-red-500 text-sm col-span-4">
+                          {errors.specifications.message}
+                        </p>
+                      )}
+                    </div>
+                    <MultiSelectWithChips
+                      name="features"
+                      options={features}
+                      label={
+                        texts.dashboard.products.addProductDialog.labels
+                          .features
+                      }
+                      placeholder="Select features"
+                    />
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="images" className="text-right">
+                        {
+                          texts.dashboard.products.addProductDialog.labels
+                            .images
+                        }
+                      </Label>
+                      <div
+                        {...getRootProps({
+                          className:
+                            "dropzone col-span-3 border-2 border-dashed rounded-md p-4 text-center cursor-pointer",
+                        })}>
+                        <input {...getInputProps()} />
+                        <p>
+                          Drag {"'n'"} drop some files here, or click to select
+                          files
+                        </p>
+                      </div>
+                      {errors.images && (
+                        <p className="text-red-500 text-sm col-span-4">
+                          {errors.images.message}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button type="submit" disabled={isLoading}>
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Please wait
+                        </>
+                      ) : (
+                        texts.dashboard.products.addProductDialog.buttonText
+                      )}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </ScrollArea>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>
+                  {texts.dashboard.products.tableHeaders.name}
+                </TableHead>
+                <TableHead>
+                  {texts.dashboard.products.tableHeaders.category}
+                </TableHead>
+                <TableHead>
+                  {texts.dashboard.products.tableHeaders.price}
+                </TableHead>
+                <TableHead>
+                  {texts.dashboard.products.tableHeaders.stock}
+                </TableHead>
+                <TableHead className="text-right">
+                  {texts.dashboard.products.tableHeaders.actions}
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <AnimatePresence>
+                {currentItems.map((product) => (
+                  <motion.tr
+                    key={product.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}>
+                    <TableCell className="font-medium">
+                      {product.name}
+                    </TableCell>
+                    <TableCell>{product.category}</TableCell>
+                    <TableCell>
+                      {currency}{" "}
+                      {parseFloat(
+                        convertCurrency(product.price, "XAF", currency)
+                      ).toFixed(2)}
+                    </TableCell>
+                    <TableCell>{product.stock}</TableCell>
+                    <TableCell className="text-right">
+                      <Button size="sm" variant="outline" className="mr-2">
+                        {texts.dashboard.products.actions.edit}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="text-red-500">
+                        {texts.dashboard.products.actions.delete}
+                      </Button>
+                    </TableCell>
+                  </motion.tr>
+                ))}
+              </AnimatePresence>
+            </TableBody>
+          </Table>
+        </div>
+      </CardContent>
+      <CardFooter className="flex justify-between items-center">
+        <div>
+          Showing {indexOfFirstItem + 1} to{" "}
+          {Math.min(indexOfLastItem, products.length)} of {products.length}{" "}
+          entries
+        </div>
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+              />
+            </PaginationItem>
+            {[...Array(pageCount)].map((_, i) => (
+              <PaginationItem key={i}>
+                <PaginationLink
+                  onClick={() => setCurrentPage(i + 1)}
+                  isActive={currentPage === i + 1}>
+                  {i + 1}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+            <PaginationItem>
+              <PaginationNext
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, pageCount))
+                }
+                disabled={currentPage === pageCount}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </CardFooter>
+    </Card>
+  );
+};
+
 const PersonalInfoTab = ({ texts }) => (
   <Card>
     <CardHeader>
@@ -393,7 +911,6 @@ const PersonalInfoTab = ({ texts }) => (
   </Card>
 );
 
-// Password Tab Component
 const PasswordTab = ({ texts }) => (
   <Card>
     <CardHeader>
@@ -426,7 +943,6 @@ const PasswordTab = ({ texts }) => (
   </Card>
 );
 
-// Orders Tab Component
 const OrdersTab = ({ texts }) => (
   <Card>
     <CardHeader>
@@ -507,7 +1023,6 @@ const OrdersTab = ({ texts }) => (
   </Card>
 );
 
-// Store Information Tab Component
 const StoreInfoTab = ({ shop, texts }) => {
   const [avatar, setAvatar] = useState(shop.avatar);
 
@@ -605,7 +1120,6 @@ const StoreInfoTab = ({ shop, texts }) => {
   );
 };
 
-// Sales Analytics Tab Component
 const SalesAnalyticsTab = ({ shop, texts }) => {
   useEffect(() => {
     // Load sales analytics for the selected shop
