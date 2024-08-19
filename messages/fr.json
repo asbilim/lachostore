@@ -363,7 +363,7 @@
         },
         "actions": {
           "view": "Voir",
-          "return": "Retourner"
+          "return": "Télécharger"
         },
         "status": {
           "fulfilled": "Accompli",

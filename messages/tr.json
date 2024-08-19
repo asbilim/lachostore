@@ -357,7 +357,7 @@
         },
         "actions": {
           "view": "Görüntüle",
-          "return": "İade Et"
+          "return": "İndir"
         },
         "status": {
           "fulfilled": "Tamamlandı",

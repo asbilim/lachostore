@@ -36,8 +36,6 @@ export const ProductsTab = ({ shop, texts }) => {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
-  console.log(shop);
-
   const { currency, convertCurrency } = useCurrency();
 
   useEffect(() => {

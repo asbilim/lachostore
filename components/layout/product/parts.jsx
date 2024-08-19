@@ -29,7 +29,6 @@ const ProductDetails = ({ product, translations }) => {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
     // Here you would typically send the review to your backend
     reset();
   };
