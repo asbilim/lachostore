@@ -96,23 +96,6 @@ export function generateMetadata() {
         "max-snippet": -1,
       },
     },
-    icons: {
-      icon: "/favicon.ico",
-      apple: [
-        { url: "/apple-icon.png" },
-        { url: "/apple-icon-x3.png", sizes: "180x180", type: "image/png" },
-      ],
-    },
-    manifest: `${baseUrl}/site.webmanifest`,
-    themeColor: [
-      { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-      { media: "(prefers-color-scheme: dark)", color: "#0f172a" },
-    ],
-    other: {
-      "google-site-verification": "your-google-site-verification-code",
-      "msvalidate.01": "your-bing-verification-code",
-      "facebook-domain-verification": "your-facebook-domain-verification-code",
-    },
   };
 }
 

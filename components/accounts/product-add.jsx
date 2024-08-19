@@ -28,20 +28,20 @@ const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 const productSchema = z.object({
   name: z.string().min(1, "Product name is required"),
   brand: z
-    .object({ value: z.string(), label: z.string(), id: z.number() }) // Expecting numeric ID
+    .object({ value: z.string(), label: z.string(), id: z.number() })
     .required("Brand is required"),
   description: z.string().min(1, "Description is required"),
   price: z.number().positive("Price must be a positive number"),
   discount: z.number().min(0).optional(),
   weight: z.number().positive("Weight must be a positive number"),
   category: z
-    .object({ value: z.string(), label: z.string(), id: z.number() }) // Expecting numeric ID
+    .object({ value: z.string(), label: z.string(), id: z.number() })
     .required("Category is required"),
   colors: z
-    .array(z.object({ value: z.string(), label: z.string(), id: z.number() })) // value as string, id as number
+    .array(z.object({ value: z.string(), label: z.string(), id: z.number() }))
     .optional(),
   sizes: z
-    .array(z.object({ value: z.string(), label: z.string(), id: z.number() })) // value as string, id as number
+    .array(z.object({ value: z.string(), label: z.string(), id: z.number() }))
     .optional(),
   specifications: z
     .array(
@@ -209,7 +209,6 @@ export default function AddProduct({ store_id }) {
     });
 
     try {
-      console.log(session);
       const response = await fetch(`${baseUrl}/store/products/create/`, {
         method: "POST",
         body: formData,
@@ -221,7 +220,6 @@ export default function AddProduct({ store_id }) {
       const result = await response.json();
 
       if (response.ok) {
-        console.log(result);
         toast.success("Product created successfully!");
       } else {
         toast.error(`Error: ${result.message || "Something went wrong"}`);
@@ -232,7 +230,6 @@ export default function AddProduct({ store_id }) {
   };
 
   const onError = (errors) => {
-    console.log(errors);
     toast.error("Please fix the errors in the form and try again.");
   };
 

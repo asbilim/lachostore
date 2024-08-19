@@ -159,7 +159,7 @@ export default function SignUpComponent() {
   const passwordStrength = calculatePasswordStrength(password);
 
   return (
-    <div className="flex h-screen w-full items-center justify-center bg-background px-4">
+    <div className="flex h-screen w-full items-center justify-center  px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <h1 className="text-3xl font-bold text-center">Sign Up</h1>

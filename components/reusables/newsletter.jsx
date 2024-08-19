@@ -7,7 +7,6 @@ import { toast } from "sonner";
 import { subscribeToNewsletter } from "@/server/add-to-newsletter";
 import * as z from "zod";
 
-console.log(process.env.BACKEND_URL);
 
 export const emailSchema = z.object({
   email: z.string().email("Invalid email address"),
