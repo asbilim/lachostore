@@ -1,5 +1,5 @@
 "use client";
-
+import { OrdersTab } from "./store";
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSession } from "next-auth/react";
@@ -12,6 +12,7 @@ import {
   Store,
   Menu,
   Loader,
+  Download,
 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -47,7 +48,7 @@ import Image from "next/image";
 import * as z from "zod";
 import { fetchData } from "../functions/fetch-data";
 import { ProductsTab } from "./products";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { AlertCircle, Loader2, DownloadCloud } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   AlertDialog,
@@ -111,7 +112,6 @@ const UserDashboard = ({ texts }) => {
   const [selectedShop, setSelectedShop] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("personal-info");
-
   const [colors, setColors] = useState([]);
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -212,11 +212,10 @@ const UserDashboard = ({ texts }) => {
             <Select
               value={selectedShopId}
               onValueChange={setSelectedShopId}
-              className="mt-4">
+              className="mt-4"
+              placeholder="Select a store">
               <SelectTrigger>
-                <SelectValue
-                  placeholder={texts.storeNotActive.selectPlaceholder}
-                />
+                <SelectValue placeholder="Select a store" />
               </SelectTrigger>
               <SelectContent>
                 {shops.map((shop) => (
@@ -246,7 +245,7 @@ const UserDashboard = ({ texts }) => {
   const ActiveComponent = tabContent[activeTab].component;
 
   return (
-    <div className="w-full min-h-screen bg-background p-4 sm:p-6 lg:p-8">
+    <div className="w-full min-h-screen mt-12  p-4 sm:p-6 lg:p-8">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">
@@ -259,9 +258,7 @@ const UserDashboard = ({ texts }) => {
               onValueChange={setSelectedShopId}
               className="ml-auto">
               <SelectTrigger>
-                <SelectValue
-                  placeholder={texts.storeNotActive.selectPlaceholder}
-                />
+                <SelectValue placeholder={"Select a store"} />
               </SelectTrigger>
               <SelectContent>
                 {shops.map((shop) => (
@@ -380,28 +377,13 @@ const PersonalInfoTab = ({ texts }) => {
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const { data: session } = useSession();
+
   useEffect(() => {
     // Fetch user data when component mounts
     const fetchUserData = async () => {
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/accounts/profile/`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `${process.env.NEXT_PUBLIC_BACKEND_URL}/accounts/change-info/`,
-            },
-          }
-        );
-
-        if (response.ok) {
-          const userData = await response.json();
-          setUsername(userData.username);
-          setEmail(userData.email);
-        } else {
-          throw new Error("Failed to fetch user data");
-        }
+        setUsername(session?.username || "");
+        setEmail(session?.user?.email || "");
       } catch (err) {
         console.error("Error fetching user data:", err);
         setError("Failed to load user data. Please try again later.");
@@ -421,7 +403,7 @@ const PersonalInfoTab = ({ texts }) => {
       schema.parse({ username, email });
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/accounts/update-profile/`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/accounts/update-account/`,
         {
           method: "POST",
           headers: {
@@ -436,7 +418,11 @@ const PersonalInfoTab = ({ texts }) => {
         setShowSuccessDialog(true);
       } else {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to update profile");
+        throw new Error(
+          errorData.username
+            ? errorData.username
+            : errorData.email || "Failed to update profile"
+        );
       }
     } catch (err) {
       if (err instanceof z.ZodError) {
@@ -464,7 +450,7 @@ const PersonalInfoTab = ({ texts }) => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1">
                 <Label htmlFor="username">
-                  {texts.dashboard.personalInfo.labels.username}
+                  {texts.dashboard.personalInfo.labels.name}
                 </Label>
                 <Input
                   id="username"
@@ -527,11 +513,9 @@ const PersonalInfoTab = ({ texts }) => {
       {showErrorAlert && (
         <Alert variant="destructive" className="mt-4">
           <AlertCircle className="h-4 w-4" />
-          <AlertTitle>
-            {texts.dashboard.personalInfo.errorAlert.title}
-          </AlertTitle>
+          <AlertTitle>{"An error occurred"}</AlertTitle>
           <AlertDescription>
-            {texts.dashboard.personalInfo.errorAlert.description}
+            {"We could not change your information , please try again later"}
           </AlertDescription>
         </Alert>
       )}
@@ -707,87 +691,6 @@ const PasswordTab = ({ texts }) => {
     </>
   );
 };
-
-// Orders Tab Component
-const OrdersTab = ({ texts }) => (
-  <Card>
-    <CardHeader>
-      <CardTitle>{texts.dashboard.orders.title}</CardTitle>
-      <CardDescription>{texts.dashboard.orders.description}</CardDescription>
-    </CardHeader>
-    <CardContent>
-      <div className="overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>
-                {texts.dashboard.orders.tableHeaders.orderNumber}
-              </TableHead>
-              <TableHead>{texts.dashboard.orders.tableHeaders.date}</TableHead>
-              <TableHead>
-                {texts.dashboard.orders.tableHeaders.status}
-              </TableHead>
-              <TableHead className="text-right">
-                {texts.dashboard.orders.tableHeaders.total}
-              </TableHead>
-              <TableHead className="text-right">
-                {texts.dashboard.orders.tableHeaders.actions}
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {[
-              {
-                id: "12345",
-                date: "2023-04-15",
-                status: texts.dashboard.orders.status.fulfilled,
-                total: 99.99,
-              },
-              {
-                id: "12346",
-                date: "2023-04-10",
-                status: texts.dashboard.orders.status.pending,
-                total: 49.99,
-              },
-              {
-                id: "12347",
-                date: "2023-04-05",
-                status: texts.dashboard.orders.status.cancelled,
-                total: 79.99,
-              },
-            ].map((order) => (
-              <TableRow key={order.id}>
-                <TableCell className="font-medium">#{order.id}</TableCell>
-                <TableCell>{order.date}</TableCell>
-                <TableCell>
-                  <Badge
-                    variant={
-                      order.status === texts.dashboard.orders.status.fulfilled
-                        ? "secondary"
-                        : "outline"
-                    }>
-                    {order.status}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-right">
-                  ${order.total.toFixed(2)}
-                </TableCell>
-                <TableCell className="text-right">
-                  <Button size="sm" variant="outline">
-                    {texts.dashboard.orders.actions.view}
-                  </Button>
-                  <Button size="sm" variant="outline" className="ml-2">
-                    {texts.dashboard.orders.actions.return}
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    </CardContent>
-  </Card>
-);
 
 // Store Information Tab Component
 const StoreInfoTab = ({ shop, texts }) => {

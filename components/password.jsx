@@ -88,7 +88,6 @@ export default function PasswordResetForm({ token }) {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
         setShowSuccessDialog(true);
         setPassword("");
         setConfirmPassword("");

@@ -20,7 +20,7 @@ export default function ActivateAccount({ tkey, token }) {
   const router = useRouter();
 
   const completeUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/accounts/activate/${tkey}/${token}/`;
-  console.log(completeUrl);
+
 
   useEffect(() => {
     const activateAccount = async () => {
@@ -34,7 +34,6 @@ export default function ActivateAccount({ tkey, token }) {
           setTimeout(() => router.push("/en/auth/login"), 5000); // Redirect after 5 seconds
         } else {
           const data = await response.json();
-          console.log(data);
           setErrorMessage(data.error || "An error occurred during activation.");
         }
       } catch (error) {

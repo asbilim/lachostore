@@ -74,7 +74,6 @@ export const CheckoutPage = ({
   console.log(getCurrentRatio());
 
   console.log(convertCurrency(1000, currency, "XAF"));
-  console.log(cart);
 
   const formSchema = z.object({
     fullName: z.string().min(2, { message: validationMessages.fullName }),

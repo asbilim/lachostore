@@ -370,7 +370,7 @@
         },
         "actions": {
           "view": "View",
-          "return": "Return"
+          "return": "Download"
         },
         "status": {
           "fulfilled": "Fulfilled",

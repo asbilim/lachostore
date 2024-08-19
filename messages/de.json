@@ -364,7 +364,7 @@
         },
         "actions": {
           "view": "Ansehen",
-          "return": "Zurückgeben"
+          "return": "Herunterladen"
         },
         "status": {
           "fulfilled": "Erfüllt",
