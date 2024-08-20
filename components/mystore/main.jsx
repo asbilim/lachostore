@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "@/components/navigation";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/accordion";
 import Image from "next/image";
 import { Star, Mail, Phone, MapPin } from "lucide-react";
-
+import { handleStoreVisit } from "../functions/api";
 // Static text content
 const staticContent = {
   storeSlogan: "Innovative tech solutions since 2020",
@@ -50,6 +50,13 @@ export default function StorePageClient({ store, products, locale }) {
     hidden: { y: 20, opacity: 0 },
     visible: { y: 0, opacity: 1, transition: { duration: 0.3 } },
   };
+
+  useEffect(() => {
+    const addVisit = async () => {
+      const data = await handleStoreVisit(store.id);
+    };
+    addVisit();
+  }, [store.id]);
 
   const renderBanner = () => (
     <div className="relative h-[50vh] lg:h-[70vh] overflow-hidden">
