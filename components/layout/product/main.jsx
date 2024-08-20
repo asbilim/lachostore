@@ -157,7 +157,7 @@ export default function Main(props) {
           className="grid gap-4 w-full">
           <div className="relative overflow-hidden rounded-lg">
             <Image
-              src={props.product.image}
+              src={props.product.image || "https://placehold.co/400x600.png"}
               alt="Product Image"
               width={600}
               height={900}

@@ -161,6 +161,11 @@ export const CheckoutPage = ({
               <CardDescription>{description}</CardDescription>
             </CardHeader>
             <CardContent>
+              <div className="text-center py-8">
+                <Button onClick={() => document.location.reload()}>
+                  Refresh the cart
+                </Button>
+              </div>
               {cart.length === 0 ? (
                 <div className="text-center py-8">
                   <h3 className="text-xl font-semibold mb-2">{empty}</h3>
