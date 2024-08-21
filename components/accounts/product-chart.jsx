@@ -24,11 +24,14 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  ScatterChart,
+  Scatter,
+  ZAxis,
 } from "recharts";
 import { useSession } from "next-auth/react";
 
-export default function ShopVisitsChart({ shop }) {
-  const [visitData, setVisitData] = useState(null);
+export default function ProductInsightsChart({ shopId }) {
+  const [insightsData, setInsightsData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [dateRange, setDateRange] = useState("30");
@@ -48,7 +51,7 @@ export default function ShopVisitsChart({ shop }) {
           .split("T")[0];
 
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/store/api/store-visits-stats/?store_id=${shop.id}&start_date=${startDate}&end_date=${endDate}`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/store/api/shop/${shopId}/insights/${startDate}/${endDate}/`,
           {
             headers: {
               Authorization: `Bearer ${session?.accessToken}`,
@@ -58,11 +61,11 @@ export default function ShopVisitsChart({ shop }) {
         );
 
         if (!response.ok) {
-          throw new Error("Failed to fetch visit data");
+          throw new Error("Failed to fetch product insights");
         }
 
         const data = await response.json();
-        setVisitData(data);
+        setInsightsData(data);
       } catch (err) {
         console.error("Error fetching data:", err);
         setError("Failed to fetch data. Please try again.");
@@ -72,7 +75,7 @@ export default function ShopVisitsChart({ shop }) {
     };
 
     fetchData();
-  }, [dateRange, shop.id, session?.accessToken]);
+  }, [dateRange, shopId, session?.accessToken]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -82,16 +85,16 @@ export default function ShopVisitsChart({ shop }) {
     return <div>Error: {error}</div>;
   }
 
-  if (!visitData) {
+  if (!insightsData || !insightsData.product_insights.length) {
     return <div>No data available</div>;
   }
 
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
-        <CardTitle>Shop Visits by Day of Week</CardTitle>
+        <CardTitle>Product Insights</CardTitle>
         <CardDescription>
-          Number of visits received for Store : {shop.name}
+          Performance metrics for products in Shop ID: {shopId}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -107,10 +110,17 @@ export default function ShopVisitsChart({ shop }) {
             </SelectContent>
           </Select>
         </div>
+
+        {/* Bar Chart for comparing products */}
         <ResponsiveContainer width="100%" height={400}>
-          <BarChart data={visitData}>
+          <BarChart data={insightsData.product_insights}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="day" />
+            <XAxis
+              dataKey="product_name"
+              angle={-45}
+              textAnchor="end"
+              height={100}
+            />
             <YAxis />
             <Tooltip
               contentStyle={{
@@ -121,12 +131,50 @@ export default function ShopVisitsChart({ shop }) {
             />
             <Legend />
             <Bar
-              dataKey="visit_count"
+              dataKey="total_views"
               fill="hsl(var(--primary))"
-              name="Visit Count"
-              radius={[4, 4, 0, 0]}
+              name="Total Views"
+            />
+            <Bar
+              dataKey="order_count"
+              fill="hsl(var(--secondary))"
+              name="Order Count"
+            />
+            <Bar
+              dataKey="completed_orders_count"
+              fill="hsl(var(--accent))"
+              name="Completed Orders"
+            />
+            <Bar
+              dataKey="delivered_orders_count"
+              fill="hsl(var(--muted))"
+              name="Delivered Orders"
             />
           </BarChart>
+        </ResponsiveContainer>
+
+        {/* Scatter Plot for Views vs Orders */}
+        <ResponsiveContainer width="100%" height={400} className="mt-8">
+          <ScatterChart>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="total_views" name="Total Views" />
+            <YAxis dataKey="order_count" name="Order Count" />
+            <ZAxis dataKey="conversion_rate" name="Conversion Rate" />
+            <Tooltip
+              cursor={{ strokeDasharray: "3 3" }}
+              contentStyle={{
+                background: "hsl(var(--background))",
+                border: "1px solid hsl(var(--border))",
+              }}
+              labelStyle={{ color: "hsl(var(--foreground))" }}
+            />
+            <Legend />
+            <Scatter
+              name="Products"
+              data={insightsData.product_insights}
+              fill="hsl(var(--primary))"
+            />
+          </ScatterChart>
         </ResponsiveContainer>
       </CardContent>
     </Card>

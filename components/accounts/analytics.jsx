@@ -9,12 +9,9 @@ import {
 } from "../ui/card";
 import RevenueChart from "./revenue-chart";
 import ShopVisitsChart from "./visit-chart";
+import ProductInsightsChart from "./product-chart";
 
 export const SalesAnalyticsTab = ({ shop, texts }) => {
-  useEffect(() => {
-    console.log(`Fetching sales analytics for shop ID: ${shop.id}`);
-  }, [shop]);
-
   return (
     <Card>
       <CardHeader>
@@ -37,10 +34,9 @@ export const SalesAnalyticsTab = ({ shop, texts }) => {
             <div className="bg-gray-100 p-4 rounded-lg"></div>
           </div>
           <div>
-            <h3 className="text-lg font-medium">Recent Sales</h3>
-            <div className="bg-gray-100 p-4 rounded-lg">
-              {texts.dashboard.salesAnalytics.placeholders.recentSalesTable}
-            </div>
+            <h3 className="text-lg font-medium">Products insight</h3>
+            <ProductInsightsChart shopId={shop.id} />
+            <div className="bg-gray-100 p-4 rounded-lg"></div>
           </div>
         </div>
       </CardContent>

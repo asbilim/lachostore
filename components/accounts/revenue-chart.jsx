@@ -56,6 +56,7 @@ export default function RevenueChart({ shop }) {
             headers: {
               Authorization: `Bearer ${session.accessToken}`,
             },
+            next: { cache: "no-store", revalidate: 10 },
           }
         );
 
