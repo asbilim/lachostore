@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import {
   Card,
@@ -15,8 +16,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  LineChart,
-  Line,
+  Bar,
+  BarChart,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -25,15 +26,13 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useSession } from "next-auth/react";
-import { useCurrency } from "@/providers/currency";
 
-export default function RevenueChart({ shop }) {
-  const [revenueData, setRevenueData] = useState(null);
+export default function ShopVisitsChart({ shop }) {
+  const [visitData, setVisitData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(null);
   const [dateRange, setDateRange] = useState("30");
   const { data: session } = useSession();
-  const { currency, convertCurrency } = useCurrency();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,7 +40,6 @@ export default function RevenueChart({ shop }) {
       setError(null);
 
       try {
-        // Calculate start and end dates based on the selected date range
         const endDate = new Date().toISOString().split("T")[0];
         const startDate = new Date(
           new Date().setDate(new Date().getDate() - parseInt(dateRange))
@@ -49,26 +47,24 @@ export default function RevenueChart({ shop }) {
           .toISOString()
           .split("T")[0];
 
-        // Fetch the data from the backend API
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/accounts/stores/${shop.id}/daily-revenue/?start_date=${startDate}&end_date=${endDate}`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/store/api/store-visits-stats/?store_id=${shop.id}&start_date=${startDate}&end_date=${endDate}`,
           {
             headers: {
-              Authorization: `Bearer ${session.accessToken}`,
+              Authorization: `Bearer ${session?.accessToken}`,
             },
             next: { cache: "no-store", revalidate: 10 },
           }
         );
 
         if (!response.ok) {
-          throw new Error("Failed to fetch revenue data");
+          throw new Error("Failed to fetch visit data");
         }
 
         const data = await response.json();
-        console.log(data);
-        setRevenueData(data);
+        setVisitData(data);
       } catch (err) {
-        console.error("Error fetching data:", err.message);
+        console.error("Error fetching data:", err);
         setError("Failed to fetch data. Please try again.");
       } finally {
         setIsLoading(false);
@@ -76,7 +72,7 @@ export default function RevenueChart({ shop }) {
     };
 
     fetchData();
-  }, [dateRange, shop.id, session.accessToken]);
+  }, [dateRange, shop.id, session?.accessToken]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -86,16 +82,16 @@ export default function RevenueChart({ shop }) {
     return <div>Error: {error}</div>;
   }
 
-  if (!revenueData || !revenueData.revenue_data) {
+  if (!visitData) {
     return <div>No data available</div>;
   }
 
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
-        <CardTitle>Daily Revenue Chart</CardTitle>
+        <CardTitle>Shop Visits by Day of Week</CardTitle>
         <CardDescription>
-          Revenue breakdown by order status for Store ID: {revenueData.store_id}
+          Number of visits received for Store : {shop.name}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -112,39 +108,25 @@ export default function RevenueChart({ shop }) {
           </Select>
         </div>
         <ResponsiveContainer width="100%" height={400}>
-          <LineChart
-            data={revenueData.revenue_data}
-            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+          <BarChart data={visitData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="day" />
             <YAxis />
-            <Tooltip />
+            <Tooltip
+              contentStyle={{
+                background: "hsl(var(--background))",
+                border: "1px solid hsl(var(--border))",
+              }}
+              labelStyle={{ color: "hsl(var(--foreground))" }}
+            />
             <Legend />
-            <Line
-              type="monotone"
-              dataKey="total"
-              stroke="#8884d8"
-              name="Total Revenue"
+            <Bar
+              dataKey="visit_count"
+              fill="hsl(var(--primary))"
+              name="Visit Count"
+              radius={[4, 4, 0, 0]}
             />
-            <Line
-              type="monotone"
-              dataKey="completed"
-              stroke="#82ca9d"
-              name="Completed Orders"
-            />
-            <Line
-              type="monotone"
-              dataKey="pending"
-              stroke="#ffc658"
-              name="Pending Orders"
-            />
-            <Line
-              type="monotone"
-              dataKey="canceled"
-              stroke="#ff8042"
-              name="Canceled Orders"
-            />
-          </LineChart>
+          </BarChart>
         </ResponsiveContainer>
       </CardContent>
     </Card>

@@ -35,6 +35,7 @@ import {
 } from "react-share";
 import { useCurrency } from "@/providers/currency";
 import { usePathname } from "@/components/navigation";
+import { handleProductVisit } from "@/components/functions/api";
 
 export default function Main(props) {
   const { cart, addToCart, removeFromCart } = useCart();
@@ -126,6 +127,13 @@ export default function Main(props) {
   const stagger = {
     visible: { transition: { staggerChildren: 0.1 } },
   };
+
+  useEffect(() => {
+    const addVisit = async () => {
+      const data = await handleProductVisit(props.product.id);
+    };
+    addVisit();
+  }, [props.product.id]);
 
   return (
     <motion.div

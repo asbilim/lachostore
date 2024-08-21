@@ -104,6 +104,7 @@ export default async function RootLayout({ children, params }) {
   const tHeader = await getTranslations("Header");
   const tFooter = await getTranslations("Footer");
   const products = await getProducts();
+
   revalidateTag("products");
 
   return (
