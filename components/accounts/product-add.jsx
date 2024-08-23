@@ -186,27 +186,30 @@ export default function AddProduct({ store_id }) {
 
     formData.append("store_id", store_id);
 
-    Object.keys(data).forEach((key) => {
-      if (key === "images") {
-        data.images.forEach((file, index) =>
-          formData.append(`images[${index}]`, file)
-        );
-      } else if (key === "category" || key === "brand") {
-        formData.append(key, data[key].id); // Send the ID, which is now expected to be a number
-      } else if (Array.isArray(data[key])) {
-        data[key].forEach((item, index) => {
-          if (typeof item === "object" && item.id) {
-            formData.append(`${key}[]`, item.id); // Send the ID, which is now expected to be a number
-          } else if (typeof item === "object" && key === "specifications") {
-            formData.append(`specifications[${index}][key]`, item.key);
-            formData.append(`specifications[${index}][value]`, item.value);
-          } else {
-            formData.append(`${key}[${index}]`, item);
-          }
-        });
-      } else {
-        formData.append(key, data[key]);
-      }
+    // Append JSON data
+    formData.append(
+      "product_data",
+      JSON.stringify({
+        name: data.name,
+        price: data.price,
+        discount: data.discount,
+        weight: data.weight,
+        description: data.description,
+        long_description: data.long_description,
+        stock: data.stock,
+        category: data.category.id,
+        brand: data.brand?.id,
+        specifications: data.specifications.map((spec) => ({
+          key: spec.key,
+          value: spec.value,
+        })),
+        keywords: data.keywords,
+      })
+    );
+
+    // Append images
+    data.images.forEach((file, index) => {
+      formData.append(`images`, file);
     });
 
     try {
@@ -291,8 +294,6 @@ export default function AddProduct({ store_id }) {
                   valueAsNumber: true,
                 })}
                 placeholder="stock eg: 100"
-                min="10"
-                step="500"
                 className={errors.price ? "border-red-500" : ""}
               />
               {errors.description && (
