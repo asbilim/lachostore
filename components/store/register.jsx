@@ -38,7 +38,6 @@ import {
 import { Toaster, toast } from "sonner";
 import Image from "next/image";
 
-
 // Define individual schemas for each step
 const basicInfoSchema = z.object({
   name: z.string().min(1, "Store name is required"),
@@ -133,6 +132,7 @@ const EnhancedStoreRegistration = ({ staticText }) => {
 
   // Form submission logic
   const onSubmit = async (data) => {
+    console.log(data);
     setIsSubmitting(true);
     try {
       const formData = new FormData();
@@ -582,7 +582,7 @@ const EnhancedStoreRegistration = ({ staticText }) => {
               type="button"
               onClick={() => {
                 setShowSuccessModal(false);
-                router.push("/en/");
+                router.push("/en/accounts/");
               }}>
               Back Home
             </Button>

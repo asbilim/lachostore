@@ -33,6 +33,7 @@ const productSchema = z.object({
   description: z.string().min(1, "Description is required"),
   price: z.number().positive("Price must be a positive number"),
   discount: z.number().min(0).optional(),
+  stock: z.number().min(0).optional(),
   weight: z.number().positive("Weight must be a positive number"),
   category: z
     .object({ value: z.string(), label: z.string(), id: z.number() })
@@ -280,6 +281,23 @@ export default function AddProduct({ store_id }) {
                   <span className="text-red-500">{errors.brand.message}</span>
                 )}
               </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="stock">Stock</Label>
+              <Input
+                id="stock"
+                type="number"
+                {...register("stock", {
+                  valueAsNumber: true,
+                })}
+                placeholder="stock eg: 100"
+                min="10"
+                step="500"
+                className={errors.price ? "border-red-500" : ""}
+              />
+              {errors.description && (
+                <span className="text-red-500">{errors.stock.message}</span>
+              )}
             </div>
 
             <div className="space-y-2">
