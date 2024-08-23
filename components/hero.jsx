@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-
+import { Link } from "./navigation";
 export default async function HeroShop({ title, description, link_1, link_2 }) {
   return (
     <section className="relative w-full md:h-[50vh] h-[65vh] overflow-hidden my-4 bg-gradient-to-br from-primary/10 to-secondary/10">
@@ -30,7 +30,7 @@ export default async function HeroShop({ title, description, link_1, link_2 }) {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button size="lg" className="bg-primary text-primary-foreground">
-              {link_1}
+              <Link href="/store/register/">{link_1}</Link>
             </Button>
             <Button
               variant="outline"

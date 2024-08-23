@@ -99,33 +99,7 @@ export default function Footer({
             </ScrollArea>
           </div>
         </div>
-        <Separator className="my-8" />
-        <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <p className="text-sm font-light">{rights}</p>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
-                <Globe className="mr-2 h-4 w-4" />
-                {currentLanguage.name}
-                <ChevronDown className="ml-2 h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              {languages.map((lang) => (
-                <DropdownMenuItem key={lang.code}>
-                  <a
-                    href={`/${lang.code}${pathname}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      window.location.href = `/${lang.code}${pathname}`;
-                    }}>
-                    {lang.name}
-                  </a>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+
         <Separator className="my-8" />
         <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
           <p className="text-sm font-light">{rights}</p>

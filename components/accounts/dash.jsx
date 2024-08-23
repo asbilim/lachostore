@@ -12,6 +12,7 @@ import {
   Store,
   Menu,
   Loader,
+  Plus,
 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -51,6 +52,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { SalesAnalyticsTab } from "./analytics";
+import { Link } from "../navigation";
 
 const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -201,22 +203,29 @@ const UserDashboard = ({ texts }) => {
               </a>{" "}
               to activate your store.
             </p>
-            <Select
-              value={selectedShopId}
-              onValueChange={setSelectedShopId}
-              className="mt-4"
-              placeholder="Select a store">
-              <SelectTrigger>
-                <SelectValue placeholder="Select a store" />
-              </SelectTrigger>
-              <SelectContent>
-                {shops.map((shop) => (
-                  <SelectItem key={shop.id} value={shop.id}>
-                    {shop.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="flex gap-2">
+              <Select
+                value={selectedShopId}
+                onValueChange={setSelectedShopId}
+                className="mt-4"
+                placeholder="Select a store">
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a store" />
+                </SelectTrigger>
+                <SelectContent>
+                  {shops.map((shop) => (
+                    <SelectItem key={shop.id} value={shop.id}>
+                      {shop.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button>
+                <Link href="/store/register" target="_blank" prefetch={true}>
+                  <Plus />
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
