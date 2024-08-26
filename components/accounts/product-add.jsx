@@ -185,12 +185,15 @@ export default function AddProduct({ store_id }) {
     const formData = new FormData();
 
     formData.append("store_id", store_id);
+    formData.append("store", store_id);
 
     // Append JSON data
     formData.append(
       "product_data",
       JSON.stringify({
         name: data.name,
+        store_id: store_id,
+        store: store_id,
         price: data.price,
         discount: data.discount,
         weight: data.weight,

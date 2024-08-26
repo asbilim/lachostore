@@ -12,6 +12,7 @@ import { revalidateTag } from "next/cache";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { CurrencyProvider } from "@/providers/currency";
 import { AuthProvider } from "@/providers/next-auth";
+import Converter from "@/components/reusables/converter";
 
 const inter = Inte({
   subsets: ["latin"],
@@ -120,6 +121,7 @@ export default async function RootLayout({ children, params }) {
                 <Toaster />
                 <FloatingChat products={products} />
                 <PreHeader />
+                <Converter />
                 <Header
                   locale={locale}
                   home={tHeader("home")}
