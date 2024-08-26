@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { getIronSession } from "iron-session";
 import { sessionOptions } from "@/lib/iron-session-config";
 
-const API_KEY = "db8d251a1ff106b91a619f32";
+const API_KEY = "bbe0c69e14cf485c83e8cab0";
 const BASE_CURRENCY = "XAF";
 
 // We'll use this to store exchange rates outside of the session

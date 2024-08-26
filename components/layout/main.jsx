@@ -8,7 +8,12 @@ import MainPageProductCard from "./main-product";
 import NewsletterSubscribe from "../reusables/newsletter";
 import { StoreCarousel } from "../reusables/stores";
 import AdvancedPartnerShowcase from "./partner";
-export default function ShopMain({ products }) {
+export default function ShopMain({
+  products,
+  customer_choices,
+  trending_products,
+  recommended_products,
+}) {
   revalidateTag("products");
   const t = useTranslations("Index");
 
@@ -35,7 +40,7 @@ export default function ShopMain({ products }) {
       <div className="w-full flex flex-col max-w-6xl  gap-4">
         <h2 className="text-primary mb-12">{t("section_two.subtitle")}</h2>
         <div className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {products.map((item) => {
+          {trending_products.map((item) => {
             return <MainPageProductCard item={item} key={item.name} />;
           })}
         </div>
@@ -49,7 +54,7 @@ export default function ShopMain({ products }) {
       <div className="w-full flex flex-col max-w-6xl  gap-4">
         <h2 className="text-primary mb-12">{t("section_two.subtitle")}</h2>
         <div className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {products.map((item) => {
+          {recommended_products.map((item) => {
             return <MainPageProductCard item={item} key={item.name} />;
           })}
         </div>
