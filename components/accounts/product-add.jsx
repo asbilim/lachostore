@@ -66,6 +66,7 @@ export default function AddProduct({ store_id }) {
   const [categories, setCategories] = useState([]);
   const [sizes, setSizes] = useState([]);
   const [specificationsKey, setSpecificationsKey] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const { data: session } = useSession();
 
@@ -182,6 +183,7 @@ export default function AddProduct({ store_id }) {
   };
 
   const onSubmit = async (data) => {
+    setLoading(true);
     const formData = new FormData();
 
     formData.append("store_id", store_id);
@@ -229,10 +231,14 @@ export default function AddProduct({ store_id }) {
       if (response.ok) {
         toast.success("Product created successfully!");
       } else {
-        toast.error(`Error: ${result.message || "Something went wrong"}`);
+        toast.error(
+          `Error: ${result.message || "Product already added or network error"}`
+        );
       }
     } catch (error) {
       toast.error("An unexpected error occurred.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -525,8 +531,8 @@ export default function AddProduct({ store_id }) {
             </div>
 
             <CardFooter>
-              <Button type="submit" className="w-full">
-                Add Product
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Adding product..." : "Add product"}
               </Button>
             </CardFooter>
           </form>
