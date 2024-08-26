@@ -75,6 +75,7 @@
     "react-share": "^5.1.0",
     "react-slugify": "^4.0.1",
     "react-step-builder": "^3.0.6",
+    "react-tilt": "^1.0.2",
     "react-time-picker": "^7.0.0",
     "react-toastify": "^10.0.5",
     "react-virtualized": "^9.22.5",
