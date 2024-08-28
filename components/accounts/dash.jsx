@@ -53,6 +53,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { SalesAnalyticsTab } from "./analytics";
 import { Link } from "../navigation";
+import { StoreInfoTab } from "./store-update";
 
 const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -694,101 +695,5 @@ const PasswordTab = ({ texts }) => {
 };
 
 // Store Information Tab Component
-const StoreInfoTab = ({ shop, texts }) => {
-  const [avatar, setAvatar] = useState(shop.avatar);
-
-  useEffect(() => {
-    // Load additional store information if needed
-    console.log(`Loaded store info for shop ID: ${shop.id}`);
-  }, [shop]);
-
-  const handleAvatarChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setAvatar(reader.result); // Update avatar state with the base64 encoded image
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{texts.dashboard.storeInfo.title}</CardTitle>
-        <CardDescription>
-          {texts.dashboard.storeInfo.description}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="space-y-1">
-          <Label htmlFor="store-name">
-            {texts.dashboard.storeInfo.labels.storeName}
-          </Label>
-          <Input id="store-name" defaultValue={shop.name} />
-        </div>
-        <div className="space-y-1">
-          <Label htmlFor="store-address">
-            {texts.dashboard.storeInfo.labels.storeAddress}
-          </Label>
-          <Input id="store-address" defaultValue={shop.address} />
-        </div>
-        <div className="space-y-1">
-          <Label htmlFor="store-avatar">
-            {texts.dashboard.storeInfo.labels.storeAvatar}
-          </Label>
-          <Input
-            id="store-avatar"
-            type="file"
-            accept="image/*"
-            onChange={handleAvatarChange}
-          />
-          {avatar && (
-            <Image
-              src={avatar}
-              alt="Store Avatar Preview"
-              className="mt-2 w-32 h-32 object-cover rounded"
-              width={1000}
-              height={1000}
-            />
-          )}
-        </div>
-        <div className="space-y-1">
-          <Label htmlFor="store-description">
-            {texts.dashboard.storeInfo.labels.storeDescription}
-          </Label>
-          <Input
-            id="store-description"
-            defaultValue={shop.description || "No description provided"}
-          />
-        </div>
-        <div className="space-y-1">
-          <Label htmlFor="social-media-links">
-            {texts.dashboard.storeInfo.labels.socialMediaLinks}
-          </Label>
-          <Input
-            id="social-media-facebook"
-            placeholder="Facebook URL"
-            defaultValue={shop.social_media_links?.facebook}
-          />
-          <Input
-            id="social-media-instagram"
-            placeholder="Instagram URL"
-            defaultValue={shop.social_media_links?.instagram}
-          />
-          <Input
-            id="social-media-twitter"
-            placeholder="Twitter URL"
-            defaultValue={shop.social_media_links?.twitter}
-          />
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Button>{texts.dashboard.storeInfo.buttonText}</Button>
-      </CardFooter>
-    </Card>
-  );
-};
 
 export default UserDashboard;
