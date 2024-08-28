@@ -8,6 +8,7 @@ import MainPageProductCard from "./main-product";
 import NewsletterSubscribe from "../reusables/newsletter";
 import { StoreCarousel } from "../reusables/stores";
 import AdvancedPartnerShowcase from "./partner";
+import lachofit from "@/public/lachofit.jpg";
 export default function ShopMain({
   products,
   customer_choices,
@@ -81,7 +82,7 @@ export default function ShopMain({
             </Button>
           </div>
           <Image
-            src="https://images.pexels.com/photos/3184294/pexels-photo-3184294.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            src={lachofit}
             width={400}
             height={400}
             alt="Hero Image"
