@@ -13,6 +13,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { CurrencyProvider } from "@/providers/currency";
 import { AuthProvider } from "@/providers/next-auth";
 import Converter from "@/components/reusables/converter";
+import lachofit from "@/public/lachofit.jpg";
 
 const inter = Inte({
   subsets: ["latin"],
@@ -26,7 +27,7 @@ export function generateMetadata() {
   const baseUrl = "https://www.shop.lachofit.com";
   const defaultDescription =
     "Discover authentic African products at Lachofit Store. We offer a wide range of local goods from Cameroon and across Africa, with multi-currency support and worldwide shipping.";
-  const defaultImage = `https://images.pexels.com/photos/25388946/pexels-photo-25388946/free-photo-of-strawberries-in-boxes-at-market.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1`;
+  const defaultImage = lachofit.src;
 
   return {
     title: {

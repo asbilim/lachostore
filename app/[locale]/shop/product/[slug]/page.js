@@ -33,13 +33,13 @@ export async function generateMetadata({ params }) {
       ...(product.categories || []),
       "buy online",
       locale,
+      product.meta_keywords,
     ].filter(Boolean),
     alternates: {
       canonical: `${baseUrl}/${locale}/product/${slug}`,
       languages: {
         en: `${baseUrl}/en/product/${slug}`,
         fr: `${baseUrl}/fr/product/${slug}`,
-        // Add more languages as needed
       },
     },
     openGraph: {
@@ -49,14 +49,16 @@ export async function generateMetadata({ params }) {
       description: product.description || t("no_description_available"),
       url: `${baseUrl}/${locale}/shop/product/${slug}`,
       siteName: siteName,
-      images: [
-        {
-          url: product.image || `${baseUrl}/default-product-image.jpg`,
-          width: 1200,
-          height: 630,
-          alt: product.name || t("unknown_product"),
-        },
-      ],
+      images: product.images.map((image) => {
+        return [
+          {
+            url: image.image || `${baseUrl}/default-product-image.jpg`,
+            width: 1200,
+            height: 630,
+            alt: product.name,
+          },
+        ];
+      }),
       locale: locale,
     },
     twitter: {
@@ -78,40 +80,6 @@ export async function generateMetadata({ params }) {
       "max-video-preview": -1,
       "max-image-preview": "large",
       "max-snippet": -1,
-    },
-    metadataBase: new URL(baseUrl),
-    viewport: "width=device-width, initial-scale=1, maximum-scale=1",
-    icons: {
-      icon: "/favicon.ico",
-      apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
-    },
-    themeColor: "#your-brand-color",
-    colorScheme: "light dark",
-    alternativeLanguage: [
-      { code: "en-US", url: `${baseUrl}/en/product/${slug}` },
-      { code: "fr-FR", url: `${baseUrl}/fr/product/${slug}` },
-    ],
-    verification: {
-      google: "your-google-site-verification-code",
-      yandex: "your-yandex-verification-code",
-      bing: "your-bing-verification-code",
-    },
-    applicationName: siteName,
-    referrer: "origin-when-cross-origin",
-    formatDetection: {
-      telephone: false,
-    },
-    manifest: `${baseUrl}/site.webmanifest`,
-    category: product.categories?.[0] || t("uncategorized"),
-    appLinks: {
-      ios: {
-        url: `your-app-scheme://product/${product.id || slug}`,
-        app_store_id: "your-app-store-id",
-      },
-      android: {
-        package: "your.android.package.name",
-        app_name: siteName,
-      },
     },
     other: {
       ...structuredData,
