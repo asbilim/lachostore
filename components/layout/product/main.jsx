@@ -9,6 +9,9 @@ import {
   TwitterShareButton,
   WhatsappShareButton,
   EmailShareButton,
+  TwitterIcon as Twitter,
+  FacebookIcon as Facebook,
+  WhatsappIcon as Whatsapp,
 } from "react-share";
 import { usePathname } from "next/navigation";
 
@@ -36,17 +39,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-import {
-  Star,
-  TruckIcon,
-  ShieldCheck,
-  Share2,
-  Gift,
-  Facebook,
-  Twitter,
-  Whatsapp,
-  Mail,
-} from "lucide-react";
+import { Star, TruckIcon, ShieldCheck, Share2, Gift, Mail } from "lucide-react";
 
 import ProductDetails from "./parts";
 import { useCart } from "@/providers/cart";
@@ -54,7 +47,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useCurrency } from "@/providers/currency";
 import { Link } from "@/components/navigation";
 import { handleProductVisit } from "@/components/functions/api";
-
+import { useSession } from "next-auth/react";
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
   visible: {
@@ -73,6 +66,11 @@ export default function ImprovedProductPage({ product, translations, locale }) {
   const { toast } = useToast();
   const { currency, convertCurrency } = useCurrency();
   const pathname = usePathname();
+  const { data: session } = useSession();
+
+  const extra_url =
+    `https://shop.lachofit.com${pathname}?from=${session?.referral_code}` ||
+    `https://shop.lachofit.com${pathname}`;
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
@@ -449,20 +447,16 @@ export default function ImprovedProductPage({ product, translations, locale }) {
                     </TooltipTrigger>
                     <TooltipContent>
                       <div className="flex gap-2">
-                        <FacebookShareButton
-                          url={`https://shop.lachofit.com${pathname}`}>
+                        <FacebookShareButton url={extra_url}>
                           <Facebook size={24} />
                         </FacebookShareButton>
-                        <TwitterShareButton
-                          url={`https://shop.lachofit.com${pathname}`}>
+                        <TwitterShareButton url={extra_url}>
                           <Twitter size={24} />
                         </TwitterShareButton>
-                        <WhatsappShareButton
-                          url={`https://shop.lachofit.com${pathname}`}>
+                        <WhatsappShareButton url={extra_url}>
                           <Whatsapp size={24} />
                         </WhatsappShareButton>
-                        <EmailShareButton
-                          url={`https://shop.lachofit.com${pathname}`}>
+                        <EmailShareButton url={extra_url}>
                           <Mail size={24} />
                         </EmailShareButton>
                       </div>
@@ -470,11 +464,11 @@ export default function ImprovedProductPage({ product, translations, locale }) {
                   </Tooltip>
                 </TooltipProvider>
                 <Button
-                  variant="outline"
+                  variant="text"
                   size="lg"
                   className="flex items-center gap-2 w-full sm:w-auto text-sm md:text-base">
                   <Gift className="w-4 h-4 md:w-5 md:h-5" />
-                  Refer & Earn
+                  Refer & start Earning
                 </Button>
               </motion.div>
 

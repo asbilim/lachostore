@@ -51,6 +51,7 @@ const auth = NextAuth({
         token.is_owner = decoded.is_owner;
         token.shops_count = decoded.shops_count;
         token.shops = decoded.shops;
+        token.referral_code = decoded.referral_code;
       }
 
       return token;
@@ -66,6 +67,7 @@ const auth = NextAuth({
       session.is_owner = token.is_owner;
       session.shops_count = token.shops_count;
       session.shops = token.shops;
+      session.referral_code = token.referral_code;
 
       return session;
     },
