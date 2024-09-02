@@ -12,7 +12,6 @@ let globalExchangeRates = null;
 let globalExchangeRatesTimestamp = null;
 
 export async function GET() {
-  console.log("GET /api/currency - Start");
   const session = await getIronSession(cookies(), sessionOptions);
 
   try {
@@ -22,9 +21,7 @@ export async function GET() {
       Date.now() - globalExchangeRatesTimestamp >= 3600000;
 
     if (needsFetch) {
-      console.log("Fetching fresh exchange rates");
       const apiUrl = `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/${BASE_CURRENCY}`;
-      console.log("API URL:", apiUrl);
 
       const response = await fetch(apiUrl);
 
@@ -37,7 +34,6 @@ export async function GET() {
       }
 
       const data = await response.json();
-      console.log("API response data:", data);
 
       if (data.result !== "success") {
         console.error("API returned error", {
@@ -52,9 +48,7 @@ export async function GET() {
         ...data.conversion_rates,
       };
       globalExchangeRatesTimestamp = Date.now();
-      console.log("Exchange rates updated globally");
     } else {
-      console.log("Using cached exchange rates");
     }
 
     // Ensure currency is always set
@@ -83,17 +77,14 @@ export async function GET() {
       { status: 500 }
     );
   } finally {
-    console.log("GET /api/currency - End");
   }
 }
 
 export async function POST(request) {
-  console.log("POST /api/currency - Start");
   const session = await getIronSession(cookies(), sessionOptions);
 
   try {
     const body = await request.json();
-    console.log("Request body:", body);
 
     const { currency } = body;
 
@@ -108,7 +99,6 @@ export async function POST(request) {
     session.currency = currency;
     await session.save();
 
-    console.log(`Currency updated to ${currency} and saved to session`);
     return NextResponse.json({ currency: session.currency });
   } catch (error) {
     console.error("Error in POST /api/currency:", error);
@@ -121,6 +111,5 @@ export async function POST(request) {
       { status: 500 }
     );
   } finally {
-    console.log("POST /api/currency - End");
   }
 }

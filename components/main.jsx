@@ -181,7 +181,7 @@ export default function MainShop({
             ? prev[type].filter((item) => item !== value)
             : [...prev[type], value];
       }
-      console.log("Updated filters:", newFilters);
+
       return newFilters;
     });
   }, []);
@@ -193,7 +193,6 @@ export default function MainShop({
       color: [],
       size: [],
     });
-    console.log("Filters cleared");
   }, []);
 
   const filteredProducts = useMemo(() => {

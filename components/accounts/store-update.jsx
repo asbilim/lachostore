@@ -63,9 +63,7 @@ export const StoreInfoTab = ({ shop, texts }) => {
   const fileInputRef = useRef(null);
   const { toast } = useToast();
 
-  useEffect(() => {
-    console.log(`Loaded store info for shop ID: ${shop.id}`);
-  }, [shop]);
+  useEffect(() => {}, [shop]);
 
   useEffect(() => {
     if (autoSave) {

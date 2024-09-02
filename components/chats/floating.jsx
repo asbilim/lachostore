@@ -15,8 +15,6 @@ import { Badge } from "@/components/ui/badge";
 const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
 const GEMINI_MODEL = "gemini-1.5-flash";
 
-console.log(GEMINI_API_KEY);
-
 // Initialize the Gemini API
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY, {
   model: GEMINI_MODEL,

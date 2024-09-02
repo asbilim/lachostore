@@ -5,7 +5,6 @@ export function keepServerAwake(url) {
     fetch(url)
       .then((response) => {
         if (response.ok) {
-          console.log("Server is awake!");
         } else {
           console.error("Failed to reach the server:", response.statusText);
         }

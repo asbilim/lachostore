@@ -2,7 +2,7 @@ import StatusPage from "@/components/reusables/status-card";
 export default function Page({ params }) {
   const { slug } = params;
 
-  const onClose = () => console.log("");
+  const onClose = () => 
 
   return (
     <div className="flex items-center justify-center w-full my-12">

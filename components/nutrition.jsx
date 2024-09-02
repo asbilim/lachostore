@@ -107,7 +107,6 @@ const NutritionistShowcase = ({ locale, translations }) => {
   });
 
   const onSubmit = (data) => {
-    console.log(data);
     toast({
       title: "Form Submitted",
       description: "Your information has been successfully submitted.",
@@ -410,7 +409,6 @@ const NutritionistShowcase = ({ locale, translations }) => {
                   type="submit"
                   className="w-full"
                   onPaymentComplete={(method, data) => {
-                    console.log("Payment completed", method, data);
                     toast({
                       title: "Payment Successful",
                       description: `Your payment using ${method} has been processed.`,

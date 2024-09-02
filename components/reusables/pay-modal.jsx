@@ -25,7 +25,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 const paymentSchema = z.object({
   phone: z.string().optional(),
   email: z.string().email("Invalid email address"),
-  shippingAddress: z
+  shipping_address: z
     .string()
     .min(10, "Please provide a detailed shipping address"),
   cardNumber: z.string().optional(),
@@ -171,25 +171,25 @@ const PaymentForm = ({ control, errors, paymentMethod }) => (
       <p className="text-destructive text-sm">{errors.email.message}</p>
     )}
 
-    <Label htmlFor="shippingAddress" className="text-lg font-medium">
+    <Label htmlFor="shipping_address" className="text-lg font-medium">
       Shipping Address
     </Label>
     <Controller
-      name="shippingAddress"
+      name="shipping_address"
       control={control}
       defaultValue=""
       render={({ field }) => (
         <Textarea
           {...field}
-          id="shippingAddress"
+          id="shipping_address"
           placeholder="Enter your full shipping address, including street name, house number, city, and any landmarks for easy location."
           rows={4}
         />
       )}
     />
-    {errors.shippingAddress && (
+    {errors.shipping_address && (
       <p className="text-destructive text-sm">
-        {errors.shippingAddress.message}
+        {errors.shipping_address.message}
       </p>
     )}
   </div>
@@ -206,6 +206,7 @@ export default function PaymentDialog({
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const { cart } = useCart();
   const { currency, convertCurrency } = useCurrency();
+  const paymentWindowRef = useRef(null);
   const {
     control,
     handleSubmit,
@@ -253,7 +254,19 @@ export default function PaymentDialog({
 
       const result = await initializePayment(orderData);
 
-      toast.success("Payment successful!", {
+      if (result.payment && result.payment.link) {
+        // Open a new tab with the payment link
+        paymentWindowRef.current = window.open(result.payment.link, "_blank");
+        if (!paymentWindowRef.current) {
+          throw new Error(
+            "Unable to open payment window. Please check your popup blocker settings."
+          );
+        }
+      } else {
+        throw new Error("Payment link not found in the response");
+      }
+
+      toast.success("Payment initiated successfully!", {
         duration: 5000,
         icon: "🎉",
       });
@@ -261,10 +274,16 @@ export default function PaymentDialog({
       setIsSheetOpen(false);
     } catch (error) {
       console.error("Error in payment process:", error);
-      toast.error("Payment failed. Please try again.", {
-        duration: 5000,
-        icon: "❌",
-      });
+      toast.error(
+        error.message || "Payment initiation failed. Please try again.",
+        {
+          duration: 5000,
+          icon: "❌",
+        }
+      );
+      if (paymentWindowRef.current) {
+        paymentWindowRef.current.close();
+      }
     } finally {
       setIsProcessing(false);
     }
@@ -282,7 +301,7 @@ export default function PaymentDialog({
       <SheetTrigger asChild>
         <Button className="w-full">{triggerButtonText}</Button>
       </SheetTrigger>
-      <SheetContent side="right" className="md:w-[35rem] lg:w-[55rem] ">
+      <SheetContent side="right" className="w-[400px] sm:w-[540px]">
         <motion.div
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}

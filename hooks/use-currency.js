@@ -24,13 +24,12 @@ export function useCurrency() {
     setLoading(true);
     setError(null);
     try {
-      console.log("Fetching currency data...");
       const response = await fetch("/api/currency");
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      console.log("Currency data received:", data);
+
       setExchangeRates(data.rates);
       setCurrency(data.currency || "XAF");
     } catch (error) {
@@ -54,7 +53,6 @@ export function useCurrency() {
       setLoading(true);
       setError(null);
       try {
-        console.log(`Changing currency to ${newCurrency}...`);
         const response = await fetch("/api/currency", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -64,7 +62,7 @@ export function useCurrency() {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log("Currency change response:", data);
+
         setCurrency(data.currency);
       } catch (error) {
         console.error("Error changing currency:", error);
