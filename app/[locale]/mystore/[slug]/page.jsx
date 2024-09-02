@@ -18,7 +18,7 @@ export async function generateMetadata({ params }) {
   return {
     title: `${store.name}`,
     description: store.description.substring(0, 160),
-    
+
     alternates: {
       canonical: `${baseUrl}/${locale}/mystore/${slug}`,
       languages: {
