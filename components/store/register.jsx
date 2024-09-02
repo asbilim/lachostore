@@ -132,7 +132,6 @@ const EnhancedStoreRegistration = ({ staticText }) => {
 
   // Form submission logic
   const onSubmit = async (data) => {
-    console.log(data);
     setIsSubmitting(true);
     try {
       const formData = new FormData();

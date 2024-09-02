@@ -123,7 +123,6 @@ export const CheckoutPage = ({
   const watchPaymentMethod = form.watch("paymentMethod");
 
   const onSubmit = (data) => {
-    console.log(data);
     // Handle checkout logic here
   };
 

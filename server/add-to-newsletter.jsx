@@ -26,7 +26,7 @@ export const subscribeToNewsletter = async (data) => {
     }
 
     const result = await response.json();
-    console.log("Success:", result);
+
     return { success: true, message: "Subscribed successfully!", data: result };
   } catch (error) {
     console.error("Error:", error);

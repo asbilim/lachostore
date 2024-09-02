@@ -45,7 +45,7 @@ export function useCart() {
       }
       const { cart: updatedCart, message } = await response.json();
       setCart(updatedCart);
-      console.log(message);
+
       return updatedCart;
     } catch (error) {
       console.error(`Error ${action} cart:`, error);

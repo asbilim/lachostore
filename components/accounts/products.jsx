@@ -43,16 +43,12 @@ export const ProductsTab = ({ shop, texts }) => {
   const { data: session } = useSession();
 
   async function deleteProduct(productId) {
-    console.log("Delete button clicked for product ID:", productId);
     setDeletingProductId(productId);
-    console.log("deletingProductId set to:", productId);
 
     // Simulate a delay to see the loading state
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     try {
-      console.log("Sending delete request for product ID:", productId);
-
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/store/products/${productId}/delete/`,
         {
@@ -65,9 +61,7 @@ export const ProductsTab = ({ shop, texts }) => {
       );
 
       if (response.ok) {
-        console.log("Delete request successful");
         setProducts((prevProducts) => {
-          console.log("Updating products state");
           return prevProducts.filter((product) => product.id !== productId);
         });
         toast({
@@ -76,7 +70,6 @@ export const ProductsTab = ({ shop, texts }) => {
           status: "success",
         });
       } else {
-        console.log("Delete request failed");
         toast({
           title: "Error",
           description: "Failed to delete the product. Please try again.",
@@ -91,7 +84,6 @@ export const ProductsTab = ({ shop, texts }) => {
         status: "error",
       });
     } finally {
-      console.log("Resetting deletingProductId to null");
       setDeletingProductId(null);
     }
   }
