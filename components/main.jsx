@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useMemo, useCallback } from "react";
+
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import Filter from "./layout/product/filter";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -13,7 +14,6 @@ export const ProductCard = ({ product, locale }) => {
   const [isAdding, setIsAdding] = useState(false);
   const { cart, addToCart, removeFromCart, error } = useCart();
   const isInCart = cart.some((item) => item.id === product.id);
-
   const { currency, convertCurrency } = useCurrency();
 
   if (error) {
@@ -164,21 +164,23 @@ export default function MainShop({
     color: [],
     size: [],
   });
-  const [displayCount, setDisplayCount] = useState(10);
+  const [displayCount, setDisplayCount] = useState(20);
 
   const handleFilterChange = useCallback((type, value, checked = null) => {
     setSelectedFilters((prev) => {
-      const newFilters = {
-        ...prev,
-        [type]:
+      const newFilters = { ...prev };
+      if (type === "price") {
+        newFilters.price = value;
+      } else {
+        newFilters[type] =
           checked !== null
             ? checked
               ? [...prev[type], value]
               : prev[type].filter((item) => item !== value)
             : prev[type].includes(value)
             ? prev[type].filter((item) => item !== value)
-            : [...prev[type], value],
-      };
+            : [...prev[type], value];
+      }
       console.log("Updated filters:", newFilters);
       return newFilters;
     });
@@ -195,8 +197,8 @@ export default function MainShop({
   }, []);
 
   const filteredProducts = useMemo(() => {
-    const filtered = products.filter((product) => {
-      const category = product.name.split(" ")[0]; // Assuming first word is category
+    return products.filter((product) => {
+      const category = product.name.split(" ")[0];
       if (
         selectedFilters.category.length > 0 &&
         !selectedFilters.category.includes(category)
@@ -223,22 +225,21 @@ export default function MainShop({
       }
       return true;
     });
-    return filtered;
   }, [selectedFilters, products]);
 
   const productsToShow = useMemo(() => {
-    const slicedProducts = filteredProducts.slice(0, displayCount);
-    console.log("Products to show:", slicedProducts);
-    return slicedProducts;
+    return filteredProducts.slice(0, displayCount);
   }, [filteredProducts, displayCount]);
 
   const loadMore = useCallback(() => {
-    setDisplayCount((prevCount) => {
-      const newCount = prevCount + 10;
-      console.log("New display count:", newCount);
-      return newCount;
-    });
-  }, []);
+    setDisplayCount((prevCount) =>
+      Math.min(prevCount + 20, filteredProducts.length)
+    );
+  }, [filteredProducts.length]);
+
+  useEffect(() => {
+    setDisplayCount(Math.min(20, filteredProducts.length));
+  }, [selectedFilters, filteredProducts]);
 
   return (
     <section className="container mx-auto px-4 py-8">

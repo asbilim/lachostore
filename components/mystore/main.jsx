@@ -1,65 +1,62 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "@/components/navigation";
+import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ProductCard } from "../main";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import Image from "next/image";
-import { Star, Mail, Phone, MapPin } from "lucide-react";
+import { Star, Mail, Phone, MapPin, ShoppingBag } from "lucide-react";
 import { handleStoreVisit } from "../functions/api";
-// Static text content
+import { ProductCard } from "../main";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+
 const staticContent = {
   storeSlogan: "Innovative tech solutions since 2020",
-  aboutTitle: "About",
-  contactTitle: "Contact Us",
+  aboutTitle: "About Us",
+  contactTitle: "Get in Touch",
   featuredTitle: "Featured Products",
-  ctaTitle: "Ready to Upgrade Your Tech?",
-  ctaText:
-    "Explore our wide range of products and find the perfect fit for your lifestyle.",
-  ctaButton: "Shop Now",
+  ctaTitle: "Elevate Your Tech Game",
+  ctaText: "Discover cutting-edge products tailored for your lifestyle.",
+  ctaButton: "Explore Now",
   tabProducts: "Products",
   tabAbout: "About",
   tabContact: "Contact",
 };
 
+const MotionCard = motion(Card);
+
 export default function StorePageClient({ store, products, locale }) {
   const [activeTab, setActiveTab] = useState("products");
-
-  const pageVariants = {
-    initial: { opacity: 0, y: 20 },
-    in: { opacity: 1, y: 0 },
-    out: { opacity: 0, y: -20 },
-  };
-
-  const pageTransition = {
-    type: "tween",
-    ease: "anticipate",
-    duration: 0.5,
-  };
-
-  const childVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.3 } },
-  };
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const addVisit = async () => {
-      const data = await handleStoreVisit(store.id);
+      try {
+        await handleStoreVisit(store.id);
+      } catch (error) {
+        console.error("Failed to record store visit:", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
     addVisit();
   }, [store.id]);
 
   const renderBanner = () => (
-    <div className="relative h-[50vh] lg:h-[70vh] overflow-hidden">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1 }}
+      className="relative h-[60vh] lg:h-[80vh] overflow-hidden">
       <Image
         src={
           store.avatar ||
@@ -70,113 +67,139 @@ export default function StorePageClient({ store, products, locale }) {
         objectFit="cover"
         className="z-0"
       />
-      <div className="absolute inset-0 bg-black/50 z-10" />
-      <div className="absolute inset-0 flex flex-col justify-center items-center text-center z-20">
-        <motion.div
-          initial={{ y: 50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.8 }}>
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
-            {store.name}
-          </h1>
-          <p className="text-xl md:text-2xl text-white/80">
-            {staticContent.storeSlogan}
-          </p>
-          <Button size="lg" variant="secondary" className="mt-8">
-            {staticContent.ctaButton}
-          </Button>
-        </motion.div>
-      </div>
-    </div>
+      <div className="absolute inset-0 bg-gradient-to-b from-black/70 to-black/30 z-10" />
+      <motion.div
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.5, duration: 0.8 }}
+        className="absolute inset-0 flex flex-col justify-center items-center text-center z-20">
+        <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight">
+          {store.name}
+        </h1>
+        <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl">
+          {staticContent.storeSlogan}
+        </p>
+        <Button size="lg" variant="secondary" className="group">
+          {staticContent.ctaButton}
+          <ShoppingBag className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+        </Button>
+      </motion.div>
+    </motion.div>
   );
 
   const renderProductsTab = () => (
-    <motion.div variants={childVariants}>
-      <h2 className="text-3xl font-bold mb-6">{staticContent.featuredTitle}</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={{
+        hidden: { opacity: 0 },
+        visible: {
+          opacity: 1,
+          transition: {
+            staggerChildren: 0.1,
+          },
+        },
+      }}>
+      <h2 className="text-3xl font-bold mb-8 text-center">
+        {staticContent.featuredTitle}
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         {products.map((product) => (
-          <ProductCard product={product} key={product.id} />
+          <motion.div key={product.id} variants={childVariants}>
+            <ProductCard product={product} locale={locale} />
+          </motion.div>
         ))}
       </div>
     </motion.div>
   );
 
   const renderAboutTab = () => (
-    <motion.div variants={childVariants}>
-      <Card>
-        <CardContent className="p-6">
-          <h2 className="text-3xl font-bold mb-4">
-            {staticContent.aboutTitle}
-          </h2>
-          <p className="text-muted-foreground">
-            {store.description || "No description available."}
-          </p>
-          <div className="flex items-center gap-2 mt-4">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <Star
-                key={i}
-                className={`w-5 h-5 ${
-                  i <= store.rating ? "fill-yellow-400" : "text-gray-300"
-                }`}
-              />
-            ))}
-            <span className="text-sm font-medium">
-              {store.rating} ({store.review_count} reviews)
-            </span>
-          </div>
-        </CardContent>
-      </Card>
-    </motion.div>
+    <MotionCard
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="overflow-hidden">
+      <CardContent className="p-6 space-y-4">
+        <h2 className="text-3xl font-bold mb-4">{staticContent.aboutTitle}</h2>
+        <p className="text-muted-foreground text-lg leading-relaxed">
+          {store.description || "No description available."}
+        </p>
+        <div className="flex items-center gap-2 mt-4">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <Star
+              key={i}
+              className={`w-6 h-6 ${
+                i <= store.rating ? "text-yellow-400" : "text-gray-300"
+              }`}
+              fill={i <= store.rating ? "currentColor" : "none"}
+            />
+          ))}
+          <span className="text-sm font-medium ml-2">
+            {store.rating} ({store.review_count} reviews)
+          </span>
+        </div>
+      </CardContent>
+    </MotionCard>
   );
 
   const renderContactTab = () => (
-    <motion.div variants={childVariants}>
-      <Card>
-        <CardContent className="p-6">
-          <h2 className="text-3xl font-bold mb-6">
-            {staticContent.contactTitle}
-          </h2>
-          <Accordion type="single" collapsible className="w-full">
-            {store.contact_email && (
-              <AccordionItem value="email">
-                <AccordionTrigger>Email</AccordionTrigger>
-                <AccordionContent>
-                  <div className="flex items-center gap-3">
-                    <Mail className="w-5 h-5 text-primary" />
-                    <span>{store.contact_email}</span>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            )}
-            {store.contact_phone && (
-              <AccordionItem value="phone">
-                <AccordionTrigger>Phone</AccordionTrigger>
-                <AccordionContent>
-                  <div className="flex items-center gap-3">
-                    <Phone className="w-5 h-5 text-primary" />
-                    <span>{store.contact_phone}</span>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            )}
-            {store.address && (
-              <AccordionItem value="address">
-                <AccordionTrigger>Address</AccordionTrigger>
-                <AccordionContent>
-                  <div className="flex items-center gap-3">
-                    <MapPin className="w-5 h-5 text-primary" />
-                    <span>{store.address}</span>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            )}
-            {!store.contact_email && !store.contact_phone && !store.address && (
-              <p>No contact information available.</p>
-            )}
-          </Accordion>
-        </CardContent>
-      </Card>
-    </motion.div>
+    <MotionCard
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="overflow-hidden">
+      <CardContent className="p-6">
+        <h2 className="text-3xl font-bold mb-6">
+          {staticContent.contactTitle}
+        </h2>
+        <Accordion type="single" collapsible className="w-full">
+          {store.contact_email && (
+            <AccordionItem value="email">
+              <AccordionTrigger>Email</AccordionTrigger>
+              <AccordionContent>
+                <div className="flex items-center gap-3">
+                  <Mail className="w-5 h-5 text-primary" />
+                  <span className="blur-sm hover:blur-none transition-all duration-300">
+                    {store.contact_email}
+                  </span>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          )}
+          {store.contact_phone && (
+            <AccordionItem value="phone">
+              <AccordionTrigger>Phone</AccordionTrigger>
+              <AccordionContent>
+                <div className="flex items-center gap-3">
+                  <Phone className="w-5 h-5 text-primary" />
+                  <span className="blur-sm hover:blur-none transition-all duration-300">
+                    {store.contact_phone}
+                  </span>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          )}
+          {store.address && (
+            <AccordionItem value="address">
+              <AccordionTrigger>Address</AccordionTrigger>
+              <AccordionContent>
+                <div className="flex items-center gap-3">
+                  <MapPin className="w-5 h-5 text-primary" />
+                  <span className="blur-sm hover:blur-none transition-all duration-300">
+                    {store.address}
+                  </span>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          )}
+        </Accordion>
+        {!store.contact_email && !store.contact_phone && !store.address && (
+          <p className="text-center text-muted-foreground">
+            No contact information available.
+          </p>
+        )}
+      </CardContent>
+    </MotionCard>
   );
 
   const renderTabsContent = () => {
@@ -194,42 +217,63 @@ export default function StorePageClient({ store, products, locale }) {
 
   const renderCTASection = () => (
     <motion.div
-      className="bg-primary text-white py-16"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.5, duration: 0.5 }}>
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.2, duration: 0.8 }}
+      className="bg-primary text-white py-20">
       <div className="container mx-auto px-4 text-center">
-        <h2 className="text-3xl font-bold mb-4">{staticContent.ctaTitle}</h2>
-        <p className="text-xl mb-8">{staticContent.ctaText}</p>
-        <Button size="lg" variant="secondary">
+        <h2 className="text-4xl font-bold mb-6">{staticContent.ctaTitle}</h2>
+        <p className="text-xl mb-8 max-w-2xl mx-auto">
+          {staticContent.ctaText}
+        </p>
+        <Button size="lg" variant="secondary" className="group">
           {staticContent.ctaButton}
+          <ShoppingBag className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
         </Button>
       </div>
     </motion.div>
   );
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Skeleton className="w-32 h-32 rounded-full" />
+      </div>
+    );
+  }
+
   return (
     <motion.div
-      initial="initial"
-      animate="in"
-      exit="out"
-      variants={pageVariants}
-      transition={pageTransition}
-      className="min-h-screen bg-gradient-to-b from-background to-secondary/10">
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen bg-gradient-to-b from-background to-secondary/5">
       {renderBanner()}
 
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-16">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-8">
-            <TabsTrigger value="products">
+          <TabsList className="grid w-full grid-cols-3 mb-12">
+            <TabsTrigger value="products" className="text-lg">
               {staticContent.tabProducts}
             </TabsTrigger>
-            <TabsTrigger value="about">{staticContent.tabAbout}</TabsTrigger>
-            <TabsTrigger value="contact">
+            <TabsTrigger value="about" className="text-lg">
+              {staticContent.tabAbout}
+            </TabsTrigger>
+            <TabsTrigger value="contact" className="text-lg">
               {staticContent.tabContact}
             </TabsTrigger>
           </TabsList>
-          <AnimatePresence mode="wait">{renderTabsContent()}</AnimatePresence>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}>
+              {renderTabsContent()}
+            </motion.div>
+          </AnimatePresence>
         </Tabs>
       </div>
 
@@ -237,3 +281,8 @@ export default function StorePageClient({ store, products, locale }) {
     </motion.div>
   );
 }
+
+const childVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};

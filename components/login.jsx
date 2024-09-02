@@ -37,7 +37,7 @@ export default function LoginComponent() {
   });
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/en/products";
+  const callbackUrl = searchParams.get("callbackUrl") || "/en/accounts";
 
   const onSubmit = async (data) => {
     setIsLoading(true);

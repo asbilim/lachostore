@@ -51,11 +51,18 @@ export default function ProductInsightsChart({ shopId }) {
           .split("T")[0];
 
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/store/api/shop/${shopId}/insights/${startDate}/${endDate}/`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/store/api/shop/insights/`,
           {
+            method: "POST",
             headers: {
+              "Content-Type": "application/json",
               Authorization: `Bearer ${session?.accessToken}`,
             },
+            body: JSON.stringify({
+              store_id: shopId,
+              start_date: startDate,
+              end_date: endDate,
+            }),
             next: { cache: "no-store", revalidate: 10 },
           }
         );
