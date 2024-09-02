@@ -21,6 +21,8 @@ import { Toaster, toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { useCurrency } from "@/providers/currency";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+
 const paymentSchema = z.object({
   phone: z.string().optional(),
   email: z.string().email("Invalid email address"),
@@ -202,10 +204,8 @@ export default function PaymentDialog({
 }) {
   const [paymentMethod, setPaymentMethod] = useState(paymentMethods[0]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const { cart } = useCart();
-  const paymentWindowRef = useRef(null);
-  const [defaultOpen, setOpen] = useState(false);
-  const router = useRouter();
   const { currency, convertCurrency } = useCurrency();
   const {
     control,
@@ -232,11 +232,7 @@ export default function PaymentDialog({
         throw new Error("Order creation failed");
       }
 
-      const orderResult = await orderResponse.json();
-
-      return {
-        order: orderResult,
-      };
+      return await orderResponse.json();
     } catch (error) {
       console.error("Error in payment process:", error);
       throw error;
@@ -253,42 +249,23 @@ export default function PaymentDialog({
         pay_on_delivery: false,
       };
 
-      // Open a new window immediately
-      paymentWindowRef.current = window.open("", "_blank");
-
-      if (paymentWindowRef.current) {
-        paymentWindowRef.current.document.write(
-          "Processing payment, please wait..."
-        );
-      }
+      // Simulate payment processing
+      await new Promise((resolve) => setTimeout(resolve, 3000));
 
       const result = await initializePayment(orderData);
 
-      paymentWindowRef.current.location.href = result.order.payment.link;
-      router.replace("/en/feedback/success");
-
-      if (paymentWindowRef.current && result.payment && result?.payment?.link) {
-        paymentWindowRef.current.location.href = result.payment.link;
-      } else {
-        toast.error(
-          "Unable to open payment window. Please check your popup blocker settings."
-        );
-      }
-
-      toast.success("Payment initiated successfully!", {
+      toast.success("Payment successful!", {
         duration: 5000,
         icon: "🎉",
       });
       onPaymentComplete && onPaymentComplete(paymentMethod, result);
+      setIsSheetOpen(false);
     } catch (error) {
       console.error("Error in payment process:", error);
-      toast.error("Payment initiation failed. Please try again.", {
+      toast.error("Payment failed. Please try again.", {
         duration: 5000,
         icon: "❌",
       });
-      if (paymentWindowRef.current) {
-        paymentWindowRef.current.close();
-      }
     } finally {
       setIsProcessing(false);
     }
@@ -302,27 +279,33 @@ export default function PaymentDialog({
   };
 
   return (
-    <>
-      <Toaster position="top-center" richColors />
-      <Dialog defaultOpen={defaultOpen}>
-        <DialogTrigger asChild>
-          <Button className="w-full">{triggerButtonText}</Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[550px]">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+    <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+      <SheetTrigger asChild>
+        <Button className="w-full">{triggerButtonText}</Button>
+      </SheetTrigger>
+      <SheetContent side="right" className="md:w-[35rem] lg:w-[55rem] ">
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: 50 }}
+          transition={{ duration: 0.3 }}
+          className="h-full flex flex-col">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-8 flex-grow">
             <div className="space-y-6">
               <motion.h3
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="text-3xl font-bold text-center">
-                Payment
+                Secure Payment
               </motion.h3>
               <motion.p
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
                 className="text-xl font-semibold text-primary text-center">
-                Amount:{" "}
+                Total:{" "}
                 {Number(convertCurrency(amount, "XAF", currency)).toFixed(2)}{" "}
                 {currency}
               </motion.p>
@@ -382,28 +365,42 @@ export default function PaymentDialog({
                 />
               </motion.div>
             </AnimatePresence>
-            <DialogFooter className="mt-8 flex justify-between items-center">
+            <div className="mt-8 flex justify-between items-center">
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => {
-                  toast.error("Payment cancelled");
-                  if (paymentWindowRef.current) {
-                    paymentWindowRef.current.close();
-                  }
-                }}>
+                onClick={() => setIsSheetOpen(false)}>
                 Cancel
               </Button>
               <Button
                 type="submit"
                 disabled={isProcessing}
                 className={isProcessing ? "opacity-70 cursor-not-allowed" : ""}>
-                {isProcessing ? "Processing..." : "Pay Now"}
+                {isProcessing ? (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="flex items-center space-x-2">
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{
+                        duration: 1,
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
+                      className="w-5 h-5 border-t-2 border-b-2 border-white rounded-full"
+                    />
+                    <span>Processing...</span>
+                  </motion.div>
+                ) : (
+                  "Complete Payment"
+                )}
               </Button>
-            </DialogFooter>
+            </div>
           </form>
-        </DialogContent>
-      </Dialog>
-    </>
+        </motion.div>
+      </SheetContent>
+    </Sheet>
   );
 }
