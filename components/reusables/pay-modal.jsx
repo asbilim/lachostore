@@ -17,9 +17,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { CreditCard, DollarSign, Mountain, ShoppingCart } from "lucide-react";
-import { Toaster, toast } from "sonner";
+import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
-import { useRouter } from "next/navigation";
 import { useCurrency } from "@/providers/currency";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
