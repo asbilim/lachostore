@@ -1,5 +1,5 @@
 "use client";
-import { z } from "zod";
+import * as z from "zod";
 import {
   Card,
   CardContent,
@@ -24,7 +24,6 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-
 
 const passwordSchema = z
   .object({
