@@ -425,5 +425,108 @@
         }
       }
     }
+  },
+  "terms": {
+    "termsOfUse": "Nutzungsbedingungen",
+    "print": "Drucken",
+    "introduction": {
+      "title": "1. Einführung in LaChoShop",
+      "description": "Willkommen bei LaChoShop, einer führenden Multivendor-E-Commerce-Plattform von LachoFit. Unsere Mission ist es, einen sicheren, zuverlässigen und effizienten Marktplatz für Anbieter und Kunden zu bieten. Durch die Nutzung unserer Dienste stimmen Sie diesen Nutzungsbedingungen zu.",
+      "lastUpdated": "Zuletzt aktualisiert:"
+    },
+    "definitions": {
+      "title": "2. Definitionen",
+      "platform": "\"Plattform\" bezieht sich auf die Website und die mobilen Anwendungen von LaChoShop.",
+      "user": "\"Benutzer\" bezieht sich auf jede Person oder Entität, die die Plattform nutzt, einschließlich Kunden und Anbieter.",
+      "vendor": "\"Anbieter\" bezieht sich auf Verkäufer, die Produkte auf der Plattform listen und verkaufen.",
+      "customer": "\"Kunde\" bezieht sich auf Benutzer, die Produkte über die Plattform kaufen."
+    },
+    "accountSecurity": {
+      "title": "3. Kontoanmeldung und Sicherheit",
+      "description": "Benutzer müssen während des Registrierungsprozesses genaue, aktuelle und vollständige Informationen bereitstellen. LaChoShop verwendet fortschrittliche Sicherheitsmaßnahmen, um Benutzerdaten zu schützen und die Integrität unserer Plattform zu wahren.",
+      "commitment": "Unser Engagement für Sicherheit:",
+      "measures": [
+        "Verschlüsselte Datenübertragung und -speicherung",
+        "Regelmäßige Sicherheitsaudits und Updates",
+        "Zwei-Faktor-Authentifizierungsoption für alle Konten",
+        "Kontinuierliche Überwachung auf verdächtige Aktivitäten"
+      ]
+    },
+    "vendorResponsibilities": {
+      "title": "4. Verantwortlichkeiten des Anbieters",
+      "description": "Anbieter auf LaChoShop sind verantwortlich für:",
+      "responsibilities": [
+        "Genauigkeit der Produktbeschreibungen, Preise und Verfügbarkeit",
+        "Pünktliche Auftragsabwicklung und Lieferung",
+        "Aufrechterhaltung hoher Standards im Kundenservice",
+        "Einhaltung aller anwendbaren Gesetze und Vorschriften"
+      ],
+      "fee": "Plattformgebühr: Auf jedes auf LaChoShop gelistete Produkt wird eine Gebühr von 5% erhoben. Diese Gebühr trägt zur Plattformwartung, Sicherheitsverbesserungen und Kundensupportdiensten bei."
+    },
+    "orderTracking": {
+      "title": "5. Auftragsverfolgung und -abwicklung",
+      "description": "LaChoShop bietet ein robustes Auftragsverfolgungssystem, um Transparenz und Zuverlässigkeit zu gewährleisten:",
+      "features": [
+        "Echtzeit-Updates zum Auftragsstatus",
+        "Automatisierte Benachrichtigungen für Kunden und Anbieter",
+        "Integration mit großen Versandunternehmen",
+        "Geo-Ortung für lokale Lieferungen"
+      ],
+      "note": "Hinweis: Obwohl LaChoShop reibungslose Transaktionen erleichtert, liegt die Verantwortung für die Auftragserfüllung beim Anbieter."
+    },
+    "customerRights": {
+      "title": "6. Rechte und Schutz der Kunden",
+      "description": "LaChoShop verpflichtet sich zum Schutz der Kundenrechte:",
+      "rights": [
+        "Sichere Zahlungsabwicklung",
+        "14-Tage-Rückgaberecht (abhängig vom Zustand des Produkts)",
+        "Unterstützung bei der Streitbeilegung",
+        "Schutz vor betrügerischen Aktivitäten"
+      ]
+    },
+    "prohibitedActivities": {
+      "title": "7. Verbotene Aktivitäten",
+      "description": "Die folgenden Aktivitäten sind auf LaChoShop strengstens untersagt:",
+      "activities": [
+        "Verkauf von gefälschten oder illegalen Produkten",
+        "Beteiligung an irreführenden Praktiken oder falscher Werbung",
+        "Verletzung von geistigen Eigentumsrechten",
+        "Manipulation des Bewertungs- oder Bewertungssystems",
+        "Nutzung der Plattform für rechtswidrige Zwecke"
+      ]
+    },
+    "disputeResolution": {
+      "title": "8. Streitbeilegung",
+      "description": "LaChoShop bietet einen umfassenden Streitbeilegungsprozess:",
+      "steps": [
+        "Erste Kommunikation zwischen den Parteien",
+        "Vermittlung durch das Support-Team von LaChoShop",
+        "Entscheidungen auf Basis von Beweisen",
+        "Option zur Eskalation zur Schlichtung durch Dritte"
+      ]
+    },
+    "limitationOfLiability": {
+      "title": "9. Haftungsbeschränkung",
+      "description": "Obwohl LaChoShop sich bemüht, eine sichere und zuverlässige Plattform aufrechtzuerhalten, können wir nicht haftbar gemacht werden für:",
+      "limitations": [
+        "Handlungen oder Unterlassungen von Anbietern oder Kunden",
+        "Qualität der von Anbietern verkauften Produkte",
+        "Verluste oder Schäden, die aus der Nutzung der Plattform resultieren",
+        "Unvorhergesehene technische Probleme oder Dienstunterbrechungen"
+      ]
+    },
+    "modifications": {
+      "title": "10. Änderungen der Bedingungen",
+      "description": "LaChoShop behält sich das Recht vor, diese Nutzungsbedingungen zu ändern. Benutzer werden über wesentliche Änderungen informiert, und die fortgesetzte Nutzung der Plattform gilt als Akzeptanz der geänderten Bedingungen."
+    },
+    "contactInformation": {
+      "title": "11. Kontaktinformationen",
+      "description": "Bei Fragen oder Bedenken bezüglich dieser Nutzungsbedingungen kontaktieren Sie uns bitte unter:",
+      "support": "LaChoShop Support",
+      "email": "E-Mail: support@lachoshop.com",
+      "phone": "Telefon: (555) 123-4567"
+    },
+    "acceptTerms": "Ich akzeptiere die Nutzungsbedingungen",
+    "termsAccepted": "Bedingungen akzeptiert"
   }
 }
