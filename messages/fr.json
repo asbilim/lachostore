@@ -424,5 +424,108 @@
         }
       }
     }
+  },
+  "terms": {
+    "termsOfUse": "Conditions d'utilisation",
+    "print": "Imprimer",
+    "introduction": {
+      "title": "1. Introduction à LaChoShop",
+      "description": "Bienvenue sur LaChoShop, une plateforme de commerce électronique multivendeur de premier plan par LachoFit. Notre mission est de fournir un marché sûr, fiable et efficace pour les vendeurs et les clients. En utilisant nos services, vous acceptez ces conditions d'utilisation.",
+      "lastUpdated": "Dernière mise à jour :"
+    },
+    "definitions": {
+      "title": "2. Définitions",
+      "platform": "\"Plateforme\" désigne le site web et les applications mobiles de LaChoShop.",
+      "user": "\"Utilisateur\" désigne toute personne ou entité utilisant la Plateforme, y compris les clients et les vendeurs.",
+      "vendor": "\"Vendeur\" désigne les vendeurs qui listent et vendent des produits sur la Plateforme.",
+      "customer": "\"Client\" désigne les utilisateurs qui achètent des produits via la Plateforme."
+    },
+    "accountSecurity": {
+      "title": "3. Enregistrement et sécurité des comptes",
+      "description": "Les utilisateurs doivent fournir des informations précises, actuelles et complètes lors du processus d'enregistrement. LaChoShop utilise des mesures de sécurité avancées pour protéger les données des utilisateurs et maintenir l'intégrité de notre Plateforme.",
+      "commitment": "Notre engagement envers la sécurité :",
+      "measures": [
+        "Transmission et stockage des données cryptées",
+        "Audits de sécurité réguliers et mises à jour",
+        "Option d'authentification à deux facteurs pour tous les comptes",
+        "Surveillance continue des activités suspectes"
+      ]
+    },
+    "vendorResponsibilities": {
+      "title": "4. Responsabilités des vendeurs",
+      "description": "Les vendeurs sur LaChoShop sont responsables de :",
+      "responsibilities": [
+        "Fournir des descriptions de produits, des prix et des disponibilités précises",
+        "Assurer l'exécution et la livraison des commandes en temps opportun",
+        "Maintenir des normes élevées de service client",
+        "Respecter toutes les lois et réglementations applicables"
+      ],
+      "fee": "Frais de Plateforme : Une commission de 5% est appliquée à chaque produit listé sur LaChoShop. Ce frais contribue à la maintenance de la plateforme, aux améliorations de sécurité et aux services de support client."
+    },
+    "orderTracking": {
+      "title": "5. Suivi et exécution des commandes",
+      "description": "LaChoShop fournit un système robuste de suivi des commandes pour assurer la transparence et la fiabilité :",
+      "features": [
+        "Mises à jour en temps réel du statut des commandes",
+        "Notifications automatiques pour les clients et les vendeurs",
+        "Intégration avec les principaux transporteurs",
+        "Suivi géolocalisé pour les livraisons locales"
+      ],
+      "note": "Note : Bien que LaChoShop facilite des transactions fluides, la responsabilité de l'exécution des commandes incombe au vendeur."
+    },
+    "customerRights": {
+      "title": "6. Droits et protections des clients",
+      "description": "LaChoShop s'engage à protéger les droits des clients :",
+      "rights": [
+        "Traitement sécurisé des paiements",
+        "Politique de retour de 14 jours (sous réserve des conditions du produit)",
+        "Support à la résolution des différends",
+        "Protection contre les activités frauduleuses"
+      ]
+    },
+    "prohibitedActivities": {
+      "title": "7. Activités interdites",
+      "description": "Les activités suivantes sont strictement interdites sur LaChoShop :",
+      "activities": [
+        "Vente de produits contrefaits ou illégaux",
+        "Engagement dans des pratiques trompeuses ou de fausse publicité",
+        "Violation des droits de propriété intellectuelle",
+        "Manipulation du système de revue ou de notation",
+        "Utilisation de la plateforme à des fins illégales"
+      ]
+    },
+    "disputeResolution": {
+      "title": "8. Résolution des différends",
+      "description": "LaChoShop propose un processus complet de résolution des différends :",
+      "steps": [
+        "Communication initiale entre les parties",
+        "Médiation par l'équipe de support de LaChoShop",
+        "Décision basée sur les preuves",
+        "Option d'escalade vers un arbitrage tiers"
+      ]
+    },
+    "limitationOfLiability": {
+      "title": "9. Limitation de responsabilité",
+      "description": "Bien que LaChoShop s'efforce de maintenir une plateforme sécurisée et fiable, nous ne pouvons être tenus responsables de :",
+      "limitations": [
+        "Actions ou omissions de vendeurs ou de clients",
+        "Qualité des produits vendus par les vendeurs",
+        "Pertes ou dommages résultant de l'utilisation de la plateforme",
+        "Problèmes techniques imprévus ou interruptions de service"
+      ]
+    },
+    "modifications": {
+      "title": "10. Modifications des conditions",
+      "description": "LaChoShop se réserve le droit de modifier ces conditions d'utilisation. Les utilisateurs seront informés des modifications importantes, et l'utilisation continue de la plateforme constitue l'acceptation des conditions modifiées."
+    },
+    "contactInformation": {
+      "title": "11. Informations de contact",
+      "description": "Pour toute question ou préoccupation concernant ces conditions d'utilisation, veuillez nous contacter à :",
+      "support": "Support LaChoShop",
+      "email": "Email : info@lachofit.com",
+      "phone": "Téléphone : +237 670 687 599 "
+    },
+    "acceptTerms": "J'accepte les Conditions d'utilisation",
+    "termsAccepted": "Conditions acceptées"
   }
 }

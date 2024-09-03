@@ -418,5 +418,108 @@
         }
       }
     }
+  },
+  "terms": {
+    "termsOfUse": "Kullanım Koşulları",
+    "print": "Yazdır",
+    "introduction": {
+      "title": "1. LaChoShop'a Giriş",
+      "description": "LaChoShop'a hoş geldiniz, LachoFit tarafından sunulan önde gelen bir çok satıcılı e-ticaret platformudur. Amacımız, satıcılar ve müşteriler için güvenli, güvenilir ve etkili bir pazar yeri sağlamaktır. Hizmetlerimizi kullanarak bu Kullanım Koşullarını kabul etmiş olursunuz.",
+      "lastUpdated": "Son Güncelleme:"
+    },
+    "definitions": {
+      "title": "2. Tanımlamalar",
+      "platform": "\"Platform\", LaChoShop web sitesi ve mobil uygulamalarını ifade eder.",
+      "user": "\"Kullanıcı\", müşteriler ve satıcılar dahil olmak üzere Platformu kullanan herhangi bir birey veya kuruluşu ifade eder.",
+      "vendor": "\"Satıcı\", Platformda ürün listeyen ve satan satıcılara denir.",
+      "customer": "\"Müşteri\", Platform üzerinden ürün satın alan kullanıcılara denir."
+    },
+    "accountSecurity": {
+      "title": "3. Hesap Kaydı ve Güvenliği",
+      "description": "Kullanıcılar, kayıt süreci sırasında doğru, güncel ve tam bilgi sağlamalıdır. LaChoShop, kullanıcı verilerini korumak ve Platformumuzun bütünlüğünü sağlamak için ileri düzey güvenlik önlemleri almaktadır.",
+      "commitment": "Güvenlik Taahhüdümüz:",
+      "measures": [
+        "Şifrelenmiş veri iletimi ve depolanması",
+        "Düzenli güvenlik denetimleri ve güncellemeler",
+        "Tüm hesaplar için iki faktörlü doğrulama seçeneği",
+        "Şüpheli aktiviteler için sürekli izleme"
+      ]
+    },
+    "vendorResponsibilities": {
+      "title": "4. Satıcı Sorumlulukları",
+      "description": "LaChoShop'taki satıcılar şunlardan sorumludur:",
+      "responsibilities": [
+        "Ürün açıklamalarını, fiyatlandırmayı ve mevcudiyeti doğru bir şekilde sağlamak",
+        "Siparişlerin zamanında yerine getirilmesi ve teslim edilmesi",
+        "Yüksek müşteri hizmeti standartlarını sürdürmek",
+        "Geçerli tüm yasalara ve yönetmeliklere uymak"
+      ],
+      "fee": "Platform Ücreti: LaChoShop'ta listelenen her ürün için %5 ücret uygulanır. Bu ücret, platform bakımı, güvenlik iyileştirmeleri ve müşteri destek hizmetlerine katkıda bulunur."
+    },
+    "orderTracking": {
+      "title": "5. Sipariş Takibi ve Yerine Getirilmesi",
+      "description": "LaChoShop, şeffaflık ve güvenilirlik sağlamak için sağlam bir sipariş takip sistemine sahiptir:",
+      "features": [
+        "Gerçek zamanlı sipariş durumu güncellemeleri",
+        "Müşteriler ve satıcılar için otomatik bildirimler",
+        "Büyük kargo taşıyıcıları ile entegrasyon",
+        "Yerel teslimatlar için coğrafi konum takibi"
+      ],
+      "note": "Not: LaChoShop, sorunsuz işlemleri kolaylaştırırken, sipariş yerine getirme sorumluluğu satıcıya aittir."
+    },
+    "customerRights": {
+      "title": "6. Müşteri Hakları ve Korunmaları",
+      "description": "LaChoShop, müşteri haklarını korumaya yönelik taahhüttedir:",
+      "rights": [
+        "Güvenli ödeme işlemleri",
+        "Ürün koşullarına bağlı 14 günlük iade politikası",
+        "Anlaşmazlık çözümü desteği",
+        "Sahtekarlık faaliyetlerine karşı koruma"
+      ]
+    },
+    "prohibitedActivities": {
+      "title": "7. Yasaklanmış Faaliyetler",
+      "description": "Aşağıdaki faaliyetler LaChoShop'ta kesinlikle yasaktır:",
+      "activities": [
+        "Sahte veya yasa dışı ürünlerin satışı",
+        "Aldatıcı uygulamalara veya yanıltıcı reklamlara katılmak",
+        "Fikri mülkiyet haklarını ihlal etmek",
+        "İnceleme veya derecelendirme sistemini manipüle etmek",
+        "Platformu yasa dışı amaçlar için kullanmak"
+      ]
+    },
+    "disputeResolution": {
+      "title": "8. Uyuşmazlık Çözümü",
+      "description": "LaChoShop, kapsamlı bir uyuşmazlık çözüm süreci sunar:",
+      "steps": [
+        "Taraflar arasındaki ilk iletişim",
+        "LaChoShop destek ekibi tarafından arabuluculuk",
+        "Kanıta dayalı karar verme",
+        "Üçüncü taraf tahkime başvurma seçeneği"
+      ]
+    },
+    "limitationOfLiability": {
+      "title": "9. Sorumluluk Sınırlaması",
+      "description": "LaChoShop, güvenli ve güvenilir bir platform sağlamaya çalışsa da, şu durumlar için sorumlu tutulamaz:",
+      "limitations": [
+        "Satıcıların veya müşterilerin eylemleri veya ihmalleri",
+        "Satıcılar tarafından satılan ürünlerin kalitesi",
+        "Platform kullanımından kaynaklanan kayıplar veya zararlar",
+        "Öngörülemeyen teknik sorunlar veya hizmet kesintileri"
+      ]
+    },
+    "modifications": {
+      "title": "10. Şartlarda Değişiklikler",
+      "description": "LaChoShop, bu Kullanım Koşullarını değiştirme hakkını saklı tutar. Kullanıcılar önemli değişiklikler konusunda bilgilendirilecek ve platformun devam eden kullanımı, değiştirilmiş şartların kabulü anlamına gelir."
+    },
+    "contactInformation": {
+      "title": "11. İletişim Bilgileri",
+      "description": "Bu Kullanım Koşulları ile ilgili herhangi bir soru veya endişeniz varsa, lütfen bizimle iletişime geçin:",
+      "support": "LaChoShop Destek",
+      "email": "E-posta: info@lachofit.com",
+      "phone": "Telefon: +237 670 687 59"
+    },
+    "acceptTerms": "Kullanım Koşullarını Kabul Ediyorum",
+    "termsAccepted": "Koşullar Kabul Edildi"
   }
 }

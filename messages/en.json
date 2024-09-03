@@ -431,5 +431,108 @@
         }
       }
     }
+  },
+  "terms": {
+    "termsOfUse": "Terms of Use",
+    "print": "Print",
+    "introduction": {
+      "title": "1. Introduction to LaChoShop",
+      "description": "Welcome to LaChoShop, a premier multivendor e-commerce platform by LachoFit. Our mission is to provide a safe, reliable, and efficient marketplace for vendors and customers alike. By using our services, you agree to these Terms of Use.",
+      "lastUpdated": "Last Updated:"
+    },
+    "definitions": {
+      "title": "2. Definitions",
+      "platform": "\"Platform\" refers to the LaChoShop website and mobile applications.",
+      "user": "\"User\" refers to any individual or entity using the Platform, including customers and vendors.",
+      "vendor": "\"Vendor\" refers to sellers who list and sell products on the Platform.",
+      "customer": "\"Customer\" refers to users who purchase products through the Platform."
+    },
+    "accountSecurity": {
+      "title": "3. Account Registration and Security",
+      "description": "Users must provide accurate, current, and complete information during the registration process. LaChoShop employs advanced security measures to protect user data and maintain the integrity of our Platform.",
+      "commitment": "Our Commitment to Security:",
+      "measures": [
+        "Encrypted data transmission and storage",
+        "Regular security audits and updates",
+        "Two-factor authentication option for all accounts",
+        "Continuous monitoring for suspicious activities"
+      ]
+    },
+    "vendorResponsibilities": {
+      "title": "4. Vendor Responsibilities",
+      "description": "Vendors on LaChoShop are responsible for:",
+      "responsibilities": [
+        "Providing accurate product descriptions, pricing, and availability",
+        "Ensuring timely order fulfillment and delivery",
+        "Maintaining high standards of customer service",
+        "Complying with all applicable laws and regulations"
+      ],
+      "fee": "Platform Fee: A 5% fee is applied to each product listed on LaChoShop. This fee contributes to platform maintenance, security enhancements, and customer support services."
+    },
+    "orderTracking": {
+      "title": "5. Order Tracking and Fulfillment",
+      "description": "LaChoShop provides a robust order tracking system to ensure transparency and reliability:",
+      "features": [
+        "Real-time order status updates",
+        "Automated notifications for customers and vendors",
+        "Integration with major shipping carriers",
+        "Geo-location tracking for local deliveries"
+      ],
+      "note": "Note: While LaChoShop facilitates smooth transactions, the responsibility for order fulfillment lies with the vendor."
+    },
+    "customerRights": {
+      "title": "6. Customer Rights and Protections",
+      "description": "LaChoShop is committed to protecting customer rights:",
+      "rights": [
+        "Secure payment processing",
+        "14-day return policy (subject to product conditions)",
+        "Dispute resolution support",
+        "Protection against fraudulent activities"
+      ]
+    },
+    "prohibitedActivities": {
+      "title": "7. Prohibited Activities",
+      "description": "The following activities are strictly prohibited on LaChoShop:",
+      "activities": [
+        "Selling counterfeit or illegal products",
+        "Engaging in deceptive practices or false advertising",
+        "Violating intellectual property rights",
+        "Manipulating the review or rating system",
+        "Using the platform for any unlawful purpose"
+      ]
+    },
+    "disputeResolution": {
+      "title": "8. Dispute Resolution",
+      "description": "LaChoShop provides a comprehensive dispute resolution process:",
+      "steps": [
+        "Initial communication between parties",
+        "Mediation by LaChoShop support team",
+        "Evidence-based decision making",
+        "Option for escalation to third-party arbitration"
+      ]
+    },
+    "limitationOfLiability": {
+      "title": "9. Limitation of Liability",
+      "description": "While LaChoShop strives to maintain a secure and reliable platform, we cannot be held liable for:",
+      "limitations": [
+        "Actions or omissions of vendors or customers",
+        "Quality of products sold by vendors",
+        "Losses or damages resulting from platform use",
+        "Unforeseen technical issues or service interruptions"
+      ]
+    },
+    "modifications": {
+      "title": "10. Modifications to Terms",
+      "description": "LaChoShop reserves the right to modify these Terms of Use. Users will be notified of significant changes, and continued use of the platform constitutes acceptance of the modified terms."
+    },
+    "contactInformation": {
+      "title": "11. Contact Information",
+      "description": "For any questions or concerns regarding these Terms of Use, please contact us at:",
+      "support": "LaChoShop Support",
+      "email": "Email: info@lachofit.com",
+      "phone": "Phone: +237 670 687 59"
+    },
+    "acceptTerms": "I Accept the Terms of Use",
+    "termsAccepted": "Terms Accepted"
   }
 }
