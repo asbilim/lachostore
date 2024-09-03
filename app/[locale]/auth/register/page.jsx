@@ -270,7 +270,9 @@ export default function SignUpComponent() {
                     <div className="space-y-1 leading-none">
                       <FormLabel>
                         I accept the{" "}
-                        <Link href="/terms">terms and conditions</Link>
+                        <Link href="/terms" className="text-primary">
+                          terms and conditions
+                        </Link>
                       </FormLabel>
                     </div>
                   </FormItem>
