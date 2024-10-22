@@ -189,6 +189,7 @@ export const CheckoutPage = ({
                           className="w-16 h-16 rounded-md object-cover"
                           width={500}
                           height={500}
+                          unoptimized
                         />
                         <div>
                           <h3 className="font-semibold">{item.name}</h3>

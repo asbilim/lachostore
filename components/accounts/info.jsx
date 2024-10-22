@@ -1078,6 +1078,7 @@ const StoreInfoTab = ({ shop, texts }) => {
               className="mt-2 w-32 h-32 object-cover rounded"
               width={1000}
               height={1000}
+              unoptimized
             />
           )}
         </div>

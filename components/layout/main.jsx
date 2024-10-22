@@ -87,6 +87,7 @@ export default function ShopMain({
             height={400}
             alt="Hero Image"
             className="mx-auto aspect-square overflow-hidden rounded-xl object-cover object-center"
+            unoptimized
           />
         </div>
       </section>

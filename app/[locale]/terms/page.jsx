@@ -16,6 +16,7 @@ export default async function TermsOfUse() {
         width={150}
         height={50}
         className="mr-4"
+        unoptimized
       />
       <div className="flex flex-col md:flex-row justify-between items-center mb-8">
         <div className="flex items-center mb-4 md:mb-0">

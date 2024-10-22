@@ -242,6 +242,7 @@ export default function EditProduct({ productId, store_id }) {
                       src={image.preview}
                       alt={`Product ${index + 1}`}
                       className="w-full h-32 object-cover rounded-md"
+                      unoptimized
                     />
                     <button
                       type="button"

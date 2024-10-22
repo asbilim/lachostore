@@ -189,6 +189,7 @@ export function OrdersTab({ texts, shop }) {
                                         className="w-16 h-16 mr-4 object-cover"
                                         width={100}
                                         height={100}
+                                        unoptimized
                                       />
                                     )}
                                     <div>

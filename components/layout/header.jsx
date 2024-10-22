@@ -198,12 +198,14 @@ export default function Header({
               width={200}
               alt="lachofit logo"
               className="hidden md:block"
+              unoptimized
             />
             <Image
               src={logo}
               width={120}
               alt="lachofit logo"
               className="md:hidden"
+              unoptimized
             />
           </Link>
 
