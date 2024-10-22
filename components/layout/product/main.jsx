@@ -205,6 +205,7 @@ export default function ImprovedProductPage({ product, translations, locale }) {
                       className={`transition-transform duration-300 ${
                         isZoomed ? "scale-110" : "scale-100"
                       }`}
+                      unoptimized
                     />
                   </motion.div>
                 </AnimatePresence>
@@ -232,6 +233,7 @@ export default function ImprovedProductPage({ product, translations, locale }) {
                             alt={`${product.name} thumbnail ${index + 1}`}
                             layout="fill"
                             objectFit="cover"
+                            unoptimized
                           />
                           <span className="sr-only">
                             View Image {index + 1}

@@ -13,6 +13,7 @@ export default async function HeroShop({ title, description, link_1, link_2 }) {
           objectFit="cover"
           className="opacity-30 md:opacity-50"
           priority
+          unoptimized
         />
       </div>
 

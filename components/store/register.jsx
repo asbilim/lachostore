@@ -502,6 +502,7 @@ const EnhancedStoreRegistration = ({ staticText }) => {
                                   className="mt-4 w-32 h-32 object-cover"
                                   width={128}
                                   height={128}
+                                  unoptimized
                                 />
                               )}
                             </div>

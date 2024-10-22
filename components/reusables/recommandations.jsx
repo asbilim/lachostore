@@ -24,6 +24,7 @@ export default function ProductRecommendation({ products }) {
                       height={400}
                       className="w-full h-48 object-contain"
                       dangerouslyAllowSVG={true}
+                      unoptimized
                     />
                     <h3 className="text-sm truncate">{item.name}</h3>
                     <div className="flex gap-2 items-center ">

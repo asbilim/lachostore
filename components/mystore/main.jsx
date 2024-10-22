@@ -66,6 +66,7 @@ export default function StorePageClient({ store, products, locale }) {
         layout="fill"
         objectFit="cover"
         className="z-0"
+        unoptimized
       />
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 to-black/30 z-10" />
       <motion.div
