@@ -301,13 +301,15 @@ export default function PaymentDialog({
       <SheetTrigger asChild>
         <Button className="w-full">{triggerButtonText}</Button>
       </SheetTrigger>
-      <SheetContent side="right" className="w-[400px] sm:w-[540px]">
+      <SheetContent
+        side="right"
+        className="w-[400px] sm:w-[540px] overflow-y-auto">
         <motion.div
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 50 }}
           transition={{ duration: 0.3 }}
-          className="h-full flex flex-col">
+          className="h-full flex flex-col py-6">
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="space-y-8 flex-grow">
