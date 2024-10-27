@@ -1,4 +1,5 @@
 export default function robots() {
+  //small comment
   return {
     rules: {
       userAgent: "*",
