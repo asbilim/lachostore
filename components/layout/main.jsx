@@ -55,9 +55,11 @@ export default function ShopMain({
       <div className="w-full flex flex-col max-w-6xl  gap-4">
         <h2 className="text-primary mb-12">{t("section_two.subtitle")}</h2>
         <div className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {recommended_products.map((item) => {
-            return <MainPageProductCard item={item} key={item.name} />;
-          })}
+          {Array.isArray(recommended_products)
+            ? recommended_products.map((item) => (
+                <MainPageProductCard item={item} key={item.name} />
+              ))
+            : null}
         </div>
       </div>
       <div className="w-full flex flex-col max-w-6xl gap-4 my-16">
