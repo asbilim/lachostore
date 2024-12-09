@@ -229,7 +229,7 @@ export default function PaymentDialog({
       });
 
       if (!orderResponse.ok) {
-        throw new Error("Order creation failed");
+        throw new Error("Order creation failed , or product stock expired");
       }
 
       return await orderResponse.json();
@@ -254,9 +254,11 @@ export default function PaymentDialog({
 
       const result = await initializePayment(orderData);
 
-      if (result.payment && result.payment.link) {
+      console.log(result);
+
+      if (result.order && result.payment_link) {
         // Open a new tab with the payment link
-        paymentWindowRef.current = window.open(result.payment.link, "_blank");
+        paymentWindowRef.current = window.open(result.payment_link, "_blank");
         if (!paymentWindowRef.current) {
           throw new Error(
             "Unable to open payment window. Please check your popup blocker settings."
