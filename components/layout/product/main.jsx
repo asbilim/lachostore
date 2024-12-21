@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { ReferralModal } from "@/components/referral";
 import {
   FacebookShareButton,
   TwitterShareButton,
@@ -38,6 +39,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import jwt from "jsonwebtoken";
 
 import { Star, TruckIcon, ShieldCheck, Share2, Gift, Mail } from "lucide-react";
 
@@ -71,6 +73,8 @@ export default function ImprovedProductPage({ product, translations, locale }) {
   const extra_url =
     `https://shop.lachofit.com${pathname}?from=${session?.referral_code}` ||
     `https://shop.lachofit.com${pathname}`;
+
+  console.log(extra_url);
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
@@ -465,13 +469,20 @@ export default function ImprovedProductPage({ product, translations, locale }) {
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-                <Button
-                  variant="text"
-                  size="lg"
-                  className="flex items-center gap-2 w-full sm:w-auto text-sm md:text-base">
-                  <Gift className="w-4 h-4 md:w-5 md:h-5" />
-                  Refer & start Earning
-                </Button>
+                <ReferralModal
+                  productName={product?.name}
+                  commission="5%"
+                  session={session}
+                  triggerChildren={
+                    <Button
+                      variant="text"
+                      size="lg"
+                      className="flex items-center gap-2 w-full sm:w-auto text-sm md:text-base">
+                      <Gift className="w-4 h-4 md:w-5 md:h-5" />
+                      Refer & start Earning
+                    </Button>
+                  }
+                />
               </motion.div>
 
               <motion.div
