@@ -6,7 +6,10 @@ import { sessionOptions } from "@/lib/iron-session-config";
 export async function GET() {
   try {
     const session = await getIronSession(cookies(), sessionOptions);
-    return Response.json({ cart: session.cart || [] });
+    return Response.json({
+      cart: session.cart || [],
+      referral_code: session.referral_code || null,
+    });
   } catch (error) {
     console.error("Error in GET /api/cart:", error);
     return Response.json({ error: "Failed to fetch cart" }, { status: 500 });
@@ -25,6 +28,9 @@ export async function POST(request) {
     switch (action) {
       case "add":
         addToCart(session.cart, product);
+        if (product.referred_by) {
+          updateReferralCode(session, product.referred_by);
+        }
         break;
       case "remove":
         removeFromCart(session.cart, product.id);
@@ -34,6 +40,7 @@ export async function POST(request) {
         break;
       case "clear":
         session.cart = [];
+        session.referral_code = null; // Clear referral code on cart reset
         break;
       default:
         return Response.json({ error: "Invalid action" }, { status: 400 });
@@ -42,6 +49,7 @@ export async function POST(request) {
     await session.save();
     return Response.json({
       cart: session.cart,
+      referral_code: session.referral_code || null,
       message: `Cart ${action} successful`,
     });
   } catch (error) {
@@ -74,4 +82,14 @@ function updateQuantity(cart, productId, quantity) {
   if (item) {
     item.quantity = quantity;
   }
+}
+
+function updateReferralCode(session, referred_by) {
+  if (isValidReferralCode(referred_by)) {
+    session.referral_code = referred_by;
+  }
+}
+
+function isValidReferralCode(code) {
+  return typeof code === "string" && code.trim().length > 0;
 }

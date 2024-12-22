@@ -14,7 +14,7 @@ import {
   FacebookIcon as Facebook,
   WhatsappIcon as Whatsapp,
 } from "react-share";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 import { BreadcrumbComponent } from "@/components/reusables/breadcrumbs";
 import { Label } from "@/components/ui/label";
@@ -69,6 +69,8 @@ export default function ImprovedProductPage({ product, translations, locale }) {
   const { currency, convertCurrency } = useCurrency();
   const pathname = usePathname();
   const { data: session } = useSession();
+  const searchParams = useSearchParams();
+  const referredBy = searchParams.get("referred_by");
 
   const extra_url =
     `https://shop.lachofit.com${pathname}?from=${session?.referral_code}` ||
@@ -113,6 +115,7 @@ export default function ImprovedProductPage({ product, translations, locale }) {
       size: selectedSize,
       price: product.price,
       sale_price: product.sale_price,
+      referred_by: referredBy,
     });
     toast({
       title: "Product added to cart",
