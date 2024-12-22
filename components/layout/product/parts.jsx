@@ -34,7 +34,7 @@ export default function ProductDetails({ translations, product }) {
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     setSubmissionStatus({ type: "", message: "" });
-    console.log(data);
+
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/store/api/products/${product?.id}/reviews/`,

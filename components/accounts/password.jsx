@@ -48,7 +48,6 @@ export const PasswordTab = ({ texts }) => {
   const [showErrorAlert, setShowErrorAlert] = useState(false);
 
   const { data: session } = useSession();
-  console.log(session?.accessToken);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

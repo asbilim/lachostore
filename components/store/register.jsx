@@ -132,7 +132,6 @@ const EnhancedStoreRegistration = ({ staticText }) => {
 
   // Form submission logic
   const onSubmit = async (data) => {
-    console.log(data);
     setIsSubmitting(true);
     try {
       const formData = new FormData();
@@ -503,6 +502,7 @@ const EnhancedStoreRegistration = ({ staticText }) => {
                                   className="mt-4 w-32 h-32 object-cover"
                                   width={128}
                                   height={128}
+                                  unoptimized
                                 />
                               )}
                             </div>

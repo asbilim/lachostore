@@ -7,7 +7,6 @@ import { toast } from "sonner";
 import { subscribeToNewsletter } from "@/server/add-to-newsletter";
 import * as z from "zod";
 
-
 export const emailSchema = z.object({
   email: z.string().email("Invalid email address"),
 });
@@ -30,7 +29,6 @@ export default function NewsletterSubscribe({ placeholder, content }) {
           description: response.message,
         });
       } else {
-        console.log(response);
         toast("Error during process", {
           description: response.message,
         });

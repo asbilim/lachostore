@@ -65,7 +65,7 @@ export default function RevenueChart({ shop }) {
         }
 
         const data = await response.json();
-        console.log(data);
+
         setRevenueData(data);
       } catch (err) {
         console.error("Error fetching data:", err.message);

@@ -52,6 +52,7 @@ export const ProductCard = ({ product, locale }) => {
               layout="fill"
               objectFit={product.transparent_image ? "contain" : "cover"}
               className="grayscale hover:grayscale-0 transition-all duration-500"
+              unoptimized
             />
             {(product.is_new || product.is_sale || product.discount > 0) && (
               <div className="absolute top-0 left-0 bg-green-800 text-green-100 text-xs px-2 py-1">
@@ -181,7 +182,7 @@ export default function MainShop({
             ? prev[type].filter((item) => item !== value)
             : [...prev[type], value];
       }
-      console.log("Updated filters:", newFilters);
+
       return newFilters;
     });
   }, []);
@@ -193,7 +194,6 @@ export default function MainShop({
       color: [],
       size: [],
     });
-    console.log("Filters cleared");
   }, []);
 
   const filteredProducts = useMemo(() => {

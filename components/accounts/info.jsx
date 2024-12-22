@@ -421,7 +421,6 @@ const ProductsTab = ({
   const { currency, convertCurrency } = useCurrency();
 
   const onDrop = (acceptedFiles) => {
-    console.log(acceptedFiles);
     // Handle file upload logic here
   };
 
@@ -1028,7 +1027,6 @@ const StoreInfoTab = ({ shop, texts }) => {
 
   useEffect(() => {
     // Load additional store information if needed
-    console.log(`Loaded store info for shop ID: ${shop.id}`);
   }, [shop]);
 
   const handleAvatarChange = (e) => {
@@ -1080,6 +1078,7 @@ const StoreInfoTab = ({ shop, texts }) => {
               className="mt-2 w-32 h-32 object-cover rounded"
               width={1000}
               height={1000}
+              unoptimized
             />
           )}
         </div>
@@ -1123,7 +1122,6 @@ const StoreInfoTab = ({ shop, texts }) => {
 const SalesAnalyticsTab = ({ shop, texts }) => {
   useEffect(() => {
     // Load sales analytics for the selected shop
-    console.log(`Fetching sales analytics for shop ID: ${shop.id}`);
   }, [shop]);
 
   return (

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { ReferralModal } from "@/components/referral";
 import {
   FacebookShareButton,
   TwitterShareButton,
@@ -13,7 +14,7 @@ import {
   FacebookIcon as Facebook,
   WhatsappIcon as Whatsapp,
 } from "react-share";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 import { BreadcrumbComponent } from "@/components/reusables/breadcrumbs";
 import { Label } from "@/components/ui/label";
@@ -38,6 +39,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import jwt from "jsonwebtoken";
 
 import { Star, TruckIcon, ShieldCheck, Share2, Gift, Mail } from "lucide-react";
 
@@ -67,10 +69,14 @@ export default function ImprovedProductPage({ product, translations, locale }) {
   const { currency, convertCurrency } = useCurrency();
   const pathname = usePathname();
   const { data: session } = useSession();
+  const searchParams = useSearchParams();
+  const referredBy = searchParams.get("referred_by");
 
   const extra_url =
     `https://shop.lachofit.com${pathname}?from=${session?.referral_code}` ||
     `https://shop.lachofit.com${pathname}`;
+
+  console.log(extra_url);
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
@@ -109,6 +115,7 @@ export default function ImprovedProductPage({ product, translations, locale }) {
       size: selectedSize,
       price: product.price,
       sale_price: product.sale_price,
+      referred_by: referredBy,
     });
     toast({
       title: "Product added to cart",
@@ -205,6 +212,7 @@ export default function ImprovedProductPage({ product, translations, locale }) {
                       className={`transition-transform duration-300 ${
                         isZoomed ? "scale-110" : "scale-100"
                       }`}
+                      unoptimized
                     />
                   </motion.div>
                 </AnimatePresence>
@@ -232,6 +240,7 @@ export default function ImprovedProductPage({ product, translations, locale }) {
                             alt={`${product.name} thumbnail ${index + 1}`}
                             layout="fill"
                             objectFit="cover"
+                            unoptimized
                           />
                           <span className="sr-only">
                             View Image {index + 1}
@@ -463,13 +472,20 @@ export default function ImprovedProductPage({ product, translations, locale }) {
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-                <Button
-                  variant="text"
-                  size="lg"
-                  className="flex items-center gap-2 w-full sm:w-auto text-sm md:text-base">
-                  <Gift className="w-4 h-4 md:w-5 md:h-5" />
-                  Refer & start Earning
-                </Button>
+                <ReferralModal
+                  productName={product?.name}
+                  commission="5%"
+                  session={session}
+                  triggerChildren={
+                    <Button
+                      variant="text"
+                      size="lg"
+                      className="flex items-center gap-2 w-full sm:w-auto text-sm md:text-base">
+                      <Gift className="w-4 h-4 md:w-5 md:h-5" />
+                      Refer & start Earning
+                    </Button>
+                  }
+                />
               </motion.div>
 
               <motion.div

@@ -525,6 +525,7 @@ export default function AddProduct({ store_id }) {
                     src={image.preview}
                     alt={`Product ${index + 1}`}
                     className="w-full h-32 object-cover rounded-md"
+                    unoptimized
                   />
                 ))}
               </div>

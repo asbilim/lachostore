@@ -63,9 +63,7 @@ export const StoreInfoTab = ({ shop, texts }) => {
   const fileInputRef = useRef(null);
   const { toast } = useToast();
 
-  useEffect(() => {
-    console.log(`Loaded store info for shop ID: ${shop.id}`);
-  }, [shop]);
+  useEffect(() => {}, [shop]);
 
   useEffect(() => {
     if (autoSave) {
@@ -341,6 +339,7 @@ export const StoreInfoTab = ({ shop, texts }) => {
                   className="mt-2 w-32 h-32 object-cover rounded"
                   width={128}
                   height={128}
+                  unoptimized
                 />
               </motion.div>
             )}

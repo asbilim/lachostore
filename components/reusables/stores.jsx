@@ -156,7 +156,7 @@ export const StoreCarousel = ({ items }) => {
         drag="x"
         dragConstraints={{ right: 0, left: -width }}
         className="flex">
-        {values.map((item) => (
+        {values.slice(1).map((item) => (
           <motion.div key={item.id} className="min-w-[300px] max-w-[350px] p-2">
             <StoreCard {...item} />
           </motion.div>
@@ -165,5 +165,3 @@ export const StoreCarousel = ({ items }) => {
     </motion.div>
   );
 };
-
-

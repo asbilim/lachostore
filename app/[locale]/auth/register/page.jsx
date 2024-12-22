@@ -268,7 +268,12 @@ export default function SignUpComponent() {
                       />
                     </FormControl>
                     <div className="space-y-1 leading-none">
-                      <FormLabel>I accept the terms and conditions</FormLabel>
+                      <FormLabel>
+                        I accept the{" "}
+                        <Link href="/terms" className="text-primary">
+                          terms and conditions
+                        </Link>
+                      </FormLabel>
                     </div>
                   </FormItem>
                 )}
