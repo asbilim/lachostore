@@ -63,6 +63,7 @@ export const CheckoutPage = ({
   const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState(0);
 
+  console.log("this is the cart: ", cart);
   const {
     currency,
     changeCurrency,
@@ -70,10 +71,6 @@ export const CheckoutPage = ({
     getCurrentRatio,
     convertCurrency,
   } = useCurrency();
-
-  console.log(getCurrentRatio());
-
-  console.log(convertCurrency(1000, currency, "XAF"));
 
   const formSchema = z.object({
     fullName: z.string().min(2, { message: validationMessages.fullName }),
@@ -121,10 +118,6 @@ export const CheckoutPage = ({
   });
 
   const watchPaymentMethod = form.watch("paymentMethod");
-
-  const onSubmit = (data) => {
-    // Handle checkout logic here
-  };
 
   const handleQuantityChange = (id, newQuantity) => {
     updateQuantity(id, newQuantity);

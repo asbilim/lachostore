@@ -205,6 +205,7 @@ export default function PaymentDialog({
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const { cart } = useCart();
+  console.log("this is the cart: ", cart);
   const { currency, convertCurrency } = useCurrency();
   const paymentWindowRef = useRef(null);
   const {
@@ -240,6 +241,7 @@ export default function PaymentDialog({
   };
 
   const onSubmit = async (data) => {
+    console.log(data);
     setIsProcessing(true);
     try {
       const newCart = cart.map((item) => ({ ...item, product: item.id }));
