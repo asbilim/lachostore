@@ -50,6 +50,7 @@ import { useCurrency } from "@/providers/currency";
 import { Link } from "@/components/navigation";
 import { handleProductVisit } from "@/components/functions/api";
 import { useSession } from "next-auth/react";
+
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
   visible: {
@@ -71,6 +72,9 @@ export default function ImprovedProductPage({ product, translations, locale }) {
   const { data: session } = useSession();
   const searchParams = useSearchParams();
   const referredBy = searchParams.get("referred_by");
+
+  // Just logging for debugging
+  console.log(referredBy);
 
   const extra_url =
     `https://shop.lachofit.com${pathname}?from=${session?.referral_code}` ||
@@ -104,6 +108,7 @@ export default function ImprovedProductPage({ product, translations, locale }) {
     { type: "text", label: product.name },
   ];
 
+  // Ensure the addToCart call includes `referred_by`
   const handleAddToCart = (e) => {
     e.preventDefault();
     addToCart({
@@ -115,7 +120,7 @@ export default function ImprovedProductPage({ product, translations, locale }) {
       size: selectedSize,
       price: product.price,
       sale_price: product.sale_price,
-      referred_by: referredBy,
+      referred_by: referredBy, // <-- Pass the referral code along!
     });
     toast({
       title: "Product added to cart",
@@ -207,9 +212,8 @@ export default function ImprovedProductPage({ product, translations, locale }) {
                         "https://placehold.co/400x400.png"
                       }
                       alt={product.name}
-                      layout="fill"
-                      objectFit="cover"
-                      className={`transition-transform duration-300 ${
+                      fill
+                      className={`object-cover transition-transform duration-300 ${
                         isZoomed ? "scale-110" : "scale-100"
                       }`}
                       unoptimized
@@ -238,8 +242,8 @@ export default function ImprovedProductPage({ product, translations, locale }) {
                           <Image
                             src={image.image}
                             alt={`${product.name} thumbnail ${index + 1}`}
-                            layout="fill"
-                            objectFit="cover"
+                            fill
+                            className="object-cover"
                             unoptimized
                           />
                           <span className="sr-only">
