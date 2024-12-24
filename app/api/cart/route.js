@@ -28,6 +28,8 @@ export async function POST(request) {
     switch (action) {
       case "add":
         addToCart(session.cart, product);
+
+        // If a valid referral code exists, store it at the session level, too
         if (product.referred_by) {
           updateReferralCode(session, product.referred_by);
         }
@@ -61,12 +63,28 @@ export async function POST(request) {
   }
 }
 
+/**
+ * Adds an item to the cart. Each cart item can carry its own referral code.
+ */
 function addToCart(cart, product) {
   const existingItem = cart.find((item) => item.id === product.id);
+
   if (existingItem) {
+    // If the item is already in the cart, just increment its quantity
     existingItem.quantity += 1;
+
+    // If the product arrives with a referral code, update the cart item
+    if (product.referred_by) {
+      existingItem.referral_code = product.referred_by;
+    }
   } else {
-    cart.push({ ...product, quantity: 1 });
+    // Otherwise, create a new cart item
+    cart.push({
+      ...product,
+      quantity: 1,
+      // Store the referral code at the item level (if provided)
+      referral_code: product.referred_by ?? null,
+    });
   }
 }
 
@@ -84,6 +102,9 @@ function updateQuantity(cart, productId, quantity) {
   }
 }
 
+/**
+ * Sets the referral code at the session (cart) level.
+ */
 function updateReferralCode(session, referred_by) {
   if (isValidReferralCode(referred_by)) {
     session.referral_code = referred_by;

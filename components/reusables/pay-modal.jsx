@@ -22,6 +22,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { useCurrency } from "@/providers/currency";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
+/**
+ * Zod schema for basic payment fields
+ */
 const paymentSchema = z.object({
   phone: z.string().optional(),
   email: z.string().email("Invalid email address"),
@@ -34,6 +37,9 @@ const paymentSchema = z.object({
   name: z.string().optional(),
 });
 
+/**
+ * Reusable PaymentForm to handle different payment methods
+ */
 const PaymentForm = ({ control, errors, paymentMethod }) => (
   <div className="space-y-4">
     {(paymentMethod === "orange-money" || paymentMethod === "mtn-money") && (
@@ -182,7 +188,7 @@ const PaymentForm = ({ control, errors, paymentMethod }) => (
         <Textarea
           {...field}
           id="shipping_address"
-          placeholder="Enter your full shipping address, including street name, house number, city, and any landmarks for easy location."
+          placeholder="Enter your full shipping address, including street name, house number, city, and any landmarks."
           rows={4}
         />
       )}
@@ -195,6 +201,11 @@ const PaymentForm = ({ control, errors, paymentMethod }) => (
   </div>
 );
 
+/**
+ * PaymentDialog
+ * -------------
+ * This component wraps your 'order creation' & 'payment' flow.
+ */
 export default function PaymentDialog({
   onPaymentComplete,
   amount = 2000,
@@ -205,9 +216,9 @@ export default function PaymentDialog({
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const { cart } = useCart();
-  console.log("this is the cart: ", cart);
   const { currency, convertCurrency } = useCurrency();
   const paymentWindowRef = useRef(null);
+
   const {
     control,
     handleSubmit,
@@ -218,6 +229,19 @@ export default function PaymentDialog({
     mode: "onChange",
   });
 
+  // Payment method icons
+  const paymentMethodIcons = {
+    "orange-money": DollarSign,
+    "mtn-money": Mountain,
+    "credit-card": CreditCard,
+    paypal: ShoppingCart,
+  };
+
+  /**
+   * initializePayment
+   * -----------------
+   * Calls your backend to create an Order, then gets the payment link
+   */
   const initializePayment = async (orderData) => {
     const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/content/orders/`;
     try {
@@ -230,7 +254,7 @@ export default function PaymentDialog({
       });
 
       if (!orderResponse.ok) {
-        throw new Error("Order creation failed , or product stock expired");
+        throw new Error("Order creation failed, or product stock expired");
       }
 
       return await orderResponse.json();
@@ -240,40 +264,68 @@ export default function PaymentDialog({
     }
   };
 
+  /**
+   * onSubmit
+   * --------
+   * This is called when the user clicks "Complete Payment".
+   * We'll gather the cart data + form data and send to your Django backend.
+   */
   const onSubmit = async (data) => {
-    console.log(data);
     setIsProcessing(true);
+
     try {
-      const newCart = cart.map((item) => ({ ...item, product: item.id }));
+      // Shape cart items to the structure your Django expects
+      const newCart = cart.map((item) => ({
+        product: item.id, // The product ID
+        quantity: item.quantity,
+        price: item.price?.toString() ?? "0", // Convert to string if needed
+        sale_price: item.sale_price?.toString() ?? null,
+        color: item.color || "",
+        size: item.size || "",
+      }));
+
+      // If you're storing the referral_code on each cart item, or in session, grab it:
+      // (Here, let's assume the first cart item, if any, might have referral_code)
+      const referralCode =
+        cart.length > 0 && cart[0].referral_code ? cart[0].referral_code : null;
+
+      // Build the final payload
       const orderData = {
-        ...data,
-        items: newCart,
+        // Payment form data: email, shipping_address, etc.
+        email: data.email,
+        shipping_address: data.shipping_address,
         pay_on_delivery: false,
+        items: newCart,
+
+        // The crucial top-level referral_code
+        referral_code: referralCode,
       };
 
-      // Simulate payment processing
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      console.log("Sending orderData:", orderData);
 
+      // Call your backend to initialize the order
       const result = await initializePayment(orderData);
 
-      console.log(result);
+      console.log("Payment init result:", result);
 
+      // If your backend returns a payment_link, open it
       if (result.order && result.payment_link) {
-        // Open a new tab with the payment link
         paymentWindowRef.current = window.open(result.payment_link, "_blank");
         if (!paymentWindowRef.current) {
           throw new Error(
-            "Unable to open payment window. Please check your popup blocker settings."
+            "Unable to open payment window. Check your popup blocker settings."
           );
         }
       } else {
-        throw new Error("Payment link not found in the response");
+        throw new Error("Payment link not found in response.");
       }
 
       toast.success("Payment initiated successfully!", {
         duration: 5000,
         icon: "🎉",
       });
+
+      // If there's a callback
       onPaymentComplete && onPaymentComplete(paymentMethod, result);
       setIsSheetOpen(false);
     } catch (error) {
@@ -285,19 +337,14 @@ export default function PaymentDialog({
           icon: "❌",
         }
       );
+
+      // Close any opened payment window on error
       if (paymentWindowRef.current) {
         paymentWindowRef.current.close();
       }
     } finally {
       setIsProcessing(false);
     }
-  };
-
-  const paymentMethodIcons = {
-    "orange-money": DollarSign,
-    "mtn-money": Mountain,
-    "credit-card": CreditCard,
-    paypal: ShoppingCart,
   };
 
   return (
@@ -324,6 +371,7 @@ export default function PaymentDialog({
                 className="text-3xl font-bold text-center">
                 Secure Payment
               </motion.h3>
+
               <motion.p
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -333,6 +381,7 @@ export default function PaymentDialog({
                 {Number(convertCurrency(amount, "XAF", currency)).toFixed(2)}{" "}
                 {currency}
               </motion.p>
+
               <Controller
                 name="paymentMethod"
                 control={control}
@@ -343,6 +392,7 @@ export default function PaymentDialog({
                     onValueChange={(value) => {
                       setPaymentMethod(value);
                       field.onChange(value);
+                      // reset form fields if switching payment method
                       reset();
                     }}
                     className="grid grid-cols-2 gap-4">
@@ -374,6 +424,7 @@ export default function PaymentDialog({
                 )}
               />
             </div>
+
             <AnimatePresence mode="wait">
               <motion.div
                 key={paymentMethod}
@@ -389,6 +440,7 @@ export default function PaymentDialog({
                 />
               </motion.div>
             </AnimatePresence>
+
             <div className="mt-8 flex justify-between items-center">
               <Button
                 type="button"
@@ -396,6 +448,7 @@ export default function PaymentDialog({
                 onClick={() => setIsSheetOpen(false)}>
                 Cancel
               </Button>
+
               <Button
                 type="submit"
                 disabled={isProcessing}
