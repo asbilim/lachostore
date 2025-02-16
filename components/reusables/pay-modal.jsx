@@ -31,10 +31,6 @@ const paymentSchema = z.object({
   shipping_address: z
     .string()
     .min(10, "Please provide a detailed shipping address"),
-  cardNumber: z.string().optional(),
-  expiry: z.string().optional(),
-  cvc: z.string().optional(),
-  name: z.string().optional(),
 });
 
 /**
@@ -68,92 +64,6 @@ const PaymentForm = ({ control, errors, paymentMethod }) => (
         {errors.phone && (
           <p className="text-destructive text-sm">{errors.phone.message}</p>
         )}
-      </>
-    )}
-
-    {paymentMethod === "credit-card" && (
-      <>
-        <Label htmlFor="card-number" className="text-lg font-medium">
-          Card Number
-        </Label>
-        <Controller
-          name="cardNumber"
-          control={control}
-          defaultValue=""
-          render={({ field }) => (
-            <Input
-              {...field}
-              id="card-number"
-              type="text"
-              placeholder="4111 1111 1111 1111"
-              className="input-masked"
-            />
-          )}
-        />
-        {errors.cardNumber && (
-          <p className="text-destructive text-sm">
-            {errors.cardNumber.message}
-          </p>
-        )}
-
-        <div className="grid grid-cols-3 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="card-expiry" className="text-lg font-medium">
-              Expiry
-            </Label>
-            <Controller
-              name="expiry"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  id="card-expiry"
-                  type="text"
-                  placeholder="MM/YY"
-                  className="input-masked"
-                />
-              )}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="card-cvc" className="text-lg font-medium">
-              CVC
-            </Label>
-            <Controller
-              name="cvc"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  id="card-cvc"
-                  type="text"
-                  placeholder="123"
-                  className="input-masked"
-                />
-              )}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="card-name" className="text-lg font-medium">
-              Name on Card
-            </Label>
-            <Controller
-              name="name"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  id="card-name"
-                  type="text"
-                  placeholder="John Doe"
-                />
-              )}
-            />
-          </div>
-        </div>
       </>
     )}
 
@@ -209,7 +119,7 @@ const PaymentForm = ({ control, errors, paymentMethod }) => (
 export default function PaymentDialog({
   onPaymentComplete,
   amount = 2000,
-  paymentMethods = ["credit-card", "orange-money", "mtn-money", "paypal"],
+  paymentMethods = ["orange-money", "mtn-money", "credit-card", "paypal"],
   triggerButtonText = "Pay Now",
 }) {
   const [paymentMethod, setPaymentMethod] = useState(paymentMethods[0]);
@@ -249,7 +159,10 @@ export default function PaymentDialog({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
+          Origin: window.location.origin,
         },
+        credentials: "include",
         body: JSON.stringify(orderData),
       });
 
@@ -390,14 +303,25 @@ export default function PaymentDialog({
                   <RadioGroup
                     {...field}
                     onValueChange={(value) => {
+                      if (value === "credit-card" || value === "paypal") {
+                        toast.error(
+                          "Currently, only payments within Cameroon are available. Please select Orange Money or MTN Money.",
+                          {
+                            duration: 5000,
+                            icon: "ℹ️",
+                          }
+                        );
+                        return;
+                      }
                       setPaymentMethod(value);
                       field.onChange(value);
-                      // reset form fields if switching payment method
                       reset();
                     }}
                     className="grid grid-cols-2 gap-4">
                     {paymentMethods.map((method, index) => {
                       const Icon = paymentMethodIcons[method];
+                      const isDisabled =
+                        method === "credit-card" || method === "paypal";
                       return (
                         <motion.div
                           key={method}
@@ -408,10 +332,13 @@ export default function PaymentDialog({
                             id={method}
                             value={method}
                             className="peer sr-only"
+                            disabled={isDisabled}
                           />
                           <Label
                             htmlFor={method}
-                            className="flex flex-col items-center gap-2 border-2 rounded-lg p-4 cursor-pointer transition duration-300 ease-in-out hover:bg-accent peer-checked:border-primary peer-checked:bg-primary/10">
+                            className={`flex flex-col items-center gap-2 border-2 rounded-lg p-4 cursor-pointer transition duration-300 ease-in-out hover:bg-accent peer-checked:border-primary peer-checked:bg-primary/10 ${
+                              isDisabled ? "opacity-50 cursor-not-allowed" : ""
+                            }`}>
                             {Icon && <Icon className="w-8 h-8 text-primary" />}
                             <span className="capitalize text-sm font-medium text-center">
                               {method.replace("-", " ")}
