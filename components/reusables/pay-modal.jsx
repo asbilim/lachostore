@@ -1,17 +1,12 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/providers/cart";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
@@ -22,9 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useCurrency } from "@/providers/currency";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
-/**
- * Zod schema for basic payment fields
- */
+// Zod schema for payment fields (unchanged)
 const paymentSchema = z.object({
   phone: z.string().optional(),
   email: z.string().email("Invalid email address"),
@@ -33,9 +26,7 @@ const paymentSchema = z.object({
     .min(10, "Please provide a detailed shipping address"),
 });
 
-/**
- * Reusable PaymentForm to handle different payment methods
- */
+// Reusable PaymentForm component (unchanged)
 const PaymentForm = ({ control, errors, paymentMethod }) => (
   <div className="space-y-4">
     {(paymentMethod === "orange-money" || paymentMethod === "mtn-money") && (
@@ -66,7 +57,6 @@ const PaymentForm = ({ control, errors, paymentMethod }) => (
         )}
       </>
     )}
-
     <Label htmlFor="email" className="text-lg font-medium">
       Email Address
     </Label>
@@ -86,7 +76,6 @@ const PaymentForm = ({ control, errors, paymentMethod }) => (
     {errors.email && (
       <p className="text-destructive text-sm">{errors.email.message}</p>
     )}
-
     <Label htmlFor="shipping_address" className="text-lg font-medium">
       Shipping Address
     </Label>
@@ -111,11 +100,6 @@ const PaymentForm = ({ control, errors, paymentMethod }) => (
   </div>
 );
 
-/**
- * PaymentDialog
- * -------------
- * This component wraps your 'order creation' & 'payment' flow.
- */
 export default function PaymentDialog({
   onPaymentComplete,
   amount = 2000,
@@ -125,9 +109,12 @@ export default function PaymentDialog({
   const [paymentMethod, setPaymentMethod] = useState(paymentMethods[0]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [paymentLink, setPaymentLink] = useState(null);
+  const [countdown, setCountdown] = useState(5); // Countdown starts at 5 seconds
   const { cart } = useCart();
   const { currency, convertCurrency } = useCurrency();
   const paymentWindowRef = useRef(null);
+  const toastIdRef = useRef(null); // To manage the toast
 
   const {
     control,
@@ -139,7 +126,6 @@ export default function PaymentDialog({
     mode: "onChange",
   });
 
-  // Payment method icons
   const paymentMethodIcons = {
     "orange-money": DollarSign,
     "mtn-money": Mountain,
@@ -147,11 +133,6 @@ export default function PaymentDialog({
     paypal: ShoppingCart,
   };
 
-  /**
-   * initializePayment
-   * -----------------
-   * Calls your backend to create an Order, then gets the payment link
-   */
   const initializePayment = async (orderData) => {
     const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/content/orders/`;
     try {
@@ -160,85 +141,87 @@ export default function PaymentDialog({
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
-          Origin: window.location.origin,
         },
         credentials: "include",
         body: JSON.stringify(orderData),
       });
 
       if (!orderResponse.ok) {
-        throw new Error("Order creation failed, or product stock expired");
+        const errorData = await orderResponse.json();
+        throw new Error(errorData.message || "Order creation failed");
       }
 
       return await orderResponse.json();
     } catch (error) {
+      if (
+        error.name === "TypeError" &&
+        error.message.includes("Failed to fetch")
+      ) {
+        console.error("CORS error or network issue:", error);
+        throw new Error(
+          "Unable to connect to the server. Please check your internet connection or try again later."
+        );
+      }
       console.error("Error in payment process:", error);
       throw error;
     }
   };
 
-  /**
-   * onSubmit
-   * --------
-   * This is called when the user clicks "Complete Payment".
-   * We'll gather the cart data + form data and send to your Django backend.
-   */
   const onSubmit = async (data) => {
     setIsProcessing(true);
 
     try {
-      // Shape cart items to the structure your Django expects
       const newCart = cart.map((item) => ({
-        product: item.id, // The product ID
+        product: item.id,
         quantity: item.quantity,
-        price: item.price?.toString() ?? "0", // Convert to string if needed
+        price: item.price?.toString() ?? "0",
         sale_price: item.sale_price?.toString() ?? null,
         color: item.color || "",
         size: item.size || "",
       }));
 
-      // If you're storing the referral_code on each cart item, or in session, grab it:
-      // (Here, let's assume the first cart item, if any, might have referral_code)
       const referralCode =
         cart.length > 0 && cart[0].referral_code ? cart[0].referral_code : null;
 
-      // Build the final payload
       const orderData = {
-        // Payment form data: email, shipping_address, etc.
         email: data.email,
         shipping_address: data.shipping_address,
         pay_on_delivery: false,
         items: newCart,
-
-        // The crucial top-level referral_code
         referral_code: referralCode,
       };
 
       console.log("Sending orderData:", orderData);
-
-      // Call your backend to initialize the order
       const result = await initializePayment(orderData);
-
       console.log("Payment init result:", result);
 
-      // If your backend returns a payment_link, open it
       if (result.order && result.payment_link) {
-        paymentWindowRef.current = window.open(result.payment_link, "_blank");
-        if (!paymentWindowRef.current) {
-          throw new Error(
-            "Unable to open payment window. Check your popup blocker settings."
-          );
-        }
+        console.log("Setting paymentLink:", result.payment_link);
+        setPaymentLink(result.payment_link);
+
+        // Show toast with countdown
+        setCountdown(5); // Reset countdown
+        toastIdRef.current = toast.success(
+          `Payment initiated successfully! Redirecting in ${countdown} seconds...`,
+          {
+            duration: Infinity, // Keep toast open until manually closed or redirected
+            action: {
+              label: "Cancel",
+              onClick: () => {
+                setPaymentLink(null);
+                toast.dismiss(toastIdRef.current);
+                toast.info("Payment process cancelled.", {
+                  duration: 3000,
+                  icon: "ℹ️",
+                });
+              },
+            },
+          }
+        );
       } else {
         throw new Error("Payment link not found in response.");
       }
 
-      toast.success("Payment initiated successfully!", {
-        duration: 5000,
-        icon: "🎉",
-      });
-
-      // If there's a callback
       onPaymentComplete && onPaymentComplete(paymentMethod, result);
       setIsSheetOpen(false);
     } catch (error) {
@@ -250,14 +233,72 @@ export default function PaymentDialog({
           icon: "❌",
         }
       );
-
-      // Close any opened payment window on error
-      if (paymentWindowRef.current) {
-        paymentWindowRef.current.close();
-      }
+      if (paymentWindowRef.current) paymentWindowRef.current.close();
     } finally {
       setIsProcessing(false);
     }
+  };
+
+  // Countdown logic
+  useEffect(() => {
+    if (paymentLink && countdown > 0) {
+      const timer = setInterval(() => {
+        setCountdown((prev) => {
+          const newCountdown = prev - 1;
+          if (toastIdRef.current) {
+            toast.success(
+              `Payment initiated successfully! Redirecting in ${newCountdown} seconds...`,
+              {
+                id: toastIdRef.current,
+                duration: Infinity,
+                action: {
+                  label: "Cancel",
+                  onClick: () => {
+                    setPaymentLink(null);
+                    toast.dismiss(toastIdRef.current);
+                    toast.info("Payment process cancelled.", {
+                      duration: 3000,
+                      icon: "ℹ️",
+                    });
+                  },
+                },
+              }
+            );
+          }
+          return newCountdown;
+        });
+      }, 1000);
+
+      return () => clearInterval(timer);
+    } else if (paymentLink && countdown === 0) {
+      // Redirect when countdown reaches zero
+      handleProceedToPayment();
+      toast.dismiss(toastIdRef.current);
+    }
+  }, [paymentLink, countdown]);
+
+  const handleProceedToPayment = () => {
+    if (paymentLink) {
+      const paymentWindow = window.open(paymentLink, "_blank");
+      if (!paymentWindow) {
+        toast.error(
+          "Unable to open payment window. Check your popup blocker settings.",
+          {
+            duration: 5000,
+            icon: "❌",
+          }
+        );
+      } else {
+        setPaymentLink(null);
+        toast.dismiss(toastIdRef.current); // Dismiss the toast
+      }
+    }
+  };
+
+  const handleCancelPayment = () => {
+    setPaymentLink(null);
+    toast.dismiss(toastIdRef.current); // Dismiss the toast
+    toast.info("Payment process cancelled.", { duration: 3000, icon: "ℹ️" });
   };
 
   return (
@@ -284,7 +325,6 @@ export default function PaymentDialog({
                 className="text-3xl font-bold text-center">
                 Secure Payment
               </motion.h3>
-
               <motion.p
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -294,7 +334,6 @@ export default function PaymentDialog({
                 {Number(convertCurrency(amount, "XAF", currency)).toFixed(2)}{" "}
                 {currency}
               </motion.p>
-
               <Controller
                 name="paymentMethod"
                 control={control}
@@ -306,10 +345,7 @@ export default function PaymentDialog({
                       if (value === "credit-card" || value === "paypal") {
                         toast.error(
                           "Currently, only payments within Cameroon are available. Please select Orange Money or MTN Money.",
-                          {
-                            duration: 5000,
-                            icon: "ℹ️",
-                          }
+                          { duration: 5000, icon: "ℹ️" }
                         );
                         return;
                       }
@@ -351,7 +387,6 @@ export default function PaymentDialog({
                 )}
               />
             </div>
-
             <AnimatePresence mode="wait">
               <motion.div
                 key={paymentMethod}
@@ -367,7 +402,6 @@ export default function PaymentDialog({
                 />
               </motion.div>
             </AnimatePresence>
-
             <div className="mt-8 flex justify-between items-center">
               <Button
                 type="button"
@@ -375,7 +409,6 @@ export default function PaymentDialog({
                 onClick={() => setIsSheetOpen(false)}>
                 Cancel
               </Button>
-
               <Button
                 type="submit"
                 disabled={isProcessing}
@@ -403,6 +436,37 @@ export default function PaymentDialog({
               </Button>
             </div>
           </form>
+
+          {paymentLink && (
+            <Dialog
+              open={!!paymentLink}
+              onOpenChange={(open) => !open && handleCancelPayment()}>
+              <DialogContent className="sm:max-w-md fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white z-50 p-6 rounded-lg shadow-lg">
+                <div className="text-center max-w-md">
+                  <h3 className="text-2xl font-bold mb-6">Confirm Payment</h3>
+                  <p className="mb-6 text-lg">
+                    Redirecting in {countdown} seconds. Proceed to payment now?
+                  </p>
+                  <p className="text-sm text-muted-foreground mb-8">
+                    Payment URL: {paymentLink}
+                  </p>
+                  <DialogFooter className="flex justify-center gap-4">
+                    <Button
+                      variant="outline"
+                      onClick={handleCancelPayment}
+                      className="px-6 py-3">
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={handleProceedToPayment}
+                      className="px-6 py-3 bg-primary text-white hover:bg-primary/90">
+                      Proceed Now
+                    </Button>
+                  </DialogFooter>
+                </div>
+              </DialogContent>
+            </Dialog>
+          )}
         </motion.div>
       </SheetContent>
     </Sheet>
