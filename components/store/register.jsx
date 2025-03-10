@@ -148,14 +148,7 @@ const EnhancedStoreRegistration = ({ staticText }) => {
         }
       });
 
-      // Open a popup with a loading message
-      popupRef.current = window.open("", "_blank");
-      updatePopupContent(
-        "Redirecting to Payment",
-        "Please wait...",
-        "We are redirecting you to the payment page. This may take a few moments."
-      );
-
+      // No longer need popup window for payment
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/store/create/`,
         formData,
@@ -167,16 +160,10 @@ const EnhancedStoreRegistration = ({ staticText }) => {
         }
       );
 
-      if (response.data.payment_url) {
-        // Redirect the popup to the payment URL
-        popupRef.current.location.href = response.data.payment_url;
-        setShowSuccessModal(true);
-      } else {
-        throw new Error("Payment URL not received from the server.");
-      }
+      // Store created successfully
+      setShowSuccessModal(true);
     } catch (error) {
       console.error("Store creation error:", error);
-      if (popupRef.current) popupRef.current.close();
       setErrorMessage(
         error.response?.data?.error ||
           error.message ||
@@ -185,21 +172,6 @@ const EnhancedStoreRegistration = ({ staticText }) => {
       setShowErrorModal(true);
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  // Popup content updater
-  const updatePopupContent = (title, heading, message) => {
-    if (popupRef.current) {
-      popupRef.current.document.write(`
-        <html>
-          <head><title>${title}</title></head>
-          <body>
-            <h1>${heading}</h1>
-            <p>${message}</p>
-          </body>
-        </html>
-      `);
     }
   };
 
@@ -572,11 +544,22 @@ const EnhancedStoreRegistration = ({ staticText }) => {
       <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{"Your store was added"}</DialogTitle>
+            <DialogTitle>{"Store Created Successfully"}</DialogTitle>
             <DialogDescription>
-              {"Your store was added , you can start selling on lachofit"}
+              {
+                "Your store has been created successfully and is now active. You can start adding products and customizing your store."
+              }
             </DialogDescription>
           </DialogHeader>
+          <div className="my-4 space-y-2">
+            <h3 className="font-medium">Next Steps:</h3>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>Add products to your store</li>
+              <li>Complete your store profile</li>
+              <li>Set up your preferred payment methods</li>
+              <li>Share your store on social media</li>
+            </ul>
+          </div>
           <DialogFooter>
             <Button
               type="button"
@@ -584,7 +567,7 @@ const EnhancedStoreRegistration = ({ staticText }) => {
                 setShowSuccessModal(false);
                 router.push("/en/accounts/");
               }}>
-              Back Home
+              Go to Dashboard
             </Button>
           </DialogFooter>
         </DialogContent>
